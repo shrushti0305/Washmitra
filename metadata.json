@@ -1,0 +1,6 @@
+{
+  "name": "WashMitra",
+  "description": "A comprehensive platform for WASH (Water, Sanitation, and Hygiene) infrastructure maintenance, connecting trained multi-skilled technicians with local households and institutions.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
