@@ -8,7 +8,7 @@
 // src/components/*.tsx - it should read like an accurate summary, not
 // separate marketing copy.
 
-const SITE_URL = 'https://washmitra.in';
+const SITE_URL = 'https://washmitra.com';
 
 export interface BotPage {
   title: string;
