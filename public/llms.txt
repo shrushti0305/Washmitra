@@ -19,12 +19,12 @@
 
 ## Key pages
 
-- Homepage: https://washmitra.in/
-- About: https://washmitra.in/about
-- Services: https://washmitra.in/services
-- Impact & work gallery: https://washmitra.in/impact
-- Training programs: https://washmitra.in/training
-- Contact: https://washmitra.in/contact
+- Homepage: https://washmitra.com/
+- About: https://washmitra.com/about
+- Services: https://washmitra.com/services
+- Impact & work gallery: https://washmitra.com/impact
+- Training programs: https://washmitra.com/training
+- Contact: https://washmitra.com/contact
 
 ## Contact
 
