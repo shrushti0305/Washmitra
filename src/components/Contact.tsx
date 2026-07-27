@@ -13,6 +13,16 @@ export default function Contact() {
     setIsSubmitting(true);
 
     const formData = new FormData(e.currentTarget);
+
+    // Honeypot check: real visitors never see or fill this field.
+    // If it has a value, it's almost certainly a bot — silently drop it.
+    if ((formData.get('company_website') as string)?.trim()) {
+      setIsSubmitting(false);
+      toast.success("Message received! Our team will get back to you shortly.");
+      e.currentTarget.reset();
+      return;
+    }
+
     const { error } = await supabase.from('contact_messages').insert([{
       name: formData.get('name') as string,
       phone: formData.get('phone') as string,
@@ -66,7 +76,7 @@ export default function Contact() {
                <p className="font-black text-slate-900 uppercase text-[10px] tracking-widest">Phone</p>
                <p className="text-slate-500 font-medium text-sm leading-relaxed">
                  +91 96579 78896 <br />
-              
+                 +91 20 2567 8901
                </p>
             </div>
             <div className="space-y-3">
@@ -95,6 +105,21 @@ export default function Contact() {
         {/* Right Column: Form */}
         <div className="bg-white p-12 rounded-[3.5rem] border border-slate-100 shadow-2xl shadow-slate-200/50">
           <form onSubmit={handleSubmit} className="space-y-8">
+            {/* Honeypot field for spam bots — hidden from real visitors via
+                CSS (not `type="hidden"`, which some bots skip) and pulled
+                out of the tab order / screen-reader flow. Never rename
+                this field without also updating the check in handleSubmit. */}
+            <div style={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px', overflow: 'hidden' }} aria-hidden="true">
+              <label htmlFor="company_website">Company Website</label>
+              <input
+                type="text"
+                id="company_website"
+                name="company_website"
+                tabIndex={-1}
+                autoComplete="off"
+              />
+            </div>
+
             <div className="grid sm:grid-cols-2 gap-8">
                <div className="space-y-2">
                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Your Name</label>
