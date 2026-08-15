@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useStore } from '../store/useStore';
 import { useBookingStore } from '../store/useBookingStore';
+import { supabase } from '../lib/supabase';
 import { 
   User, 
   Settings, 
@@ -14,7 +15,8 @@ import {
   LifeBuoy,
   Menu,
   X,
-  UserPlus
+  UserPlus,
+  Mail
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { 
@@ -54,6 +56,7 @@ export default function Layout({ children }: LayoutProps) {
     { label: 'Home', path: '/' },
     { label: 'About', path: '/about' },
     { label: 'Services', path: '/services' },
+    { label: 'Training', path: '/training' },
     { label: 'Impact', path: '/impact' },
     { label: 'Contact', path: '/contact' }
   ];
@@ -193,7 +196,16 @@ export default function Layout({ children }: LayoutProps) {
                     <DropdownMenuSeparator className="bg-[#062D27]/5" />
                     <DropdownMenuItem 
                       className="text-[#F26522] cursor-pointer font-black rounded-xl px-3 py-2"
-                      onClick={() => setUser(null)}
+                      onClick={async () => {
+                        try {
+                          await supabase.auth.signOut();
+                        } catch (err) {
+                          console.error('Sign out error:', err);
+                        } finally {
+                          setUser(null);
+                          toast.success('Logged out successfully');
+                        }
+                      }}
                     >
                       Log out
                     </DropdownMenuItem>
@@ -202,15 +214,15 @@ export default function Layout({ children }: LayoutProps) {
               </>
             ) : (
               <div className="flex items-center gap-2 sm:gap-3">
-                {SHOW_TRANSACTIONAL_FEATURES && (
+                {SHOW_TRANSACTIONAL_FEATURES ? (
                   <>
                     <Button 
-  variant="outline"
-  onClick={handleBecomeMitraClick}
-  className="hidden sm:inline-flex border-[#062D27]/20 text-[#062D27] hover:bg-[#062D27]/5 rounded-xl h-9 px-3 text-[10px] font-black uppercase tracking-widest transition-all"
->
-  <UserPlus className="mr-1.5 h-3 w-3 text-[#F26522]" /> Become a WASH Mitra
-</Button>
+                      variant="outline"
+                      onClick={handleBecomeMitraClick}
+                      className="hidden sm:inline-flex border-[#062D27]/20 text-[#062D27] hover:bg-[#062D27]/5 rounded-xl h-9 px-3 text-[10px] font-black uppercase tracking-widest transition-all"
+                    >
+                      <UserPlus className="mr-1.5 h-3 w-3 text-[#F26522]" /> Become a WASH Mitra
+                    </Button>
 
                     <Button 
                       variant="ghost"
@@ -226,6 +238,16 @@ export default function Layout({ children }: LayoutProps) {
                       Book a Service
                     </Button>
                   </>
+                ) : (
+                  <Button 
+                    onClick={() => {
+                      navigate('/contact');
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="hidden sm:inline-flex bg-[#F26522] hover:bg-[#d95d1f] font-black h-11 sm:h-12 rounded-xl px-5 sm:px-6 shadow-xl shadow-orange-200 border-none text-white whitespace-nowrap text-[11px] sm:text-[12px] uppercase tracking-widest transition-all hover:scale-105 active:scale-95 items-center gap-2"
+                  >
+                    <Mail className="h-4 w-4" /> Contact Us
+                  </Button>
                 )}
                 <Button 
                   variant="ghost" 
@@ -295,7 +317,7 @@ export default function Layout({ children }: LayoutProps) {
               </div>
 
               <div className="mt-auto pt-10 border-t border-slate-100 space-y-4">
-                {SHOW_TRANSACTIONAL_FEATURES && (
+                {SHOW_TRANSACTIONAL_FEATURES ? (
                   <>
                     <Button 
                       onClick={handleBecomeMitraClick}
@@ -319,6 +341,16 @@ export default function Layout({ children }: LayoutProps) {
                       Book a Service
                     </Button>
                   </>
+                ) : (
+                  <Button 
+                    onClick={() => {
+                      navigate('/contact');
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="w-full h-14 bg-[#F26522] hover:bg-[#d95d1f] text-white rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-orange-100 flex items-center justify-center gap-2"
+                  >
+                    <Mail className="h-4 w-4" /> Contact Us
+                  </Button>
                 )}
               </div>
             </motion.div>

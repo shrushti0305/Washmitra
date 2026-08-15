@@ -1,5 +1,6 @@
 import type { ComponentType } from 'react';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, Variants } from 'motion/react';
 import { useStore } from '../store/useStore';
 import { supabase } from '../lib/supabase';
@@ -124,6 +125,7 @@ function getStatusStepIndex(status: string | undefined): number {
 const HELPLINE_NUMBER = '+919657978896';
 
 function ServiceRequestSection() {
+  const navigate = useNavigate();
   const { user, requests, addRequest, updateRequest } = useStore();
   const { sendNotification } = useNotifications();
   const [isBooking, setIsBooking] = useState(false);
@@ -131,7 +133,8 @@ function ServiceRequestSection() {
 
   const handleBook = async (trade: typeof TRADE_PROGRAMS[0]) => {
     if (!SHOW_TRANSACTIONAL_FEATURES) {
-      toast.info('Bookings open soon — reach out via our Contact page in the meantime.');
+      toast.success(`Redirecting to inquiry form for ${trade.name}...`);
+      navigate('/contact');
       return;
     }
     if (!user) {
@@ -400,6 +403,7 @@ const SERVICES_MAP: Record<string, string[]> = {
 
 function CatalogueSection({ onSelect }: { onSelect?: (cat: ServiceCategory) => void }) {
   const { categories } = useStore();
+  const navigate = useNavigate();
 
   if (!categories || categories.length === 0) {
     return (
@@ -497,7 +501,7 @@ function CatalogueSection({ onSelect }: { onSelect?: (cat: ServiceCategory) => v
         </div>
         <Button
           className="h-14 px-10 rounded-full bg-brand-accent hover:bg-white hover:text-slate-900 border-none font-black uppercase tracking-widest relative z-10 transition-all"
-          onClick={() => { window.location.href = '/contact'; }}
+          onClick={() => navigate('/contact')}
         >
           Get a Quote
         </Button>

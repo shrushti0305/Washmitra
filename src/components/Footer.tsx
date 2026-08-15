@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { Droplets, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
 import logoUrl from '../assets/images/WASH Mitra logo.png';
 
@@ -48,11 +49,17 @@ export default function Footer() {
           <div className="space-y-6">
              <h4 className="text-[10px] font-black text-[#F26522] uppercase tracking-[0.3em]">Company</h4>
              <ul className="space-y-4">
-                {['About', 'Services', 'Catalog', 'Impact', 'Contact'].map((item) => (
-                  <li key={item}>
-                    <a href={`#${item.toLowerCase()}`} className="text-white/60 hover:text-[#F26522] transition-colors font-bold text-sm">
-                      {item}
-                    </a>
+                {[
+                  { name: 'About', path: '/about' },
+                  { name: 'Services', path: '/services' },
+                  { name: 'Training', path: '/training' },
+                  { name: 'Impact', path: '/impact' },
+                  { name: 'Contact', path: '/contact' }
+                ].map((item) => (
+                  <li key={item.name}>
+                    <Link to={item.path} className="text-white/60 hover:text-[#F26522] transition-colors font-bold text-sm">
+                      {item.name}
+                    </Link>
                   </li>
                 ))}
              </ul>

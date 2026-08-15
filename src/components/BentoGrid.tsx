@@ -1,9 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, Variants } from 'motion/react';
 import { ArrowUpRight, Wrench, Zap, GraduationCap } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { useBookingStore } from '../store/useBookingStore';
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -26,7 +26,7 @@ const itemVariants: Variants = {
 };
 
 export default function BentoGrid() {
-  const { openBookingFor } = useBookingStore();
+  const navigate = useNavigate();
 
   return (
     <motion.div 
@@ -39,7 +39,7 @@ export default function BentoGrid() {
       {/* Featured Card: Plumbing */}
       <motion.div variants={itemVariants} className="md:col-span-2 lg:col-span-2">
         <Card 
-          onClick={() => openBookingFor('Plumbing')}
+          onClick={() => navigate('/services')}
           className="group relative h-[450px] bg-[#062D27] rounded-[40px] border-none overflow-hidden cursor-pointer shadow-2xl transition-all duration-500 hover:shadow-wm-primary/20"
         >
           <div className="absolute top-8 left-8 z-20">
@@ -71,7 +71,7 @@ export default function BentoGrid() {
       {/* Standard Card: Electrical */}
       <motion.div variants={itemVariants}>
         <Card 
-          onClick={() => openBookingFor('Electrical')}
+          onClick={() => navigate('/services')}
           className="group relative h-[450px] bg-white rounded-[40px] border-border/50 overflow-hidden cursor-pointer shadow-xl transition-all duration-500 hover:shadow-2xl hover:border-[#F26522]/30"
         >
           <div className="absolute top-8 left-8 z-20">
@@ -100,7 +100,7 @@ export default function BentoGrid() {
       {/* Standard Card: Training */}
       <motion.div variants={itemVariants} className="lg:col-start-3">
         <Card 
-          onClick={() => openBookingFor('Training')}
+          onClick={() => navigate('/training')}
           className="group relative h-[450px] bg-white rounded-[40px] border-border/50 overflow-hidden cursor-pointer shadow-xl transition-all duration-500 hover:shadow-2xl hover:border-[#F26522]/30"
         >
           <div className="absolute top-8 left-8 z-20">

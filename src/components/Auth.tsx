@@ -8,10 +8,9 @@ import { toast } from 'sonner';
 import washMitraLogo from '../assets/images/WASH Mitra logo.png';
 
 const ROLES = [
-  { key: "customer", label: "User", fullLabel: "Citizen / Household", badgeCls: "bg-sky-100 text-sky-800" },
-  { key: "washmitra", label: "WashMitra", fullLabel: "WashMitra Operator", badgeCls: "bg-green-100 text-green-800" },
-  { key: "institution", label: "Inst", fullLabel: "School / ZP / NGO", badgeCls: "bg-yellow-100 text-yellow-800" },
-  { key: "admin", label: "Adm", fullLabel: "Admin Access", badgeCls: "bg-pink-100 text-pink-800" },
+  { key: "customer", label: "Household", fullLabel: "Citizen / Household", badgeCls: "bg-sky-100 text-sky-800" },
+  { key: "washmitra", label: "WASH Mitra", fullLabel: "WASH Mitra Technician", badgeCls: "bg-green-100 text-green-800" },
+  { key: "institution", label: "Institution", fullLabel: "School / ZP / NGO", badgeCls: "bg-yellow-100 text-yellow-800" },
 ];
 
 export default function Auth() {
@@ -67,30 +66,43 @@ export default function Auth() {
       return;
     }
 
-    // 2. Only attempt profile update if session exists
+    // 2. Only attempt profile upsert if session exists
     if (data.user) {
+      // Check if user has an existing profile to avoid overwriting an ADMIN role
+      const { data: existingProfile } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', data.user.id)
+        .maybeSingle();
+
+      const userRole = existingProfile?.role || role.toUpperCase();
+      const userName = formData.fullName || existingProfile?.full_name || existingProfile?.name || 'WASH Mitra User';
+
       const { error: profileError } = await supabase
         .from('profiles')
-        .update({ 
-          name: formData.fullName,
-          role: role.toUpperCase(),
-          email: formData.email || null 
-        })
-        .eq('id', data.user.id);
+        .upsert({ 
+          id: data.user.id,
+          full_name: userName,
+          name: userName,
+          role: userRole,
+          phone: getFormattedPhone(),
+          email: formData.email || existingProfile?.email || null,
+          is_paid: existingProfile ? existingProfile.is_paid : role !== 'washmitra',
+          is_available: true
+        }, { onConflict: 'id' });
 
       if (profileError) {
-        console.error("Profile update failed:", profileError);
-        // We continue anyway so the user can still log in
+        console.error("Profile upsert notice:", profileError);
       }
 
       setUser({
         id: data.user.id,
-        full_name: formData.fullName,
-        email: formData.email,
-        role: role.toUpperCase() as UserRole,
-        is_paid: role !== 'washmitra',
-        avatar_url: '',
-        created_at: new Date().toISOString()
+        full_name: userName,
+        email: formData.email || existingProfile?.email,
+        role: userRole as UserRole,
+        is_paid: existingProfile ? existingProfile.is_paid : role !== 'washmitra',
+        avatar_url: existingProfile?.avatar_url || '',
+        created_at: existingProfile?.created_at || new Date().toISOString()
       });
       
       toast.success("Account verified successfully!");
@@ -105,10 +117,10 @@ export default function Auth() {
       <div className="w-full max-w-[440px] bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border border-slate-100">
         <div className="text-center px-10 pt-10 pb-6">
           <img src={washMitraLogo} alt="WASH Mitra Logo" className="w-auto h-16 mx-auto mb-4 object-contain" />
-          <h2 className="text-[1.25rem] font-black text-[#062D27] tracking-tight">Create your WASH Mitra account</h2>
+          <h2 className="text-[1.25rem] font-black text-[#062D27] tracking-tight">Access your WASH Mitra account</h2>
         </div>
 
-        <div className="mx-10 mb-6 grid grid-cols-4 gap-1 bg-slate-100 p-1 rounded-xl">
+        <div className="mx-10 mb-6 grid grid-cols-3 gap-1 bg-slate-100 p-1 rounded-xl">
           {ROLES.map((r) => (
             <button key={r.key} onClick={() => { setRole(r.key); setStep(0); }} className={`py-2 text-[9px] font-black uppercase rounded-lg transition-all ${role === r.key ? 'bg-white shadow-sm text-[#062D27]' : 'text-slate-500'}`}>
               {r.label}

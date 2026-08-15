@@ -136,7 +136,7 @@ export default function WashMitraDashboard() {
             <p className="text-[10px] font-black text-[#F26522] uppercase tracking-[0.4em]">Work Hub: Verified WashMitra</p>
           </div>
           <h1 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter">
-            Good Morning, <span className="italic font-serif text-slate-400">{user?.full_name.split(' ')[0]}</span>
+            Good Morning, <span className="italic font-serif text-slate-400">{user?.full_name ? user.full_name.split(' ')[0] : 'Mitra'}</span>
           </h1>
           <p className="text-slate-500 font-medium mt-1">Status: {isAvailable ? 'Active & Certified (Batch 04). Ready for service.' : 'Offline. Shift finished.'}</p>
         </div>

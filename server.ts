@@ -84,31 +84,59 @@ app.get('/api/db-check', async (req, res) => {
   }
 });
 
-// Initialize Gemini
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY,
-  httpOptions: {
-    headers: {
-      'User-Agent': 'aistudio-build',
+// Simple in-memory rate limiter for public endpoints
+const requestCounts = new Map<string, { count: number; resetAt: number }>();
+function rateLimit(maxRequests: number, windowMs: number) {
+  return (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    const ip = req.ip || req.socket.remoteAddress || 'unknown';
+    const now = Date.now();
+    const entry = requestCounts.get(ip);
+
+    if (!entry || now > entry.resetAt) {
+      requestCounts.set(ip, { count: 1, resetAt: now + windowMs });
+      return next();
     }
+
+    if (entry.count >= maxRequests) {
+      return res.status(429).json({ error: 'Too many requests. Please try again later.' });
+    }
+
+    entry.count += 1;
+    next();
+  };
+}
+
+// Get or initialize Gemini AI client
+function getAIClient() {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey || apiKey.includes('your_')) {
+    return null;
   }
-});
+  return new GoogleGenAI({
+    apiKey,
+    httpOptions: {
+      headers: {
+        'User-Agent': 'aistudio-build',
+      }
+    }
+  });
+}
 
 // Create a Razorpay order. Amount is passed in rupees; Razorpay expects paise.
-app.post('/api/create-order', async (req, res) => {
+app.post('/api/create-order', rateLimit(20, 60000), async (req, res) => {
   try {
     const razorpay = getRazorpay();
     if (!razorpay) {
       return res.status(500).json({ error: 'Payment gateway is not configured on this server yet.' });
     }
     const { amount, purpose } = req.body;
-    if (!amount || typeof amount !== 'number' || amount <= 0) {
-      return res.status(400).json({ error: 'A valid amount is required.' });
+    if (!amount || typeof amount !== 'number' || amount < 1 || amount > 500000) {
+      return res.status(400).json({ error: 'A valid amount between ₹1 and ₹5,00,000 is required.' });
     }
     const order = await razorpay.orders.create({
       amount: Math.round(amount * 100),
       currency: 'INR',
-      receipt: `${purpose || 'order'}_${Date.now()}`,
+      receipt: `${purpose || 'order'}_${Date.now()}`.slice(0, 40),
     });
     res.json(order);
   } catch (error: any) {
@@ -143,41 +171,62 @@ app.post('/api/verify-payment', (req, res) => {
 });
 
 // Impact Story Generation API
-app.post('/api/generate-impact', async (req, res) => {
+app.post('/api/generate-impact', rateLimit(10, 60000), async (req, res) => {
   try {
     const { location, projectType } = req.body;
+    const ai = getAIClient();
     
-    if (!process.env.GEMINI_API_KEY) {
-      return res.status(500).json({ error: 'GEMINI_API_KEY is not configured' });
+    if (!ai) {
+      return res.status(500).json({ error: 'GEMINI_API_KEY is not configured on the server.' });
     }
 
-    const prompt = `Generate a short, inspiring impact story for a WASH Mitra project in ${location}. 
-    The project type is ${projectType}. 
+    const prompt = `Generate a short, inspiring impact story for a WASH Mitra project in ${location || 'rural Maharashtra'}. 
+    The project type is ${projectType || 'Water Infrastructure Maintenance'}. 
     Focus on how it changed the lives of local villagers or students. 
-    Keep it under 3 words for a quick "Proof of Concept" summary or 100 words for a full story.
+    Keep it under 3 words for a quick summary and under 100 words for the full story.
     Return JSON with fields: 'summary' and 'story'.`;
 
-    const response = await ai.models.generateContent({
-      model: "gemini-3.5-flash",
-      contents: prompt,
-      config: {
-        responseMimeType: "application/json",
-        responseSchema: {
-          type: Type.OBJECT,
-          properties: {
-            summary: { type: Type.STRING },
-            story: { type: Type.STRING }
-          },
-          required: ["summary", "story"]
+    let response;
+    try {
+      response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: prompt,
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: Type.OBJECT,
+            properties: {
+              summary: { type: Type.STRING },
+              story: { type: Type.STRING }
+            },
+            required: ["summary", "story"]
+          }
         }
-      }
-    });
+      });
+    } catch (modelErr) {
+      // Fallback to gemini-1.5-flash if 2.5 is unavailable
+      response = await ai.models.generateContent({
+        model: "gemini-1.5-flash",
+        contents: prompt,
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: Type.OBJECT,
+            properties: {
+              summary: { type: Type.STRING },
+              story: { type: Type.STRING }
+            },
+            required: ["summary", "story"]
+          }
+        }
+      });
+    }
 
     const data = JSON.parse(response.text || '{}');
     res.json(data);
-  } catch (error) {
+  } catch (error: any) {
     console.error('Gemini Error:', error);
-    res.status(500).json({ error: 'Failed to generate impact story' });
+    res.status(500).json({ error: error.message || 'Failed to generate impact story' });
   }
 });
 

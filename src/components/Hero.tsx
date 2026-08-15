@@ -1,6 +1,7 @@
 import React, { Suspense, lazy } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, Variants } from 'motion/react';
-import { Users2, ArrowRight } from 'lucide-react';
+import { Users2, ArrowRight, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useBookingStore } from '../store/useBookingStore';
 import roofRepairImg from '../assets/images/roof_repair.jpeg';
@@ -18,6 +19,7 @@ const textVariants: Variants = {
 };
 
 export default function Hero() {
+  const navigate = useNavigate();
   const { openBookingFor } = useBookingStore();
 
   return (
@@ -66,10 +68,17 @@ export default function Hero() {
               className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start"
             >
               <Button 
-                onClick={() => openBookingFor('General Inquiry')}
+                onClick={() => navigate('/contact')}
                 className="h-16 px-10 rounded-[20px] bg-[#F26522] hover:bg-[#d95d1f] text-white font-black uppercase tracking-widest gap-2 shadow-2xl shadow-orange-200 group transition-all w-full sm:w-auto"
               >
-                Book a Service <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                Contact Us <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </Button>
+              <Button 
+                onClick={() => navigate('/training')}
+                variant="outline"
+                className="h-16 px-8 rounded-[20px] border-2 border-[#062D27]/20 hover:bg-[#062D27]/5 text-[#062D27] font-black uppercase tracking-widest transition-all w-full sm:w-auto"
+              >
+                Explore Training
               </Button>
             </motion.div>
           </div>

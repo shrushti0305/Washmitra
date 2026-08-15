@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -37,6 +38,7 @@ const programs = [
 type FlowStep = 'IDLE' | 'REGISTRATION_FORM' | 'CHECKOUT_PREVIEW' | 'ENROLLMENT_SUCCESS';
 
 export default function TrainingCatalogue() {
+  const navigate = useNavigate();
   const { user, isFirstTimeMitra, isProcessingPayment, setIsProcessingPayment } = useStore();
   const supabase = getSupabase();
 
@@ -54,7 +56,8 @@ export default function TrainingCatalogue() {
 
   const handleEnrollInit = (course: typeof programs[number]) => {
     if (!SHOW_TRANSACTIONAL_FEATURES) {
-      toast.info('Enrollment opens soon — reach out via our Contact page to be notified.');
+      toast.success(`Redirecting to inquiry form for ${course.name}...`);
+      navigate('/contact');
       return;
     }
     setSelectedCourse(course);
