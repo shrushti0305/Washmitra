@@ -8,6 +8,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig(() => {
   return {
+    base: '/Washmitra/', // <-- Required for GitHub Pages asset routing
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
