@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence, useMotionValue, useTransform } from 'motion/react';
 import {
   Users, GraduationCap, MapPin, Shield, ArrowUpRight, ChevronRight,
@@ -61,7 +62,7 @@ function StatsAndFieldOps() {
   return (
     <>
       {/* Header Section */}
-      <div className="flex flex-col md:flex-row justify-between items-end gap-8">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8">
         <div className="space-y-4 max-w-2xl">
           <h3 className="text-[10px] font-black text-brand-accent uppercase tracking-[0.4em]">Our Impact</h3>
           <h2 className="text-3xl sm:text-4xl md:text-7xl font-black text-brand-primary leading-tight tracking-tighter">
@@ -75,28 +76,28 @@ function StatsAndFieldOps() {
         </div>
 
         {/* Commercial Impact Highlighting Module */}
-        <div className="p-8 bg-white rounded-[40px] shadow-xl border border-slate-100 text-right">
-          <p className="text-4xl font-black text-brand-primary">₹49 Lakh</p>
+        <div className="p-6 sm:p-8 bg-white rounded-[32px] sm:rounded-[40px] shadow-xl border border-slate-100 text-left sm:text-right w-full md:w-auto">
+          <p className="text-3xl sm:text-4xl font-black text-brand-primary">₹49 Lakh</p>
           <p className="text-[10px] font-bold text-brand-accent uppercase tracking-widest">Tribal Income Generated (Sep 2025–Mar 2026)</p>
-          <p className="text-xs text-slate-400 font-medium mt-2 max-w-[220px] ml-auto">
+          <p className="text-xs text-slate-400 font-medium mt-2 max-w-[220px] sm:ml-auto">
             Direct earnings placed into the hands of tribal technicians and their families — not routed through intermediaries.
           </p>
         </div>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 items-stretch">
         {stats.map((stat, idx) => (
           <div
             key={idx}
-            className="group flex flex-col justify-between p-10 min-h-[220px] bg-brand-primary hover:bg-brand-accent rounded-[40px] shadow-lg transition-all duration-500 relative overflow-hidden border border-white/5"
+            className="group flex flex-col justify-between p-8 sm:p-10 min-h-[200px] sm:min-h-[220px] bg-brand-primary hover:bg-brand-accent rounded-[32px] sm:rounded-[40px] shadow-lg transition-all duration-500 relative overflow-hidden border border-white/5"
           >
             <div className={`w-14 h-14 rounded-2xl bg-white/5 group-hover:bg-white/20 flex items-center justify-center shrink-0 ${stat.color} transition-colors`}>
               <stat.icon className="h-7 w-7" />
             </div>
             <div className="mt-6">
               <div className="flex items-baseline gap-2">
-                <p className="text-5xl font-black text-white tracking-tighter leading-none">{stat.value}</p>
+                <p className="text-4xl sm:text-5xl font-black text-white tracking-tighter leading-none">{stat.value}</p>
                 <ArrowUpRight className="h-5 w-5 text-white/20 group-hover:text-white/40 shrink-0" />
               </div>
               <p className="text-[10px] font-black text-slate-400 group-hover:text-white uppercase tracking-widest mt-2 leading-snug">{stat.label}</p>
@@ -106,33 +107,33 @@ function StatsAndFieldOps() {
       </div>
 
       {/* Strategic Focus Highlight Banner */}
-      <div className="bg-slate-50 border border-slate-100 rounded-[40px] p-10 grid md:grid-cols-2 gap-8 items-center">
-        <div className="space-y-4">
+      <div className="bg-slate-50 border border-slate-100 rounded-[32px] sm:rounded-[40px] p-6 sm:p-10 grid md:grid-cols-2 gap-6 sm:gap-8 items-center">
+        <div className="space-y-3 sm:space-y-4">
           <span className="text-[10px] font-black text-brand-accent uppercase tracking-widest block">Gender Paradigm Shift</span>
-          <h3 className="text-3xl font-black text-brand-primary tracking-tight">Shattering Barriers in Technical Fields</h3>
-          <p className="text-slate-600 font-medium">
+          <h3 className="text-2xl sm:text-3xl font-black text-brand-primary tracking-tight">Shattering Barriers in Technical Fields</h3>
+          <p className="text-slate-600 font-medium text-sm sm:text-base">
             By intentionally training and actively deploying 149 women technicians, we are shifting traditional rural paradigms across mechanical and infrastructure maintenance sectors.
           </p>
         </div>
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           <span className="text-[10px] font-black text-brand-success uppercase tracking-widest block">Operational Impact</span>
-          <h3 className="text-3xl font-black text-brand-primary tracking-tight">Securing 250 Ashramshalas</h3>
-          <p className="text-slate-600 font-medium">
+          <h3 className="text-2xl sm:text-3xl font-black text-brand-primary tracking-tight">Securing 250 Ashramshalas</h3>
+          <p className="text-slate-600 font-medium text-sm sm:text-base">
             Our specialized rural tribal workforce ensures direct, dependable preventive O&M system frameworks across remote, highly vulnerable geographical regions.
           </p>
         </div>
       </div>
 
       {/* Field Operations Stack Gallery */}
-      <div className="grid lg:grid-cols-12 gap-12 items-center bg-brand-primary p-8 md:p-16 rounded-[60px] shadow-2xl">
-        <div className="lg:col-span-5 space-y-8">
-          <div className="space-y-4">
-            <h3 className="text-4xl md:text-5xl font-black text-white leading-[0.9] tracking-tighter">WASH <br /> Field Operations</h3>
-            <p className="text-white/50 text-lg font-medium">Real-time glimpses of our multi-skilled technicians handling electrical, solar, plumbing, masonry, and RO systems filtration units.</p>
+      <div className="grid lg:grid-cols-12 gap-8 md:gap-12 items-center bg-brand-primary p-6 sm:p-10 md:p-16 rounded-[32px] sm:rounded-[48px] md:rounded-[60px] shadow-2xl">
+        <div className="lg:col-span-5 space-y-6 sm:space-y-8">
+          <div className="space-y-3 sm:space-y-4">
+            <h3 className="text-3xl sm:text-4xl md:text-5xl font-black text-white leading-[0.9] tracking-tighter">WASH <br /> Field Operations</h3>
+            <p className="text-white/50 text-sm sm:text-base md:text-lg font-medium">Real-time glimpses of our multi-skilled technicians handling electrical, solar, plumbing, masonry, and RO systems filtration units.</p>
           </div>
           <Button
             onClick={cycleNext}
-            className="bg-white text-brand-primary hover:bg-brand-accent hover:text-white rounded-2xl font-black uppercase text-xs tracking-[0.2em] px-8 h-14"
+            className="bg-white text-brand-primary hover:bg-brand-accent hover:text-white rounded-2xl font-black uppercase text-xs tracking-[0.15em] sm:tracking-[0.2em] px-6 sm:px-8 h-12 sm:h-14"
           >
             Next Image <ChevronRight className="ml-2 h-4 w-4" />
           </Button>
@@ -931,29 +932,29 @@ function TestimonialsSection() {
   }, []);
 
   return (
-    <section className="py-32 bg-slate-50 relative overflow-hidden">
+    <section className="py-16 sm:py-24 md:py-32 bg-slate-50 relative overflow-hidden rounded-[32px] sm:rounded-[48px]">
       <div className="container px-4 sm:px-8 mx-auto max-w-7xl relative z-10">
-        <div className="flex flex-col md:flex-row justify-between items-end gap-8 mb-20">
-          <div className="space-y-4">
-            <h3 className="text-sm font-black text-brand-accent uppercase tracking-[0.2em]">Social Proof</h3>
-            <h2 className="text-5xl md:text-7xl font-black text-slate-900 leading-[0.8] tracking-tighter">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12 sm:mb-20">
+          <div className="space-y-3 sm:space-y-4">
+            <h3 className="text-xs sm:text-sm font-black text-brand-accent uppercase tracking-[0.2em]">Social Proof</h3>
+            <h2 className="text-3xl sm:text-5xl md:text-7xl font-black text-slate-900 leading-[0.9] tracking-tighter">
               Voice of the <br />
               <span className="text-slate-400 italic font-serif lowercase tracking-normal">community.</span>
             </h2>
           </div>
-          <div className="flex gap-4">
-            <button className="h-14 w-14 rounded-full border border-slate-200 flex items-center justify-center hover:bg-white hover:border-brand-accent hover:text-brand-accent transition-all">
-              <ArrowLeft className="h-6 w-6" />
+          <div className="hidden sm:flex gap-4">
+            <button className="h-12 w-12 sm:h-14 sm:w-14 rounded-full border border-slate-200 flex items-center justify-center hover:bg-white hover:border-brand-accent hover:text-brand-accent transition-all">
+              <ArrowLeft className="h-5 w-5 sm:h-6 sm:w-6" />
             </button>
-            <button className="h-14 w-14 rounded-full border border-slate-200 flex items-center justify-center hover:bg-white hover:border-brand-accent hover:text-brand-accent transition-all">
-              <ArrowRight className="h-6 w-6" />
+            <button className="h-12 w-12 sm:h-14 sm:w-14 rounded-full border border-slate-200 flex items-center justify-center hover:bg-white hover:border-brand-accent hover:text-brand-accent transition-all">
+              <ArrowRight className="h-5 w-5 sm:h-6 sm:w-6" />
             </button>
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-3 gap-6 sm:gap-8">
           {testimonials.map((t) => (
-            <div key={t.id} className="group bg-white p-12 rounded-[3.5rem] border border-slate-100 hover:shadow-2xl hover:shadow-slate-200/50 transition-all duration-500 flex flex-col justify-between">
+            <div key={t.id} className="group bg-white p-6 sm:p-10 md:p-12 rounded-[2rem] sm:rounded-[2.5rem] md:rounded-[3.5rem] border border-slate-100 hover:shadow-2xl hover:shadow-slate-200/50 transition-all duration-500 flex flex-col justify-between">
               <div>
                 <div className="flex gap-1 mb-8">
                   {[...Array(t.rating || 5)].map((_, i) => (
@@ -998,39 +999,43 @@ function TestimonialsSection() {
    ============================================================ */
 
 function ImpactCTA() {
+  const navigate = useNavigate();
+
   return (
     <section className="py-4">
-      <div className="bg-brand-primary rounded-[60px] p-10 md:p-20 grid md:grid-cols-[1.4fr_1fr] gap-10 items-center overflow-hidden relative">
-        <div className="space-y-6 relative z-10">
-          <div className="flex items-center gap-2 text-brand-accent">
-            <Handshake className="h-5 w-5" />
-            <span className="text-[10px] font-black uppercase tracking-[0.3em]">Partner With WASH Mitra</span>
+      <div className="bg-brand-primary rounded-[32px] sm:rounded-[48px] md:rounded-[60px] p-6 sm:p-10 md:p-16 lg:p-20 grid lg:grid-cols-[1.3fr_1fr] gap-8 md:gap-12 items-center overflow-hidden relative shadow-2xl">
+        <div className="space-y-4 sm:space-y-6 relative z-10">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 text-brand-accent backdrop-blur-sm">
+            <Handshake className="h-4 w-4" />
+            <span className="text-[10px] font-black uppercase tracking-[0.25em]">Partner With WASH Mitra</span>
           </div>
-          <h2 className="text-3xl md:text-5xl font-black text-white leading-tight tracking-tight">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tight break-words">
             Every technician we train is a household with safer water tomorrow.
           </h2>
-          <p className="text-white/60 font-medium max-w-xl">
-            WASH Mitra's skilling programs are funded through CSR partnerships and institutional grants.
+          <p className="text-white/70 font-medium text-sm sm:text-base leading-relaxed max-w-xl">
+            WASH Mitra's skilling programs are powered through CSR partnerships and institutional collaborations.
             If your organization wants to support technician training, sanitation infrastructure, or
-            our tribal livelihoods initiative, we'd like to talk.
+            tribal livelihoods, let's connect.
           </p>
         </div>
-        <div className="flex flex-col gap-4 relative z-10">
+
+        <div className="flex flex-col gap-3.5 relative z-10 w-full">
           <Button
-            className="w-full h-16 bg-white text-brand-primary hover:bg-brand-accent hover:text-white rounded-2xl font-black uppercase text-xs tracking-[0.2em] flex items-center justify-center gap-2"
-            onClick={() => { window.location.href = '/partner-with-us'; }}
+            className="w-full min-h-[3.5rem] h-auto py-4 px-6 bg-[#F26522] hover:bg-[#d95d1f] text-white rounded-2xl font-black uppercase text-xs tracking-wider sm:tracking-[0.15em] flex items-center justify-center gap-2 shadow-xl shadow-orange-950/20 transition-all hover:scale-[1.02] active:scale-[0.98] text-center whitespace-normal leading-tight"
+            onClick={() => navigate('/contact')}
           >
-            Request a Partnership Proposal <ArrowRightCta className="h-4 w-4" />
+            <span>Request Partnership Proposal</span>
+            <ArrowRightCta className="h-4 w-4 shrink-0" />
           </Button>
-          <Button
-            variant="outline"
-            className="w-full h-16 border-white/20 text-white hover:bg-white/10 rounded-2xl font-black uppercase text-xs tracking-[0.2em]"
-            onClick={() => { window.location.href = 'mailto:washmitra.india@gmail.com'; }}
+          <a
+            href="mailto:washmitra.india@gmail.com"
+            className="w-full min-h-[3.5rem] h-auto py-3.5 px-6 border-2 border-white/20 hover:border-white/40 text-white hover:bg-white/10 rounded-2xl font-black uppercase text-xs tracking-wider sm:tracking-[0.15em] flex items-center justify-center gap-2 transition-all text-center whitespace-normal leading-tight"
           >
             Email washmitra.india@gmail.com
-          </Button>
+          </a>
         </div>
-        <div className="absolute -right-24 -bottom-24 w-72 h-72 bg-brand-accent/10 rounded-full blur-3xl" />
+
+        <div className="absolute -right-24 -bottom-24 w-80 h-80 bg-brand-accent/20 rounded-full blur-3xl pointer-events-none" />
       </div>
     </section>
   );

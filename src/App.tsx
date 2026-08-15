@@ -10,9 +10,7 @@ import Seo from './components/Seo';
 import { seoContent } from './lib/seoContent';
 import { Button } from '@/components/ui/button';
 
-// Code-split everything that isn't needed for first paint. These are only
-// rendered once a route is actually visited, so there's no reason to ship
-// them in the initial bundle.
+// Code-split everything that isn't needed for first paint.
 const Auth = lazy(() => import('./components/Auth'));
 const CustomerDashboard = lazy(() => import('./components/CustomerDashboard'));
 const WashMitraDashboard = lazy(() => import('./components/WashMitraDashboard'));
@@ -21,11 +19,6 @@ const AdminDashboard = lazy(() => import('./components/AdminDashboard'));
 const About = lazy(() => import('./components/About'));
 const Impact = lazy(() => import('./components/Impact'));
 const Contact = lazy(() => import('./components/Contact'));
-// ServiceFlow.tsx now contains the single, unified services page (Company
-// Products & Services + Request a Service + Service Catalogue all in one
-// component). This replaces the old separate ServiceFlow + Catalogue
-// pairing, which was causing the "Services that show up, on time, every
-// time." heading to render twice on /services.
 const ServiceFlow = lazy(() => import('./components/ServiceFlow'));
 const WashMitraFeeGate = lazy(() => import('./components/WashMitraFeeGate'));
 const TrainingCatalogue = lazy(() => import('./components/TrainingCatalogue'));
@@ -171,7 +164,9 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 py-6 pt-32">
           <Suspense fallback={<RouteFallback />}>
             <Routes>
+              {/* Handles base route and Washmitra repo sub-path */}
               <Route path="/" element={homeContent} />
+              <Route path="/Washmitra" element={homeContent} />
               <Route
                 path="/login"
                 element={
