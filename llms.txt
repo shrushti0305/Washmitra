@@ -1,0 +1,33 @@
+# WashMitra
+
+> WashMitra is a WASH (Water, Sanitation, and Hygiene) sector platform based in Pune, Maharashtra, India. It trains, certifies, and connects skilled technicians ("WASH Mitras") with households and institutions for plumbing, sanitation, solar, and water infrastructure services.
+
+## What WashMitra does
+
+- Trains and certifies technicians across seven programs: Electrical, Plumbing, Solar, Masonry, CCTV Installation, Water Filter & Water Testing, and a Comprehensive WASH Mitra program covering all trades plus entrepreneurship and soft skills.
+- Connects certified technicians with customers (households) and institutions (schools, panchayats) needing WASH-related repair and maintenance.
+- Focuses on rural and semi-urban communities across Maharashtra and other Indian states.
+
+## Reported impact
+
+- 820+ skilled youth trained
+- 149+ women empowered through training and employment
+- 120+ schools supported
+- 29+ villages connected
+- 33 enterprises launched by graduates
+- 15,000+ hours of service delivered
+
+## Key pages
+
+- Homepage: https://washmitra.com/
+- About: https://washmitra.com/about
+- Services: https://washmitra.com/services
+- Impact & work gallery: https://washmitra.com/impact
+- Training programs: https://washmitra.com/training
+- Contact: https://washmitra.com/contact
+
+## Contact
+
+- Email: support@washmitra.com
+- Phone: +91 96579 78896
+- Address: Plot No. 12, Tech Park, Pune, Maharashtra 411001, India
