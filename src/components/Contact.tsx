@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Send, Instagram, Facebook, Twitter, Linkedin, Loader2, MessageSquare, CheckCircle2, MessageCircle, ArrowRight } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, Instagram, Facebook, Linkedin, Loader2, CheckCircle2, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { supabase } from '../lib/supabase';
@@ -71,17 +71,17 @@ export default function Contact() {
   );
 
   return (
-    <div className="py-24">
-      <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-start">
+    <div className="py-12 sm:py-24">
+      <div className="grid lg:grid-cols-2 gap-12 lg:gap-24 items-start">
         {/* Left Column: Information & Direct Channels */}
-        <div className="space-y-12">
-          <div className="space-y-6">
-            <h3 className="text-sm font-black text-[#F26522] uppercase tracking-[0.2em]">Get in Touch</h3>
-            <h2 className="text-5xl md:text-7xl font-black text-[#062D27] leading-[0.9] tracking-tighter">
+        <div className="space-y-8 sm:space-y-12">
+          <div className="space-y-4 sm:space-y-6">
+            <h3 className="text-xs sm:text-sm font-black text-[#F26522] uppercase tracking-[0.2em]">Get in Touch</h3>
+            <h2 className="text-4xl sm:text-5xl md:text-7xl font-black text-[#062D27] leading-[0.9] tracking-tighter">
               Let's build a <br />
               <span className="text-slate-400 italic font-serif lowercase tracking-normal">better rural future.</span>
             </h2>
-            <p className="text-xl text-slate-500 font-medium max-w-md leading-relaxed">
+            <p className="text-base sm:text-xl text-slate-500 font-medium max-w-md leading-relaxed">
               Have questions about our multi-trade services, certified training batches, or institutional maintenance contracts? Reach out to our Pune headquarters.
             </p>
           </div>
@@ -89,7 +89,7 @@ export default function Contact() {
           {/* Quick Contact Buttons */}
           <div className="flex flex-wrap gap-4">
             <a 
-              href="https://wa.me/919421528996" 
+              href="https://wa.me/919657978896" 
               target="_blank" 
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-black px-6 py-4 rounded-2xl text-xs uppercase tracking-wider shadow-lg shadow-emerald-600/20 transition-all hover:scale-105 active:scale-95"
@@ -104,7 +104,7 @@ export default function Contact() {
             </a>
           </div>
 
-          <div className="grid sm:grid-cols-2 gap-8 pt-4 border-t border-slate-200/60">
+          <div className="grid sm:grid-cols-2 gap-6 sm:gap-8 pt-4 border-t border-slate-200/60">
             <div className="space-y-3">
                <div className="w-11 h-11 bg-white rounded-2xl flex items-center justify-center text-[#062D27] border border-slate-200/60 shadow-sm">
                   <MapPin className="h-5 w-5 text-[#F26522]" />
@@ -141,31 +141,33 @@ export default function Contact() {
                   {[
                     { icon: Instagram, href: '#' },
                     { icon: Facebook, href: '#' },
-                    { icon: Twitter, href: '#' },
                     { icon: Linkedin, href: '#' }
-                  ].map((item, idx) => (
-                    <a 
-                      key={idx} 
-                      href={item.href} 
-                      className="w-11 h-11 bg-white hover:bg-[#F26522] hover:text-white text-[#062D27] rounded-2xl flex items-center justify-center transition-all border border-slate-200/60 shadow-sm"
-                    >
-                       <item.icon className="h-4 w-4" />
-                    </a>
-                  ))}
+                  ].map((item, idx) => {
+                    const SocialIcon = item.icon;
+                    return (
+                      <a 
+                        key={idx} 
+                        href={item.href} 
+                        className="w-11 h-11 bg-white hover:bg-[#F26522] hover:text-white text-[#062D27] rounded-2xl flex items-center justify-center transition-all border border-slate-200/60 shadow-sm"
+                      >
+                         <SocialIcon className="h-4 w-4" />
+                      </a>
+                    );
+                  })}
                </div>
             </div>
           </div>
         </div>
 
         {/* Right Column: Working Contact & Inquiry Form */}
-        <div className="bg-white p-8 sm:p-12 rounded-[3.5rem] border border-slate-100 shadow-2xl shadow-slate-200/50 relative">
+        <div className="bg-white p-6 sm:p-10 md:p-12 rounded-[2.5rem] sm:rounded-[3.5rem] border border-slate-100 shadow-2xl shadow-slate-200/50 relative">
           {isSuccess ? (
-            <div className="py-12 text-center space-y-6 animate-in fade-in zoom-in duration-300">
+            <div className="py-8 sm:py-12 text-center space-y-6 animate-in fade-in zoom-in duration-300">
               <div className="w-20 h-20 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto shadow-inner">
                 <CheckCircle2 className="h-10 w-10" />
               </div>
               <div className="space-y-2">
-                <h3 className="text-3xl font-black text-[#062D27] tracking-tight">Inquiry Received!</h3>
+                <h3 className="text-2xl sm:text-3xl font-black text-[#062D27] tracking-tight">Inquiry Received!</h3>
                 <p className="text-slate-500 max-w-sm mx-auto font-medium text-sm leading-relaxed">
                   Thank you, <span className="font-bold text-[#062D27]">{submittedData?.name}</span>. Our technical coordinator at Pune headquarters will review your inquiry and connect with you within 24 business hours.
                 </p>
@@ -184,7 +186,7 @@ export default function Contact() {
 
               <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
                 <a
-                  href={`https://wa.me/9421528996?text=${whatsappMessage}`}
+                  href={`https://wa.me/919657978896?text=${whatsappMessage}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black px-6 py-4 rounded-xl text-xs uppercase tracking-wider shadow-md transition-all"

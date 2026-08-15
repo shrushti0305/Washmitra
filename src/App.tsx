@@ -89,53 +89,51 @@ export default function App() {
     }
   };
 
-  // Wait for the initial session check before rendering anything auth-gated.
-  const [authChecked, setAuthChecked] = useState(false);
-
   // 1. Restore session on load + keep the store in sync with auth state changes
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) loadProfile(session.user.id);
-      setAuthChecked(true);
-    });
+    try {
+      supabase.auth.getSession().then(({ data }) => {
+        if (data?.session?.user) loadProfile(data.session.user.id);
+      }).catch((err) => {
+        console.warn('Session check note:', err);
+      });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' && session?.user) {
-        loadProfile(session.user.id);
-      } else if (event === 'SIGNED_OUT') {
-        setUser(null);
-      }
-    });
+      const { data } = supabase.auth.onAuthStateChange((event, session) => {
+        if (event === 'SIGNED_IN' && session?.user) {
+          loadProfile(session.user.id);
+        } else if (event === 'SIGNED_OUT') {
+          setUser(null);
+        }
+      });
 
-    return () => subscription.unsubscribe();
+      return () => data?.subscription?.unsubscribe?.();
+    } catch (e) {
+      console.warn('Auth setup note:', e);
+    }
   }, []);
 
   // 2. Load real catalog data from Supabase
   useEffect(() => {
     async function loadInitialData() {
-      const [{ data: categories }, { data: services }, { data: batches }, { data: martItems }] = await Promise.all([
-        supabase.from('service_categories').select('*'),
-        supabase.from('services').select('*').eq('is_active', true),
-        supabase.from('training_batches').select('*'),
-        supabase.from('washmart_items').select('*').eq('is_active', true),
-      ]);
-      setInitialData({
-        categories: categories ?? [],
-        services: services ?? [],
-        batches: batches ?? [],
-        martItems: martItems ?? [],
-      });
+      try {
+        const [{ data: categories }, { data: services }, { data: batches }, { data: martItems }] = await Promise.all([
+          supabase.from('service_categories').select('*'),
+          supabase.from('services').select('*').eq('is_active', true),
+          supabase.from('training_batches').select('*'),
+          supabase.from('washmart_items').select('*').eq('is_active', true),
+        ]);
+        setInitialData({
+          categories: categories ?? [],
+          services: services ?? [],
+          batches: batches ?? [],
+          martItems: martItems ?? [],
+        });
+      } catch (err) {
+        console.warn('Initial data load note:', err);
+      }
     }
     loadInitialData();
   }, [setInitialData]);
-
-  if (!authChecked) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[#F9F9F7]">
-        <div className="h-10 w-10 rounded-full border-4 border-[#F16622] border-t-transparent animate-spin" />
-      </div>
-    );
-  }
 
   const homeContent = !user ? (
     <>
