@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import washmitraQrCode from '../assets/images/WASHMITRA.jpeg';
 
 export default function VideoShowcase() {
-  const VIDEO_URL = "https://www.youtube.com/watch?v=tWa4Q-Zp1WI";
+  const VIDEO_URL = "https://www.youtube.com/watch?v=eSzTlktr5jk";
 
   return (
     <div className="py-24 space-y-16">
@@ -56,7 +56,7 @@ export default function VideoShowcase() {
 
             <div className="flex items-center gap-2 text-xs font-bold text-slate-400 group-hover:text-brand-accent transition-colors">
                <ExternalLink className="h-4 w-4" />
-               <span>youtube.com/watch?v=tWa4Q-Zp1WI</span>
+               <span>youtube.com/watch?v=eSzTlktr5jk</span>
             </div>
           </div>
         </motion.div>

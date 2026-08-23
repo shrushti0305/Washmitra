@@ -67,7 +67,7 @@ export function Leadership() {
         >
           <iframe 
             className="w-full aspect-video rounded-[2.5rem] shadow-2xl border-8 border-brand-primary"
-            src="https://www.youtube.com/embed/tWa4Q-Zp1WI?si=cCEHkCikGGLxRQGH" 
+            src="https://www.youtube.com/embed/eSzTlktr5jk?si=_RlFz9jA0caXiVWW" 
             title="WASHMITRA Video Player" 
             frameBorder="0" 
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
