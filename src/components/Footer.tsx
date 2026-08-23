@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Droplets, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
+import { Facebook, Instagram, Youtube, MessageCircle } from 'lucide-react';
 import logoUrl from '../assets/images/WASH Mitra logo.png';
 
 export default function Footer() {
@@ -29,20 +29,25 @@ export default function Footer() {
             </p>
             <div className="flex gap-4">
               {[
-                { icon: Facebook, label: 'Facebook' },
-                { icon: Twitter, label: 'Twitter' },
-                { icon: Instagram, label: 'Instagram' },
-                { icon: Linkedin, label: 'LinkedIn' }
-              ].map((social) => (
-                <a 
-                  key={social.label}
-                  href="#" 
-                  className="w-10 h-10 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center text-white/40 hover:bg-[#F26522] hover:text-white hover:border-[#F26522] transition-all duration-300"
-                  aria-label={social.label}
-                >
-                  <social.icon size={18} />
-                </a>
-              ))}
+                { icon: Instagram, label: 'Instagram', href: 'https://www.instagram.com/wash_mitra?igsh=MWJwa3R1eXU1dnFvbg==' },
+                { icon: Facebook, label: 'Facebook', href: 'https://www.facebook.com/share/19DSY3t7yP/?mibextid=wwXIfr' },
+                { icon: Youtube, label: 'YouTube', href: 'https://youtube.com/@washmitra?si=7G_5IPkQxtZd65Go' },
+                { icon: MessageCircle, label: 'WhatsApp', href: 'https://wa.me/919421528996' }
+              ].map((social) => {
+                const IconComponent = social.icon;
+                return (
+                  <a 
+                    key={social.label}
+                    href={social.href} 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-10 h-10 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center text-white/60 hover:bg-[#F26522] hover:text-white hover:border-[#F26522] transition-all duration-300"
+                    aria-label={social.label}
+                  >
+                    <IconComponent size={18} />
+                  </a>
+                );
+              })}
             </div>
           </div>
           

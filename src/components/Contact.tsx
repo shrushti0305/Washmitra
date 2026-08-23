@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Send, Instagram, Facebook, Linkedin, Loader2, CheckCircle2, MessageCircle } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, Instagram, Facebook, Youtube, Loader2, CheckCircle2, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { supabase } from '../lib/supabase';
@@ -89,7 +89,7 @@ export default function Contact() {
           {/* Quick Contact Buttons */}
           <div className="flex flex-wrap gap-4">
             <a 
-              href="https://wa.me/919657978896" 
+              href="https://wa.me/919421528996" 
               target="_blank" 
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-black px-6 py-4 rounded-2xl text-xs uppercase tracking-wider shadow-lg shadow-emerald-600/20 transition-all hover:scale-105 active:scale-95"
@@ -97,10 +97,10 @@ export default function Contact() {
               <MessageCircle className="h-5 w-5" /> Chat on WhatsApp
             </a>
             <a 
-              href="tel:+919657978896" 
+              href="tel:+919421528996" 
               className="inline-flex items-center gap-2.5 bg-white hover:bg-slate-50 text-[#062D27] font-black px-6 py-4 rounded-2xl text-xs uppercase tracking-wider border border-slate-200 shadow-sm transition-all hover:scale-105 active:scale-95"
             >
-              <Phone className="h-4 w-4 text-[#F26522]" /> Call Headquarters
+              <Phone className="h-4 w-4 text-[#F26522]" /> Call Helpline
             </a>
           </div>
 
@@ -121,8 +121,8 @@ export default function Contact() {
                </div>
                <p className="font-black text-[#062D27] uppercase text-[10px] tracking-widest">Phone & Helpline</p>
                <p className="text-slate-500 font-medium text-sm leading-relaxed">
-                 +91 96579 78896 <br />
-                 +91 20 2567 8901
+                 +91 94215 28996 <br />
+                 +91 96579 78896
                </p>
             </div>
             <div className="space-y-3">
@@ -139,15 +139,19 @@ export default function Contact() {
                <p className="font-black text-[#062D27] uppercase text-[10px] tracking-widest mb-4">Connect on Social</p>
                <div className="flex gap-3">
                   {[
-                    { icon: Instagram, href: '#' },
-                    { icon: Facebook, href: '#' },
-                    { icon: Linkedin, href: '#' }
+                    { icon: Instagram, href: 'https://www.instagram.com/wash_mitra?igsh=MWJwa3R1eXU1dnFvbg==', label: 'Instagram' },
+                    { icon: Facebook, href: 'https://www.facebook.com/share/19DSY3t7yP/?mibextid=wwXIfr', label: 'Facebook' },
+                    { icon: Youtube, href: 'https://youtube.com/@washmitra?si=7G_5IPkQxtZd65Go', label: 'YouTube' },
+                    { icon: MessageCircle, href: 'https://wa.me/919421528996', label: 'WhatsApp' }
                   ].map((item, idx) => {
                     const SocialIcon = item.icon;
                     return (
                       <a 
                         key={idx} 
                         href={item.href} 
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={item.label}
                         className="w-11 h-11 bg-white hover:bg-[#F26522] hover:text-white text-[#062D27] rounded-2xl flex items-center justify-center transition-all border border-slate-200/60 shadow-sm"
                       >
                          <SocialIcon className="h-4 w-4" />
@@ -186,7 +190,7 @@ export default function Contact() {
 
               <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
                 <a
-                  href={`https://wa.me/919657978896?text=${whatsappMessage}`}
+                  href={`https://wa.me/919421528996?text=${whatsappMessage}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black px-6 py-4 rounded-xl text-xs uppercase tracking-wider shadow-md transition-all"
@@ -249,7 +253,7 @@ export default function Contact() {
                     name="phone" 
                     type="tel"
                     className="h-14 rounded-2xl bg-slate-50 border border-slate-100 px-5 font-bold text-[#062D27] focus-visible:ring-2 focus-visible:ring-[#F26522]/30" 
-                    placeholder="e.g. +91 98765 43210" 
+                    placeholder="e.g. +91 94215 28996" 
                     required 
                   />
                 </div>
