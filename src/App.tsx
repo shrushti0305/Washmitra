@@ -159,7 +159,7 @@ export default function App() {
     <NotificationProvider>
       <ScrollToTop />
       <Layout>
-        <div className="max-w-7xl mx-auto px-4 py-6 pt-32">
+        <div className="max-w-7xl mx-auto px-4 py-6 pt-20 sm:pt-24">
           <Suspense fallback={<RouteFallback />}>
             <Routes>
               {/* Handles base route and Washmitra repo sub-path */}

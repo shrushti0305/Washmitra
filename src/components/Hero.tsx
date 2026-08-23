@@ -23,7 +23,7 @@ export default function Hero() {
   const { openBookingFor } = useBookingStore();
 
   return (
-    <div className="relative pt-32 pb-24 md:pt-48 md:pb-32 overflow-hidden">
+    <div className="relative pt-24 pb-16 md:pt-36 md:pb-24 overflow-hidden">
       <div className="container px-4 sm:px-8 max-w-7xl mx-auto">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left Column: Text Content */}

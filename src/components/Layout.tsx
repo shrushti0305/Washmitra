@@ -81,23 +81,23 @@ export default function Layout({ children }: LayoutProps) {
   return (
     <div className="min-h-screen bg-[#F9F9F7] font-sans flex flex-col selection:bg-[#F26522]/30">
       {/* Header */}
-      <header className="fixed top-0 z-50 w-full border-b border-[#062D27]/5 bg-[#F9F9F7]/80 backdrop-blur-xl">
-        <div className="container flex h-24 items-center justify-between px-4 sm:px-8 max-w-7xl mx-auto">
+      <header className="fixed top-0 z-50 w-full border-b border-[#062D27]/5 bg-[#F9F9F7]/90 backdrop-blur-xl transition-all">
+        <div className="container flex h-16 sm:h-20 items-center justify-between px-4 sm:px-8 max-w-7xl mx-auto">
           
           {/* Brand Logo Container */}
-          <div className="flex items-center gap-3 cursor-pointer" onClick={(e) => handleNavClick(e, '/')}>
+          <div className="flex items-center gap-2.5 cursor-pointer" onClick={(e) => handleNavClick(e, '/')}>
             <div className="flex items-center">
               <img 
                 src={logoUrl} 
                 alt="WashMitra Logo" 
-                className="h-12 w-auto"
+                className="h-8 sm:h-10 w-auto"
               />
             </div>
-            <div className="flex flex-col -space-y-1">
-               <span className="text-lg font-black tracking-tighter text-[#293592] leading-tight uppercase">
+            <div className="flex flex-col -space-y-0.5">
+               <span className="text-base sm:text-lg font-black tracking-tighter text-[#293592] leading-tight uppercase">
                  WASH <span className="text-[#F26522]">Mitra</span>
                </span>
-               <span className="text-[10px] font-bold text-[#062D27]/40 tracking-widest uppercase">PVT. LTD.</span>
+               <span className="text-[9px] sm:text-[10px] font-bold text-[#062D27]/40 tracking-widest uppercase">PVT. LTD.</span>
             </div>
           </div>
 
