@@ -40,7 +40,7 @@ const stats = [
   { label: "Districts in Maharashtra", value: "29", icon: MapPin, color: "text-brand-success" },
   { label: "Districts in Chhattisgarh", value: "5", icon: MapPin, color: "text-brand-accent" },
   { label: "Youth aged 21–30", value: "70.5%", icon: Users, color: "text-brand-success" },
-  { label: "Women Technicians Trained", value: "149", icon: Users, color: "text-brand-accent" },
+  { label: "Certified Field Technicians", value: "500+", icon: Users, color: "text-brand-accent" },
   { label: "Tribal Mitras Deployed", value: "120", icon: Shield, color: "text-brand-success" },
 ];
 
@@ -109,10 +109,10 @@ function StatsAndFieldOps() {
       {/* Strategic Focus Highlight Banner */}
       <div className="bg-slate-50 border border-slate-100 rounded-[32px] sm:rounded-[40px] p-6 sm:p-10 grid md:grid-cols-2 gap-6 sm:gap-8 items-center">
         <div className="space-y-3 sm:space-y-4">
-          <span className="text-[10px] font-black text-brand-accent uppercase tracking-widest block">Gender Paradigm Shift</span>
-          <h3 className="text-2xl sm:text-3xl font-black text-brand-primary tracking-tight">Shattering Barriers in Technical Fields</h3>
+          <span className="text-[10px] font-black text-brand-accent uppercase tracking-widest block">Workforce Paradigm Shift</span>
+          <h3 className="text-2xl sm:text-3xl font-black text-brand-primary tracking-tight">Technical Empowerment in Rural Regions</h3>
           <p className="text-slate-600 font-medium text-sm sm:text-base">
-            By intentionally training and actively deploying 149 women technicians, we are shifting traditional rural paradigms across mechanical and infrastructure maintenance sectors.
+            By intentionally training and actively deploying skilled local technicians, we are shifting traditional rural paradigms across mechanical and infrastructure maintenance sectors.
           </p>
         </div>
         <div className="space-y-3 sm:space-y-4">
@@ -170,15 +170,13 @@ function StatsAndFieldOps() {
    ============================================================ */
 
 /* ============================================================
-   SECTION 2B — Featured Women WASH Mitra Spotlight (carousel)
-   Add photos at ../assets/images/mitras/<slug>.jpeg per person
-   and set `photo: importedImage` once files are ready.
+   SECTION 2B — Featured Certified WASH Mitra Spotlight
    ============================================================ */
 
 const featuredMitras = [
   {
     name: 'Rupali Sunil Kumbhare',
-    eyebrow: 'Meet Our Women WASH Mitra',
+    eyebrow: 'Meet Our Certified WASH Mitra',
     location: 'Katol, Nagpur',
     skills: ['Plumbing', 'Electrical Repairs', 'Solar Maintenance', 'Basic Construction'],
     metrics: [
@@ -186,16 +184,16 @@ const featuredMitras = [
       { label: 'Service Areas', value: 'Ladgaon and Hardoli' },
     ],
     story:
-      "Rupali Sunil Kumbhare from Katol, Nagpur, is proving that women can excel in technical trades. " +
+      "Rupali Sunil Kumbhare from Katol, Nagpur, is proving that technical excellence transforms communities. " +
       "Trained in plumbing, electrical repairs, solar maintenance, and basic construction, she has repaired " +
       "taps, fans, lighting, and electrical systems in schools and hostels across Ladgaon and Hardoli. " +
-      "With earnings of ₹3,25,900, Rupali is improving community infrastructure while inspiring rural women " +
+      "With earnings of ₹3,25,900, Rupali is improving community infrastructure while inspiring rural technicians " +
       "to build sustainable livelihoods through technical skills.",
-    photo: undefined as string | undefined,
+    photo: img10,
   },
   {
     name: 'Sonali Haridas Gawali',
-    eyebrow: 'Meet Our Women WASH Mitra',
+    eyebrow: 'Meet Our Certified WASH Mitra',
     location: 'Hatti, Chhatrapati Sambhajinagar',
     skills: ['Plumbing', 'Electrical Repairs', 'Welding', 'Carpentry', 'Facility Maintenance'],
     metrics: [
@@ -207,13 +205,12 @@ const featuredMitras = [
       "the WASH Mitra Multi-Skilled Training Program. Equipped with practical skills in plumbing, electrical " +
       "repairs, welding, carpentry, and facility maintenance, she now delivers essential repair and maintenance " +
       "services in Ashram schools. Serving Hatti, Nagad, and Brahmani, she has earned ₹2,42,500, improving " +
-      "community infrastructure, supporting her family, and inspiring more rural women to build sustainable " +
-      "livelihoods through technical skills.",
-    photo: undefined as string | undefined,
+      "community infrastructure and supporting her family through technical skills.",
+    photo: img6,
   },
   {
     name: 'Ashok',
-    eyebrow: 'Meet Our WASH Mitra',
+    eyebrow: 'Meet Our Certified WASH Mitra',
     location: 'Wada, Palghar District',
     skills: ['Solar Installation', 'Solar Maintenance', 'Solar Repair', 'Mechanical Engineering'],
     metrics: [
@@ -227,7 +224,7 @@ const featuredMitras = [
       "services. Through his dedication and technical capabilities, Ashok has successfully built a thriving " +
       "enterprise, generating a turnover of ₹20 lakh in the last year while contributing to clean energy " +
       "solutions and creating sustainable livelihood opportunities in his community.",
-    photo: undefined as string | undefined,
+    photo: img5,
   },
 ];
 

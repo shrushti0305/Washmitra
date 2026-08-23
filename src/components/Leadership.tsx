@@ -10,16 +10,15 @@ import ashishImg from '../assets/images/ASHISH.png';
 import yogeshImg from '../assets/images/yogesh .jpeg';
 
 // 2. Work Gallery Asset Imports
-import womenSanitizing from '../assets/images/womenSanitizing.jpg';
 import solar from '../assets/images/solar.jpeg';
 import plumbing2 from '../assets/images/plumbing2.jpeg';
-import women2 from '../assets/images/women2.jpg';
 import roofRepair from '../assets/images/roof_repair.jpeg';
 import pipelineRepair from '../assets/images/pipelineRepair.jpeg';
+import traningImg from '../assets/images/traning.jpg';
 
-// 3. Section images (previously broken raw-string paths - now proper imports)
+// 3. Section images
 import drillImg from '../assets/images/drill.jpeg';
-import mainWomenImg from '../assets/images/mainimgWOMEN.jpg';
+import washMitraPhoto from '../assets/images/WASH MITRA photo.png';
 
 const teamMembers = [
   {
@@ -40,10 +39,10 @@ const teamMembers = [
 ];
 
 const galleryItems = [
-  { title: "Community Sanitization", category: "WASH Services", img: womenSanitizing },
+  { title: "Community Water Infrastructure", category: "WASH Services", img: pipelineRepair },
   { title: "Solar Infrastructure", category: "Skill Development", img: solar },
   { title: "Advanced Plumbing Module", category: "Technical Training", img: plumbing2 },
-  { title: "Women Empowerment Cohort", category: "Livelihoods", img: women2 },
+  { title: "Technical Skill Cohort", category: "Livelihoods", img: traningImg },
   { title: "Residential Roof Restoration", category: "Infrastructure", img: roofRepair },
   { title: "Pipeline Network Repair", category: "Rural Maintenance", img: pipelineRepair }
 ];
@@ -118,27 +117,27 @@ export function Leadership() {
       </section>
 
       {/* ========================================== */}
-      {/* 3. WOMEN WASH MITRA EMPOWERMENT            */}
+      {/* 3. TECHNICAL EXCELLENCE & WORKFORCE        */}
       {/* ========================================== */}
       <section className="bg-brand-primary text-white py-24 relative overflow-hidden rounded-[60px] mx-4 sm:mx-8">
         <div className="container max-w-7xl mx-auto px-4 sm:px-8 grid lg:grid-cols-12 gap-12 items-center">
           <div className="lg:col-span-5 order-last lg:order-first">
             <img 
-              src={mainWomenImg} 
-              alt="Women technical leadership cohort" 
-              className="rounded-[40px] shadow-2xl border-4 border-white/10 w-full"
+              src={washMitraPhoto} 
+              alt="Certified WASH Mitra technical team" 
+              className="rounded-[40px] shadow-2xl border-4 border-white/10 w-full object-cover"
             />
           </div>
           <div className="lg:col-span-7 space-y-6">
-            <span className="text-[10px] font-black text-brand-accent uppercase tracking-[0.4em] block">Gender Inclusion</span>
+            <span className="text-[10px] font-black text-brand-accent uppercase tracking-[0.4em] block">Technical Excellence</span>
             <h3 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">
-              Empowering Women <br />as Certified Hydro-Technicians
+              Empowering Rural Youth <br />as Certified Hydro-Technicians
             </h3>
             <p className="text-emerald-100/70 font-medium leading-relaxed">
-              We proactively break traditional barriers by onboarding women into complex trade verticals. Our specialized Women WASH Mitra cohorts master water testing operations, distribution grid diagnostics, and community development logistics, positioning them as primary clean water guardians of their gram panchayats.
+              We proactively train and deploy multi-skilled technicians across complex trade verticals. Our specialized WASH Mitra cohorts master water testing operations, distribution grid diagnostics, and community development logistics, positioning them as primary clean water guardians of their gram panchayats.
             </p>
             <div className="border-l-4 border-brand-accent pl-4 italic text-sm font-medium text-emerald-50 bg-emerald-950/40 py-3 pr-4 rounded-r-xl">
-              "Over 40% of our registered localized service interventions are engineered and executed successfully by certified women technicians."
+              "Over 15,000 localized service interventions engineered and executed successfully by certified technicians."
             </div>
           </div>
         </div>
@@ -195,7 +194,7 @@ export function Leadership() {
         </div>
       </section>
 
-           {/* ========================================== */}
+      {/* ========================================== */}
       {/* 5. IMPACT STATISTICS SUMMARY               */}
       {/* ========================================== */}
       <section className="bg-white py-20 border-y border-slate-100 shadow-inner">
@@ -214,8 +213,8 @@ export function Leadership() {
               <p className="text-[10px] sm:text-xs font-black uppercase text-slate-400 tracking-wider leading-tight">Panchayats Enabled</p>
             </div>
             <div className="aspect-square bg-brand-background rounded-[32px] flex flex-col items-center justify-center text-center p-4 sm:p-6 gap-2 sm:gap-3">
-              <h4 className="text-3xl sm:text-4xl lg:text-5xl font-black text-brand-accent">40%</h4>
-              <p className="text-[10px] sm:text-xs font-black uppercase text-slate-400 tracking-wider leading-tight">Women Workforce Representation</p>
+              <h4 className="text-3xl sm:text-4xl lg:text-5xl font-black text-brand-accent">98%</h4>
+              <p className="text-[10px] sm:text-xs font-black uppercase text-slate-400 tracking-wider leading-tight">System Resolution Rate</p>
             </div>
           </div>
         </div>
