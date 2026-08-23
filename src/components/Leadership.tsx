@@ -123,9 +123,9 @@ export function Leadership() {
         <div className="container max-w-7xl mx-auto px-4 sm:px-8 grid lg:grid-cols-12 gap-12 items-center">
           <div className="lg:col-span-5 order-last lg:order-first">
             <img 
-              src={washMitraPhoto} 
-              alt="Certified WASH Mitra technical team" 
-              className="rounded-[40px] shadow-2xl border-4 border-white/10 w-full object-cover"
+              src={traningImg} 
+              alt="Certified WASH Mitra technical training cohort" 
+              className="rounded-[40px] shadow-2xl border-4 border-white/10 w-full object-cover aspect-[4/3]"
             />
           </div>
           <div className="lg:col-span-7 space-y-6">
