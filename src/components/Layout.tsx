@@ -16,8 +16,10 @@ import {
   Menu,
   X,
   UserPlus,
-  Mail
+  Mail,
+  Globe
 } from 'lucide-react';
+import { useLanguage, Language } from '../contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { 
   DropdownMenu, 
@@ -46,6 +48,7 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   const { user, setUser } = useStore();
+  const { language, setLanguage, t } = useLanguage();
   const { notifications = [], unreadCount = 0, markAsRead } = useNotifications() || {};
   const { openBookingFor } = useBookingStore();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -53,12 +56,12 @@ export default function Layout({ children }: LayoutProps) {
   const location = useLocation();
 
   const navItems = [
-    { label: 'Home', path: '/' },
-    { label: 'About', path: '/about' },
-    { label: 'Services', path: '/services' },
-    { label: 'Training', path: '/training' },
-    { label: 'Impact', path: '/impact' },
-    { label: 'Contact', path: '/contact' }
+    { label: t('home'), path: '/' },
+    { label: t('about'), path: '/about' },
+    { label: t('services'), path: '/services' },
+    { label: t('training'), path: '/training' },
+    { label: t('impact'), path: '/impact' },
+    { label: t('contact'), path: '/contact' }
   ];
 
   const handleNavClick = (e: React.MouseEvent, path: string) => {
@@ -249,6 +252,35 @@ export default function Layout({ children }: LayoutProps) {
                     <Mail className="h-4 w-4" /> Contact Us
                   </Button>
                 )}
+
+                {/* Language Switcher Pill */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger className="h-9 px-2.5 rounded-xl border border-[#062D27]/15 bg-white/80 hover:bg-white text-[#062D27] flex items-center gap-1.5 text-xs font-black uppercase tracking-wider outline-none shadow-sm transition-all cursor-pointer">
+                    <Globe className="h-3.5 w-3.5 text-[#F26522]" />
+                    <span>{language}</span>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="rounded-2xl p-1.5 border-[#062D27]/10 shadow-xl bg-white min-w-[130px]">
+                    <DropdownMenuItem 
+                      onClick={() => setLanguage('EN')}
+                      className={`cursor-pointer font-bold text-xs rounded-xl px-3 py-2 ${language === 'EN' ? 'bg-[#062D27] text-white font-black' : 'text-[#062D27]'}`}
+                    >
+                      🇬🇧 English (EN)
+                    </DropdownMenuItem>
+                    <DropdownMenuItem 
+                      onClick={() => setLanguage('MR')}
+                      className={`cursor-pointer font-bold text-xs rounded-xl px-3 py-2 ${language === 'MR' ? 'bg-[#062D27] text-white font-black' : 'text-[#062D27]'}`}
+                    >
+                      🇮🇳 मराठी (MR)
+                    </DropdownMenuItem>
+                    <DropdownMenuItem 
+                      onClick={() => setLanguage('HI')}
+                      className={`cursor-pointer font-bold text-xs rounded-xl px-3 py-2 ${language === 'HI' ? 'bg-[#062D27] text-white font-black' : 'text-[#062D27]'}`}
+                    >
+                      🇮🇳 हिंदी (HI)
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
                 <Button 
                   variant="ghost" 
                   size="icon" 

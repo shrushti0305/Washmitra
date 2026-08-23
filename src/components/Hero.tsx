@@ -4,6 +4,7 @@ import { motion, Variants } from 'motion/react';
 import { Users2, ArrowRight, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useBookingStore } from '../store/useBookingStore';
+import { useLanguage } from '../contexts/LanguageContext';
 import roofRepairImg from '../assets/images/roof_repair.jpeg';
 
 
@@ -21,6 +22,7 @@ const textVariants: Variants = {
 export default function Hero() {
   const navigate = useNavigate();
   const { openBookingFor } = useBookingStore();
+  const { t } = useLanguage();
 
   return (
     <div className="relative pt-24 pb-16 md:pt-36 md:pb-24 overflow-hidden">
@@ -36,27 +38,27 @@ export default function Hero() {
                 animate="visible"
                 className="text-[10px] font-black text-[#F26522] uppercase tracking-[0.4em] ml-1"
               >
-                Supporting Rural Resilience
+                {t('tagline')}
               </motion.p>
               <motion.h1 
                 custom={2}
                 variants={textVariants}
                 initial="hidden"
                 animate="visible"
-                className="text-6xl md:text-8xl font-black text-[#062D27] leading-[0.85] tracking-tighter"
+                className="text-5xl sm:text-6xl md:text-8xl font-black text-[#062D27] leading-[0.85] tracking-tighter"
               >
-                Real people, <br />
-                <span className="font-serif italic text-slate-400 font-normal tracking-normal lowercase">real skills,</span> <br />
-                real impact.
+                {t('heroTitleLine1')} <br />
+                <span className="font-serif italic text-slate-400 font-normal tracking-normal">{t('heroTitleLine2')}</span> <br />
+                {t('heroTitleLine3')}
               </motion.h1>
               <motion.p 
                 custom={3}
                 variants={textVariants}
                 initial="hidden"
                 animate="visible"
-                className="text-xl text-slate-500 font-medium max-w-xl mx-auto lg:mx-0 leading-relaxed"
+                className="text-lg sm:text-xl text-slate-500 font-medium max-w-xl mx-auto lg:mx-0 leading-relaxed"
               >
-                We train and deploy local technicians to maintain critical water and sanitation infrastructure across India's villages.
+                {t('heroDesc')}
               </motion.p>
             </div>
 
@@ -69,16 +71,16 @@ export default function Hero() {
             >
               <Button 
                 onClick={() => navigate('/contact')}
-                className="h-16 px-10 rounded-[20px] bg-[#F26522] hover:bg-[#d95d1f] text-white font-black uppercase tracking-widest gap-2 shadow-2xl shadow-orange-200 group transition-all w-full sm:w-auto"
+                className="h-16 px-10 rounded-[20px] bg-[#F26522] hover:bg-[#d95d1f] text-white font-black uppercase tracking-widest gap-2 shadow-2xl shadow-orange-200 group transition-all w-full sm:w-auto text-xs"
               >
-                Contact Us <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                {t('contactUs')} <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Button>
               <Button 
                 onClick={() => navigate('/training')}
                 variant="outline"
-                className="h-16 px-8 rounded-[20px] border-2 border-[#062D27]/20 hover:bg-[#062D27]/5 text-[#062D27] font-black uppercase tracking-widest transition-all w-full sm:w-auto"
+                className="h-16 px-10 rounded-[20px] border-[#062D27]/20 text-[#062D27] hover:bg-[#062D27]/5 font-black uppercase tracking-widest transition-all w-full sm:w-auto text-xs"
               >
-                Explore Training
+                {t('exploreTraining')}
               </Button>
             </motion.div>
           </div>

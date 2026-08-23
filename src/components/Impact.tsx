@@ -5,12 +5,14 @@ import {
   Users, GraduationCap, MapPin, Shield, ArrowUpRight, ChevronRight,
   LayoutPanelTop, CheckCircle2, Upload, Plus, Loader2, X,
   Quote, Star, ArrowLeft, ArrowRight, Handshake, ArrowRight as ArrowRightCta,
+  Download, FileText
 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useStore } from '../store/useStore';
 import { getSupabase } from '../lib/supabase';
 import { toast } from 'sonner';
+import { AnimatedNumber } from './AnimatedNumber';
 
 // Field Operations gallery images
 import img1 from '../assets/images/window_pipe.jpeg';
@@ -44,6 +46,96 @@ const stats = [
   { label: "Tribal Mitras Deployed", value: "120", icon: Shield, color: "text-brand-success" },
 ];
 
+function handleDownloadImpactBrief() {
+  const printWindow = window.open('', '_blank');
+  if (!printWindow) {
+    toast.error('Please allow popups to download the Impact Brief PDF.');
+    return;
+  }
+
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>WASHMITRA Impact Brief 2026</title>
+      <style>
+        body { font-family: system-ui, -apple-system, sans-serif; padding: 40px; color: #062D27; background: #FFF; line-height: 1.5; }
+        .header { border-bottom: 3px solid #F26522; padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
+        .title { font-size: 28px; font-weight: 900; color: #062D27; text-transform: uppercase; margin: 0; }
+        .subtitle { font-size: 13px; font-weight: 700; color: #F26522; text-transform: uppercase; letter-spacing: 2px; }
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 30px; }
+        .card { background: #F9F9F7; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; }
+        .stat-val { font-size: 32px; font-weight: 900; color: #062D27; margin: 0; }
+        .stat-lbl { font-size: 11px; font-weight: 700; color: #F26522; text-transform: uppercase; margin-top: 5px; }
+        .section-title { font-size: 18px; font-weight: 800; color: #062D27; margin-top: 30px; border-left: 4px solid #F26522; padding-left: 12px; }
+        .footer { margin-top: 50px; font-size: 12px; color: #64748b; border-top: 1px solid #e2e8f0; padding-top: 20px; text-align: center; }
+      </style>
+    </head>
+    <body>
+      <div class="header">
+        <div>
+          <h1 class="title">WASH <span style="color: #F26522;">Mitra</span></h1>
+          <div class="subtitle">Official Impact Brief & CSR Summary</div>
+        </div>
+        <div style="text-align: right; font-size: 12px; font-weight: bold; color: #64748b;">
+          Published: August 2026<br/>
+          www.washmitra.com
+        </div>
+      </div>
+
+      <div style="background: #062D27; color: white; border-radius: 16px; padding: 24px; margin-bottom: 30px;">
+        <h2 style="margin: 0 0 10px 0; font-size: 22px;">₹49 Lakh Tribal Income Generated</h2>
+        <p style="margin: 0; opacity: 0.8; font-size: 14px;">Direct earnings placed into the hands of 850+ rural and tribal technicians across 34 districts in Maharashtra &amp; Chhattisgarh.</p>
+      </div>
+
+      <h2 class="section-title">Key Operational Highlights</h2>
+      <div class="grid">
+        <div class="card">
+          <div class="stat-val">850+</div>
+          <div class="stat-lbl">Trained WASH Mitras</div>
+        </div>
+        <div class="card">
+          <div class="stat-val">29</div>
+          <div class="stat-lbl">Districts in Maharashtra</div>
+        </div>
+        <div class="card">
+          <div class="stat-val">500+</div>
+          <div class="stat-lbl">Certified Field Technicians</div>
+        </div>
+        <div class="card">
+          <div class="stat-val">120</div>
+          <div class="stat-lbl">Tribal Mitras Deployed</div>
+        </div>
+        <div class="card">
+          <div class="stat-val">70.5%</div>
+          <div class="stat-lbl">Youth Aged 21–30</div>
+        </div>
+        <div class="card">
+          <div class="stat-val">250</div>
+          <div class="stat-lbl">Ashramshalas Maintained</div>
+        </div>
+      </div>
+
+      <h2 class="section-title">Institutional Overview</h2>
+      <p style="font-size: 14px; line-height: 1.6; color: #334155;">
+        WASHMITRA is a specialized social enterprise dedicated to solving rural water, sanitation, and hygiene infrastructure maintenance challenges. By combining hands-on technical skilling with direct deployment, WASHMITRA empowers local youth while ensuring 100% operational uptime for rural schools, Ashramshalas, and Gram Panchayats.
+      </p>
+
+      <div class="footer">
+        WASHMITRA PVT. LTD. &bull; Contact: +91 94215 28996 &bull; Email: info@washmitra.com &bull; Web: www.washmitra.com
+      </div>
+
+      <script>
+        window.onload = function() {
+          window.print();
+        };
+      </script>
+    </body>
+    </html>
+  `);
+  printWindow.document.close();
+}
+
 function StatsAndFieldOps() {
   const [stack, setStack] = useState([img1, img2, img3, img4, img5, img6, img7, img10, img11]);
 
@@ -64,7 +156,16 @@ function StatsAndFieldOps() {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8">
         <div className="space-y-4 max-w-2xl">
-          <h3 className="text-[10px] font-black text-brand-accent uppercase tracking-[0.4em]">Our Impact</h3>
+          <div className="flex items-center gap-3">
+            <h3 className="text-[10px] font-black text-brand-accent uppercase tracking-[0.4em]">Our Impact</h3>
+            <Button 
+              onClick={handleDownloadImpactBrief}
+              variant="outline"
+              className="h-7 px-3 text-[9px] font-black uppercase tracking-widest border-brand-accent/30 text-brand-accent hover:bg-brand-accent hover:text-white rounded-lg flex items-center gap-1.5 transition-all"
+            >
+              <Download className="h-3 w-3" /> Impact Brief (PDF)
+            </Button>
+          </div>
           <h2 className="text-3xl sm:text-4xl md:text-7xl font-black text-brand-primary leading-tight tracking-tighter">
             Measuring success in <br className="hidden sm:block" />
             <span className="text-slate-500 italic font-serif"> livelihoods & scale.</span>
@@ -77,7 +178,9 @@ function StatsAndFieldOps() {
 
         {/* Commercial Impact Highlighting Module */}
         <div className="p-6 sm:p-8 bg-white rounded-[32px] sm:rounded-[40px] shadow-xl border border-slate-100 text-left sm:text-right w-full md:w-auto">
-          <p className="text-3xl sm:text-4xl font-black text-brand-primary">₹49 Lakh</p>
+          <p className="text-3xl sm:text-4xl font-black text-brand-primary">
+            <AnimatedNumber value="₹49 Lakh" />
+          </p>
           <p className="text-[10px] font-bold text-brand-accent uppercase tracking-widest">Tribal Income Generated (Sep 2025–Mar 2026)</p>
           <p className="text-xs text-slate-400 font-medium mt-2 max-w-[220px] sm:ml-auto">
             Direct earnings placed into the hands of tribal technicians and their families — not routed through intermediaries.
@@ -97,7 +200,9 @@ function StatsAndFieldOps() {
             </div>
             <div className="mt-6">
               <div className="flex items-baseline gap-2">
-                <p className="text-4xl sm:text-5xl font-black text-white tracking-tighter leading-none">{stat.value}</p>
+                <p className="text-4xl sm:text-5xl font-black text-white tracking-tighter leading-none">
+                  <AnimatedNumber value={stat.value} />
+                </p>
                 <ArrowUpRight className="h-5 w-5 text-white/20 group-hover:text-white/40 shrink-0" />
               </div>
               <p className="text-[10px] font-black text-slate-400 group-hover:text-white uppercase tracking-widest mt-2 leading-snug">{stat.label}</p>

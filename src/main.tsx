@@ -50,12 +50,16 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   }
 }
 
+import { LanguageProvider } from './contexts/LanguageContext';
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ErrorBoundary>
-      <HashRouter>
-        <App />
-      </HashRouter>
+      <LanguageProvider>
+        <HashRouter>
+          <App />
+        </HashRouter>
+      </LanguageProvider>
     </ErrorBoundary>
   </StrictMode>,
 );
