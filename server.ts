@@ -33,10 +33,10 @@ let supabaseInstance: any = null;
 
 function getSupabase() {
   if (!supabaseInstance) {
-    const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
-    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
+    const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL || 'https://mqpomswuudvovzybmuxv.supabase.co';
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1xcG9tc3d1dWR2b3Z6eWJtdXh2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxODY0OTksImV4cCI6MjA5Nzc2MjQ5OX0.nhRvR8PGFqy1Ukq3OnyT2eQV-gvg6DMqrJalDvoYb_Y';
     
-    if (!supabaseUrl || !supabaseUrl.startsWith('http') || !supabaseServiceKey || supabaseServiceKey.includes('your_')) {
+    if (!supabaseUrl || !supabaseUrl.startsWith('http') || !supabaseServiceKey) {
       console.warn('Supabase credentials missing or invalid. DB features will be disabled.');
       return null;
     }
