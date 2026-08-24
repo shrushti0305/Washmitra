@@ -32,6 +32,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import Footer from './Footer';
+import WashMitraChatbot from './WashMitraChatbot';
 import logoUrl from '../assets/images/WASH Mitra logo.png';
 import { SHOW_TRANSACTIONAL_FEATURES } from '../lib/featureFlags';
 import { Toaster } from '@/components/ui/sonner';
@@ -439,6 +440,7 @@ export default function Layout({ children }: LayoutProps) {
         </nav>
       )}
       
+      <WashMitraChatbot />
       <Toaster position="top-center" />
     </div>
   );
