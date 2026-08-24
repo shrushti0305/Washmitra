@@ -183,6 +183,7 @@ export default function App() {
               <Route path="/impact" element={<Page seo={seoContent.impact} path="/impact"><Impact /></Page>} />
               <Route path="/contact" element={<Page seo={seoContent.contact} path="/contact"><Contact /></Page>} />
               <Route path="/training" element={<Page seo={seoContent.training} path="/training"><TrainingCatalogue /></Page>} />
+              <Route path="/admin" element={<Page seo={{ title: "Admin Command Center", description: "Directorate Dashboard" }} path="/admin"><AdminDashboard /></Page>} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
