@@ -10,11 +10,13 @@ import { supabase } from '../lib/supabase'
 
 export default function AdminDashboard() {
   const [mitras, setMitras] = useState<any[]>([]);
+  const [messages, setMessages] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
 
   useEffect(() => {
     fetchWashMitras();
+    fetchContactMessages();
   }, []);
 
   const fetchWashMitras = async () => {
@@ -27,6 +29,17 @@ export default function AdminDashboard() {
     if (error) toast.error("Error loading WashMitras");
     else setMitras(data || []);
     setLoading(false);
+  };
+
+  const fetchContactMessages = async () => {
+    const { data, error } = await supabase
+      .from('contact_messages')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (!error && data) {
+      setMessages(data);
+    }
   };
 
   const togglePaymentStatus = async (userId: string, currentStatus: boolean) => {
@@ -55,13 +68,60 @@ export default function AdminDashboard() {
       </div>
 
       {/* 2. Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <MetricCard title="Total WashMitras" value={mitras.length.toString()} icon={Users} color="blue" sub="Registered Operators" />
         <MetricCard title="Fee Collection" value={`₹${mitras.filter(m => m.is_paid).length * 500}`} icon={Wallet} color="green" sub="Total Revenue" />
         <MetricCard title="Pending Verifications" value={mitras.filter(m => !m.is_paid).length.toString()} icon={AlertCircle} color="purple" sub="Action Required" />
+        <MetricCard title="Contact Messages" value={messages.length.toString()} icon={FileText} color="blue" sub="Inquiries Received" />
       </div>
 
-      {/* 3. Registry Table */}
+      {/* 3. Live Contact Inquiry Messages Table */}
+      <Card className="border-none shadow-sm rounded-[40px] p-8 bg-white">
+        <div className="flex justify-between items-center mb-6">
+          <div>
+            <h3 className="text-xl font-black text-[#062D27] flex items-center gap-2">
+              <FileText className="text-[#F26522]" /> Live Contact Inquiries ({messages.length})
+            </h3>
+            <p className="text-xs font-medium text-slate-400">Messages submitted through the Contact Us form</p>
+          </div>
+          <Button variant="outline" size="sm" onClick={fetchContactMessages} className="rounded-xl text-xs font-bold">
+            Refresh Messages
+          </Button>
+        </div>
+
+        {messages.length === 0 ? (
+          <div className="p-8 text-center bg-slate-50 rounded-2xl">
+            <p className="text-sm font-bold text-slate-400">No contact messages received yet.</p>
+          </div>
+        ) : (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>DATE</TableHead>
+                <TableHead>NAME</TableHead>
+                <TableHead>PHONE</TableHead>
+                <TableHead>EMAIL</TableHead>
+                <TableHead>MESSAGE</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {messages.map((msg) => (
+                <TableRow key={msg.id || Math.random()}>
+                  <TableCell className="text-xs font-bold text-slate-400">
+                    {msg.created_at ? new Date(msg.created_at).toLocaleDateString() : 'Today'}
+                  </TableCell>
+                  <TableCell className="font-black text-[#062D27]">{msg.name}</TableCell>
+                  <TableCell className="font-bold text-[#F26522]">{msg.phone}</TableCell>
+                  <TableCell>{msg.email || 'N/A'}</TableCell>
+                  <TableCell className="max-w-md text-xs font-medium text-slate-600">{msg.message}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        )}
+      </Card>
+
+      {/* 4. Registry Table */}
       <Card className="border-none shadow-sm rounded-[40px] p-8">
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-xl font-black flex items-center gap-2"><FileText /> WashMitra Registry</h3>
