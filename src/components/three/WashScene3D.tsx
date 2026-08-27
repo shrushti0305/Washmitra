@@ -43,8 +43,8 @@ function useDropletGeometry() {
     ];
     // Smooth the silhouette so the bulb reads as liquid, not faceted.
     const curve = new THREE.SplineCurve(profile);
-    const points = curve.getPoints(60).map((p) => new THREE.Vector2(Math.max(p.x, 0), p.y));
-    const geo = new THREE.LatheGeometry(points, 96);
+    const points = curve.getPoints(40).map((p) => new THREE.Vector2(Math.max(p.x, 0), p.y));
+    const geo = new THREE.LatheGeometry(points, 48);
     geo.computeVertexNormals();
     return geo;
   }, []);
@@ -65,15 +65,12 @@ function Droplet() {
     <group ref={group}>
       <mesh geometry={geometry} castShadow scale={1.18}>
         <MeshTransmissionMaterial
-          thickness={1.1}
-          roughness={0.04}
-          transmission={1}
+          resolution={256}
+          thickness={0.8}
+          roughness={0.06}
+          transmission={0.95}
           ior={1.33}
-          chromaticAberration={0.04}
-          anisotropy={0.2}
-          distortion={0.2}
-          distortionScale={0.25}
-          temporalDistortion={0.1}
+          chromaticAberration={0.02}
           color={BRAND.water}
           attenuationColor={BRAND.green}
           attenuationDistance={2.5}
@@ -336,8 +333,8 @@ export default function WashScene3D({ className = '', interactive = true }: Wash
   return (
     <div className={className}>
       <Canvas
-        shadows
-        dpr={[1, 1.8]}
+        shadows={false}
+        dpr={[1, 1.25]}
         camera={{ position: [0, 0.5, 7], fov: 38 }}
         gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
         onCreated={({ gl }) => {
