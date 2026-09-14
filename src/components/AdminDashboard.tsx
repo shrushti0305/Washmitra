@@ -134,7 +134,8 @@ export default function AdminDashboard() {
   };
 
   const fetchContactMessages = async () => {
-    let combined: any[] = [];
+    let localItems: any[] = [];
+    let dbItems: any[] = [];
 
     // 1. Read local storage backup inquiries (both standard and permanent log)
     try {
@@ -142,7 +143,7 @@ export default function AdminDashboard() {
       const permStr = localStorage.getItem('washmitra_permanent_inquiry_log');
       const localArr = localStr ? JSON.parse(localStr) : [];
       const permArr = permStr ? JSON.parse(permStr) : [];
-      combined = [...localArr, ...permArr];
+      localItems = [...localArr, ...permArr];
     } catch (e) {
       console.warn('Local storage read note:', e);
     }
@@ -154,59 +155,108 @@ export default function AdminDashboard() {
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (!error && data && data.length > 0) {
-        const map = new Map();
-        [...data, ...combined].forEach((item) => {
-          const key = item.id || `${item.phone}_${item.name}_${item.message}`;
-          if (!map.has(key)) {
-            map.set(key, { ...item, status: item.status || 'pending' });
-          }
-        });
-        combined = Array.from(map.values());
+      if (!error && data) {
+        dbItems = data;
       }
     } catch (err) {
       console.warn('Supabase message fetch note:', err);
     }
 
-    // Sort by created_at descending
+    // 3. Auto-sync any local items missing from Supabase DB
+    const existingDbKeys = new Set(dbItems.map(d => `${d.phone}_${d.name}`));
+    const unsyncedItems = localItems.filter(l => l.name && !existingDbKeys.has(`${l.phone}_${l.name}`));
+
+    if (unsyncedItems.length > 0) {
+      console.log(`Auto-syncing ${unsyncedItems.length} unsynced local inquiries to Supabase...`);
+      for (const item of unsyncedItems) {
+        try {
+          const isValidUuid = item.id && item.id.length > 25 && item.id.includes('-');
+          const recordToInsert: any = {
+            name: item.name || 'Visitor',
+            phone: item.phone || null,
+            email: item.email || null,
+            message: item.message || '[General Inquiry]',
+            status: item.status || 'pending'
+          };
+          if (isValidUuid) recordToInsert.id = item.id;
+
+          const { error: insErr } = await supabase.from('contact_messages').insert([recordToInsert]);
+          if (!insErr) {
+            console.log('Auto-synced inquiry to Supabase:', item.name);
+          }
+        } catch (e) {
+          console.warn('Auto-sync item note:', e);
+        }
+      }
+
+      // Re-fetch clean DB list after auto-sync
+      try {
+        const { data: freshData } = await supabase
+          .from('contact_messages')
+          .select('*')
+          .order('created_at', { ascending: false });
+        if (freshData) dbItems = freshData;
+      } catch (e) {}
+    }
+
+    // Merge and deduplicate by ID or name+phone+message
+    const map = new Map();
+    [...dbItems, ...localItems].forEach((item) => {
+      const key = item.id || `${item.phone}_${item.name}_${item.message}`;
+      if (!map.has(key)) {
+        map.set(key, { ...item, status: item.status || 'pending' });
+      }
+    });
+
+    const combined = Array.from(map.values());
     combined.sort((a, b) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime());
     setMessages(combined);
   };
 
   const syncLocalToDatabase = async () => {
-    if (messages.length === 0) {
-      toast.info("No local messages to sync.");
-      return;
-    }
-
     setLoading(true);
     let syncedCount = 0;
 
+    // Fetch existing Supabase items
+    let dbItems: any[] = [];
+    try {
+      const { data } = await supabase.from('contact_messages').select('*');
+      if (data) dbItems = data;
+    } catch (e) {}
+
+    const existingDbKeys = new Set(dbItems.map(d => `${d.phone}_${d.name}`));
+
     for (const msg of messages) {
       try {
-        const uuid = (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function')
-          ? (msg.id && msg.id.length > 20 ? msg.id : crypto.randomUUID())
-          : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
-              const r = Math.random() * 16 | 0;
-              return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-            });
+        const key = `${msg.phone}_${msg.name}`;
+        if (existingDbKeys.has(key)) continue; // Already in DB
 
-        const { error } = await supabase.from('contact_messages').insert([{
-          id: uuid,
+        const isValidUuid = msg.id && msg.id.length > 25 && msg.id.includes('-');
+        const payload: any = {
           name: msg.name || 'Visitor',
           phone: msg.phone || null,
           email: msg.email || null,
-          message: msg.message || 'General Inquiry'
-        }]);
+          message: msg.message || '[General Inquiry]',
+          status: msg.status || 'pending'
+        };
+        if (isValidUuid) payload.id = msg.id;
 
-        if (!error) syncedCount++;
+        const { error } = await supabase.from('contact_messages').insert([payload]);
+        if (!error) {
+          syncedCount++;
+          existingDbKeys.add(key);
+        }
       } catch (e) {
-        console.warn('Sync message note:', e);
+        console.warn('Manual sync message note:', e);
       }
     }
 
     setLoading(false);
-    toast.success(`Database Sync Complete! (${syncedCount} records processed)`);
+    if (syncedCount > 0) {
+      toast.success(`Database Sync Complete! (${syncedCount} new records pushed to Supabase)`);
+    } else {
+      toast.info("Database is already up to date. All inquiries synced!");
+    }
     fetchContactMessages();
   };
 
