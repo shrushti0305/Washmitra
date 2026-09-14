@@ -83,18 +83,43 @@ export default function AdminDashboard() {
   };
 
   const fetchContactMessages = async () => {
+    let combined: any[] = [];
+
+    // 1. Read local storage inquiries
+    try {
+      const localStr = localStorage.getItem('washmitra_local_inquiries');
+      if (localStr) {
+        combined = JSON.parse(localStr);
+      }
+    } catch (e) {
+      console.warn('Local storage read note:', e);
+    }
+
+    // 2. Read Supabase database inquiries
     try {
       const { data, error } = await supabase
         .from('contact_messages')
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (!error && data) {
-        setMessages(data);
+      if (!error && data && data.length > 0) {
+        // Merge and remove duplicates based on phone + message combination
+        const map = new Map();
+        [...data, ...combined].forEach((item) => {
+          const key = `${item.phone}_${item.name}_${item.message}`;
+          if (!map.has(key)) {
+            map.set(key, item);
+          }
+        });
+        combined = Array.from(map.values());
       }
     } catch (err) {
       console.warn('Supabase fetch note:', err);
     }
+
+    // Sort by creation date
+    combined.sort((a, b) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime());
+    setMessages(combined);
   };
 
   const togglePaymentStatus = async (userId: string, currentStatus: boolean) => {

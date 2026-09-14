@@ -43,6 +43,24 @@ export default function Contact() {
       return;
     }
 
+    const newInquiry = {
+      id: Date.now().toString(),
+      name,
+      phone,
+      email,
+      message: formattedMessage,
+      created_at: new Date().toISOString()
+    };
+
+    // Save locally for instant offline admin access
+    try {
+      const existingStr = localStorage.getItem('washmitra_local_inquiries');
+      const existingArr = existingStr ? JSON.parse(existingStr) : [];
+      localStorage.setItem('washmitra_local_inquiries', JSON.stringify([newInquiry, ...existingArr]));
+    } catch (e) {
+      console.warn('LocalStorage save note:', e);
+    }
+
     try {
       if (supabase) {
         const { error } = await supabase.from('contact_messages').insert([{
