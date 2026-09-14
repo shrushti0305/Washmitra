@@ -59,7 +59,8 @@ export default function Footer() {
                   { name: 'Services', path: '/services' },
                   { name: 'Training', path: '/training' },
                   { name: 'Impact', path: '/impact' },
-                  { name: 'Contact', path: '/contact' }
+                  { name: 'Contact', path: '/contact' },
+                  { name: 'Admin Portal', path: '/admin' }
                 ].map((item) => (
                   <li key={item.name}>
                     <Link to={item.path} className="text-white/60 hover:text-[#F26522] transition-colors font-bold text-sm">
