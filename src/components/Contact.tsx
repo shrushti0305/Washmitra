@@ -63,7 +63,13 @@ export default function Contact() {
 
     try {
       if (supabase) {
+        // Generate client-side UUID in case Supabase table doesn't have gen_random_uuid() default
+        const uuid = (typeof crypto !== 'undefined' && crypto.randomUUID) 
+          ? crypto.randomUUID() 
+          : `${Date.now()}-0000-4000-8000-${Math.floor(Math.random()*1000000000000)}`;
+
         const { data, error } = await supabase.from('contact_messages').insert([{
+          id: uuid,
           name,
           phone,
           email,
