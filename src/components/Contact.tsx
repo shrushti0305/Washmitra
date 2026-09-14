@@ -63,15 +63,17 @@ export default function Contact() {
 
     try {
       if (supabase) {
-        const { error } = await supabase.from('contact_messages').insert([{
+        const { data, error } = await supabase.from('contact_messages').insert([{
           name,
           phone,
           email,
           message: formattedMessage,
-        }]);
+        }]).select();
 
         if (error) {
-          console.warn('Database note on contact insert:', error.message);
+          console.error('Supabase contact_messages error:', error.message, error.details, error.hint);
+        } else {
+          console.log('Successfully inserted inquiry to Supabase contact_messages:', data);
         }
       }
     } catch (err) {
