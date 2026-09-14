@@ -4,21 +4,27 @@
     <meta charset="utf-8">
     <title>WashMitra</title>
     <script type="text/javascript">
-      // Single Page Apps for GitHub Pages
-      // MIT License
-      // https://github.com/rafgraph/spa-github-pages
-      var pathSegmentsToKeep = 1;
-
-      var l = window.location;
-      l.replace(
-        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-        l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
-        l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
-        (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
-        l.hash
-      );
+      // SPA Fallback for GitHub Pages and Custom Domain (washmitra.com)
+      (function() {
+        var l = window.location;
+        var path = l.pathname;
+        
+        // Remove trailing repo name if present (e.g. /Washmitra/admin -> /admin)
+        if (path.toLowerCase().startsWith('/washmitra')) {
+          path = path.substring(10);
+        }
+        
+        if (!path || path === '/') {
+          path = '';
+        }
+        
+        // Redirect directly to HashRouter target e.g. washmitra.com/#/admin
+        var targetUrl = l.protocol + '//' + l.host + l.search + '/#' + path + l.hash;
+        l.replace(targetUrl);
+      })();
     </script>
   </head>
   <body>
   </body>
 </html>
+
