@@ -7,9 +7,12 @@
       // SPA Fallback for GitHub Pages and Custom Domain (washmitra.com)
       (function() {
         var l = window.location;
-        var path = l.pathname;
+        var path = l.pathname || '';
         
-        // Remove trailing repo name if present (e.g. /Washmitra/admin -> /admin)
+        // Remove trailing or leading duplicate slashes
+        path = path.replace(/\/+/g, '/');
+        
+        // Remove repo subpath prefix if present (e.g. /Washmitra/admin -> /admin)
         if (path.toLowerCase().startsWith('/washmitra')) {
           path = path.substring(10);
         }
@@ -18,7 +21,12 @@
           path = '';
         }
         
-        // Redirect directly to HashRouter target e.g. washmitra.com/#/admin
+        // Ensure single leading slash for hash route (e.g. /admin)
+        if (path && !path.startsWith('/')) {
+          path = '/' + path;
+        }
+        
+        // Construct clean target URL: protocol//host/#/path
         var targetUrl = l.protocol + '//' + l.host + l.search + '/#' + path + l.hash;
         l.replace(targetUrl);
       })();
@@ -27,4 +35,5 @@
   <body>
   </body>
 </html>
+
 

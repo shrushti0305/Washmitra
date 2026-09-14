@@ -162,9 +162,10 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 py-6 pt-20 sm:pt-24">
           <Suspense fallback={<RouteFallback />}>
             <Routes>
-              {/* Handles base route and Washmitra repo sub-path */}
+              {/* Base Routes and Subpath Aliases */}
               <Route path="/" element={homeContent} />
               <Route path="/Washmitra" element={homeContent} />
+              <Route path="/washmitra" element={homeContent} />
               <Route
                 path="/login"
                 element={
@@ -179,11 +180,25 @@ export default function App() {
                 }
               />
               <Route path="/about" element={<Page seo={seoContent.about} path="/about"><About /></Page>} />
+              <Route path="/Washmitra/about" element={<Page seo={seoContent.about} path="/about"><About /></Page>} />
+              
               <Route path="/services" element={<Page seo={seoContent.services} path="/services"><ServiceFlow /></Page>} />
+              <Route path="/Washmitra/services" element={<Page seo={seoContent.services} path="/services"><ServiceFlow /></Page>} />
+              
               <Route path="/impact" element={<Page seo={seoContent.impact} path="/impact"><Impact /></Page>} />
+              <Route path="/Washmitra/impact" element={<Page seo={seoContent.impact} path="/impact"><Impact /></Page>} />
+              
               <Route path="/contact" element={<Page seo={seoContent.contact} path="/contact"><Contact /></Page>} />
+              <Route path="/Washmitra/contact" element={<Page seo={seoContent.contact} path="/contact"><Contact /></Page>} />
+              
               <Route path="/training" element={<Page seo={seoContent.training} path="/training"><TrainingCatalogue /></Page>} />
+              <Route path="/Washmitra/training" element={<Page seo={seoContent.training} path="/training"><TrainingCatalogue /></Page>} />
+              
+              {/* Admin Route & Aliases */}
               <Route path="/admin" element={<Page seo={{ title: "Admin Portal — WashMitra", description: "Directorate Dashboard" }} path="/admin"><AdminDashboard /></Page>} />
+              <Route path="/Washmitra/admin" element={<Page seo={{ title: "Admin Portal — WashMitra", description: "Directorate Dashboard" }} path="/admin"><AdminDashboard /></Page>} />
+              <Route path="/washmitra/admin" element={<Page seo={{ title: "Admin Portal — WashMitra", description: "Directorate Dashboard" }} path="/admin"><AdminDashboard /></Page>} />
+              
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
