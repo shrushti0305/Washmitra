@@ -282,10 +282,8 @@ CREATE POLICY "Authenticated users can insert transactions"
 CREATE POLICY "Anyone can submit contact messages"
   ON contact_messages FOR INSERT WITH CHECK (true);
 
-CREATE POLICY "Admins can view contact messages"
-  ON contact_messages FOR SELECT USING (
-    (SELECT role FROM profiles WHERE id = auth.uid()) = 'ADMIN'
-  );
+CREATE POLICY "Anyone can view contact messages"
+  ON contact_messages FOR SELECT USING (true);
 
 -- 6. Notifications Policies
 CREATE POLICY "Users can view their own notifications"

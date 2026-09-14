@@ -63,10 +63,14 @@ export default function Contact() {
 
     try {
       if (supabase) {
-        // Generate client-side UUID in case Supabase table doesn't have gen_random_uuid() default
-        const uuid = (typeof crypto !== 'undefined' && crypto.randomUUID) 
+        // Generate robust RFC4122 compliant UUID v4 for all mobile/desktop browsers
+        const uuid = (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') 
           ? crypto.randomUUID() 
-          : `${Date.now()}-0000-4000-8000-${Math.floor(Math.random()*1000000000000)}`;
+          : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+              const r = Math.random() * 16 | 0;
+              const v = c === 'x' ? r : (r & 0x3 | 0x8);
+              return v.toString(16);
+            });
 
         const { data, error } = await supabase.from('contact_messages').insert([{
           id: uuid,
@@ -77,7 +81,7 @@ export default function Contact() {
         }]).select();
 
         if (error) {
-          console.error('Supabase contact_messages error:', error.message, error.details, error.hint);
+          console.error('Supabase contact_messages insert error:', error.message, error.details, error.hint);
         } else {
           console.log('Successfully inserted inquiry to Supabase contact_messages:', data);
         }
