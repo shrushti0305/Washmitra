@@ -78,7 +78,7 @@ export default function Contact() {
           phone,
           email,
           message: formattedMessage,
-          status: 'pending'
+          status: 'NEW'
         };
 
         let { error } = await supabase.from('contact_messages').insert([payload]);
@@ -91,7 +91,7 @@ export default function Contact() {
             phone,
             email,
             message: formattedMessage,
-            status: 'pending'
+            status: 'NEW'
           }]);
 
           if (fallbackRes.error) {

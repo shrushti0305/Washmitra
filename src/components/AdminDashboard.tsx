@@ -176,7 +176,7 @@ export default function AdminDashboard() {
             phone: item.phone || null,
             email: item.email || null,
             message: item.message || '[General Inquiry]',
-            status: item.status || 'pending'
+            status: item.status === 'resolved' ? 'resolved' : 'NEW'
           };
           if (isValidUuid) recordToInsert.id = item.id;
 
@@ -237,7 +237,7 @@ export default function AdminDashboard() {
           phone: msg.phone || null,
           email: msg.email || null,
           message: msg.message || '[General Inquiry]',
-          status: msg.status || 'pending'
+          status: msg.status === 'resolved' ? 'resolved' : 'NEW'
         };
         if (isValidUuid) payload.id = msg.id;
 
