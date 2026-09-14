@@ -32,16 +32,9 @@ export default function Contact() {
     const phone = (formData.get('phone') as string)?.trim() || '';
     const email = (formData.get('email') as string)?.trim() || null;
     const message = (formData.get('message') as string)?.trim() || '';
-    const formattedMessage = `[Interest: ${selectedInterest}] ${message}`;
-
-    // Honeypot check: real visitors never see or fill this field.
-    if ((formData.get('company_website') as string)?.trim()) {
-      setIsSubmitting(false);
-      setIsSuccess(true);
-      setSubmittedData({ name, phone });
-      toast.success("Thank you! Your inquiry has been received.");
-      return;
-    }
+    const formattedMessage = message 
+      ? `[Interest: ${selectedInterest}] ${message}`
+      : `[Interest: ${selectedInterest}] Customer requested call-back.`;
 
     // Generate robust RFC4122 compliant UUID v4 for all mobile/desktop browsers
     const uuid = (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') 
@@ -78,14 +71,17 @@ export default function Contact() {
     // 2. Primary Database Sync: Supabase contact_messages
     try {
       if (supabase) {
-        // Attempt 1: Insert with UUID
-        let { data, error } = await supabase.from('contact_messages').insert([{
+        // Insert payload
+        const payload = {
           id: uuid,
           name,
           phone,
           email,
           message: formattedMessage,
-        }]).select();
+          status: 'pending'
+        };
+
+        let { error } = await supabase.from('contact_messages').insert([payload]);
 
         // Fallback Attempt 2: If custom ID rejected, insert without explicit ID
         if (error) {
@@ -95,18 +91,16 @@ export default function Contact() {
             phone,
             email,
             message: formattedMessage,
-          }]).select();
+            status: 'pending'
+          }]);
 
-          if (!fallbackRes.error) {
-            data = fallbackRes.data;
-            error = null;
+          if (fallbackRes.error) {
+            console.error('Supabase contact_messages fallback insert error:', fallbackRes.error.message);
+          } else {
+            console.log('Successfully inserted inquiry into Supabase via fallback');
           }
-        }
-
-        if (error) {
-          console.error('Supabase contact_messages insert error:', error.message, error.details);
         } else {
-          console.log('Successfully inserted inquiry to Supabase contact_messages:', data);
+          console.log('Successfully inserted inquiry into Supabase contact_messages');
         }
       }
     } catch (err) {
@@ -121,13 +115,14 @@ export default function Contact() {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
+        keepalive: true,
         body: JSON.stringify({
-          _subject: `New WASHMitra Inquiry from ${name}`,
+          _subject: `New WASHMitra Mobile Inquiry from ${name}`,
           Name: name,
           Phone: phone,
           Email: email || 'Not Provided',
           Category: selectedInterest,
-          Message: message,
+          Message: formattedMessage,
           SubmittedAt: new Date().toLocaleString()
         })
       }).catch(e => console.warn('Email webhook backup note:', e));
@@ -283,18 +278,6 @@ export default function Contact() {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Honeypot field for spam bots */}
-              <div style={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px', overflow: 'hidden' }} aria-hidden="true">
-                <label htmlFor="company_website">Company Website</label>
-                <input
-                  type="text"
-                  id="company_website"
-                  name="company_website"
-                  tabIndex={-1}
-                  autoComplete="off"
-                />
-              </div>
-
               <div className="space-y-2">
                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">
                   What are you inquiring about?
