@@ -512,7 +512,7 @@ export default function AdminDashboard() {
 
                 <div className="text-center pt-2 border-t border-slate-100">
                   <p className="text-[11px] font-semibold text-slate-400">
-                    Default Master Passcode: <code className="bg-slate-100 text-slate-800 px-2 py-0.5 rounded font-bold border border-slate-200">Washmitra@2026</code>
+                    Directorate Passcode Protected System
                   </p>
                 </div>
               </form>
@@ -1226,7 +1226,7 @@ export default function AdminDashboard() {
               <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-200">
                 <div>
                   <span className="font-bold text-[#062D27] block">Administrative Passcode</span>
-                  <span className="text-[11px] text-slate-400">Current Security Key: Washmitra@2026</span>
+                  <span className="text-[11px] text-slate-400">Security Mode: Environment Variable Protected</span>
                 </div>
                 <Badge className="bg-emerald-100 text-emerald-800 font-bold">Active</Badge>
               </div>
