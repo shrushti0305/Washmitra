@@ -43,36 +43,43 @@ export default function Contact() {
       return;
     }
 
+    // Generate robust RFC4122 compliant UUID v4 for all mobile/desktop browsers
+    const uuid = (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') 
+      ? crypto.randomUUID() 
+      : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+          const r = Math.random() * 16 | 0;
+          const v = c === 'x' ? r : (r & 0x3 | 0x8);
+          return v.toString(16);
+        });
+
     const newInquiry = {
-      id: Date.now().toString(),
+      id: uuid,
       name,
       phone,
       email,
       message: formattedMessage,
-      created_at: new Date().toISOString()
+      created_at: new Date().toISOString(),
+      status: 'pending'
     };
 
-    // Save locally for instant offline admin access
+    // 1. Save to Local Storage (2 separate storage keys for zero data loss)
     try {
       const existingStr = localStorage.getItem('washmitra_local_inquiries');
       const existingArr = existingStr ? JSON.parse(existingStr) : [];
       localStorage.setItem('washmitra_local_inquiries', JSON.stringify([newInquiry, ...existingArr]));
+
+      const permanentStr = localStorage.getItem('washmitra_permanent_inquiry_log');
+      const permanentArr = permanentStr ? JSON.parse(permanentStr) : [];
+      localStorage.setItem('washmitra_permanent_inquiry_log', JSON.stringify([newInquiry, ...permanentArr]));
     } catch (e) {
       console.warn('LocalStorage save note:', e);
     }
 
+    // 2. Primary Database Sync: Supabase contact_messages
     try {
       if (supabase) {
-        // Generate robust RFC4122 compliant UUID v4 for all mobile/desktop browsers
-        const uuid = (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') 
-          ? crypto.randomUUID() 
-          : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-              const r = Math.random() * 16 | 0;
-              const v = c === 'x' ? r : (r & 0x3 | 0x8);
-              return v.toString(16);
-            });
-
-        const { data, error } = await supabase.from('contact_messages').insert([{
+        // Attempt 1: Insert with UUID
+        let { data, error } = await supabase.from('contact_messages').insert([{
           id: uuid,
           name,
           phone,
@@ -80,20 +87,58 @@ export default function Contact() {
           message: formattedMessage,
         }]).select();
 
+        // Fallback Attempt 2: If custom ID rejected, insert without explicit ID
         if (error) {
-          console.error('Supabase contact_messages insert error:', error.message, error.details, error.hint);
+          console.warn('Supabase insert with UUID note, retrying without explicit ID:', error.message);
+          const fallbackRes = await supabase.from('contact_messages').insert([{
+            name,
+            phone,
+            email,
+            message: formattedMessage,
+          }]).select();
+
+          if (!fallbackRes.error) {
+            data = fallbackRes.data;
+            error = null;
+          }
+        }
+
+        if (error) {
+          console.error('Supabase contact_messages insert error:', error.message, error.details);
         } else {
           console.log('Successfully inserted inquiry to Supabase contact_messages:', data);
         }
       }
     } catch (err) {
       console.error('Contact submission error:', err);
-    } finally {
-      setIsSubmitting(false);
-      setIsSuccess(true);
-      setSubmittedData({ name, phone });
-      toast.success("Inquiry received! Our team will contact you shortly.");
     }
+
+    // 3. Background Email Backup Notification (Sends instant alert to washmitra.india@gmail.com)
+    try {
+      fetch('https://formsubmit.co/ajax/washmitra.india@gmail.com', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          _subject: `New WASHMitra Inquiry from ${name}`,
+          Name: name,
+          Phone: phone,
+          Email: email || 'Not Provided',
+          Category: selectedInterest,
+          Message: message,
+          SubmittedAt: new Date().toLocaleString()
+        })
+      }).catch(e => console.warn('Email webhook backup note:', e));
+    } catch (e) {
+      console.warn('Email trigger note:', e);
+    }
+
+    setIsSubmitting(false);
+    setIsSuccess(true);
+    setSubmittedData({ name, phone });
+    toast.success("Inquiry received! Our team will contact you shortly.");
   };
 
   const whatsappMessage = encodeURIComponent(

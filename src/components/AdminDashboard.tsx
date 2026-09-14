@@ -136,12 +136,13 @@ export default function AdminDashboard() {
   const fetchContactMessages = async () => {
     let combined: any[] = [];
 
-    // 1. Read local storage backup inquiries
+    // 1. Read local storage backup inquiries (both standard and permanent log)
     try {
       const localStr = localStorage.getItem('washmitra_local_inquiries');
-      if (localStr) {
-        combined = JSON.parse(localStr);
-      }
+      const permStr = localStorage.getItem('washmitra_permanent_inquiry_log');
+      const localArr = localStr ? JSON.parse(localStr) : [];
+      const permArr = permStr ? JSON.parse(permStr) : [];
+      combined = [...localArr, ...permArr];
     } catch (e) {
       console.warn('Local storage read note:', e);
     }
@@ -170,6 +171,43 @@ export default function AdminDashboard() {
     // Sort by created_at descending
     combined.sort((a, b) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime());
     setMessages(combined);
+  };
+
+  const syncLocalToDatabase = async () => {
+    if (messages.length === 0) {
+      toast.info("No local messages to sync.");
+      return;
+    }
+
+    setLoading(true);
+    let syncedCount = 0;
+
+    for (const msg of messages) {
+      try {
+        const uuid = (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function')
+          ? (msg.id && msg.id.length > 20 ? msg.id : crypto.randomUUID())
+          : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+              const r = Math.random() * 16 | 0;
+              return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+            });
+
+        const { error } = await supabase.from('contact_messages').insert([{
+          id: uuid,
+          name: msg.name || 'Visitor',
+          phone: msg.phone || null,
+          email: msg.email || null,
+          message: msg.message || 'General Inquiry'
+        }]);
+
+        if (!error) syncedCount++;
+      } catch (e) {
+        console.warn('Sync message note:', e);
+      }
+    }
+
+    setLoading(false);
+    toast.success(`Database Sync Complete! (${syncedCount} records processed)`);
+    fetchContactMessages();
   };
 
   // ----------------------------------------------------
@@ -828,6 +866,18 @@ export default function AdminDashboard() {
                 >
                   <Download className="h-3.5 w-3.5 text-emerald-600" />
                   <span>Export CSV</span>
+                </Button>
+
+                {/* Re-Sync DB */}
+                <Button
+                  onClick={syncLocalToDatabase}
+                  variant="outline"
+                  size="sm"
+                  title="Push locally saved inquiries directly to Supabase cloud database"
+                  className="h-9 border-amber-200 bg-amber-50/50 hover:bg-amber-100 text-amber-800 font-bold text-xs gap-1.5 rounded-xl transition-all cursor-pointer"
+                >
+                  <RefreshCw className="h-3.5 w-3.5 text-amber-600" />
+                  <span>Re-Sync DB</span>
                 </Button>
               </div>
             </CardHeader>
