@@ -61,10 +61,15 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(false);
   const [lastSynced, setLastSynced] = useState<Date | null>(null);
 
-  // Inquiries Search & Filter
+  // Inquiries Search, Date & Status Filters
   const [messageSearch, setMessageSearch] = useState('');
   const [messageStatusFilter, setMessageStatusFilter] = useState<'all' | 'pending' | 'resolved'>('all');
+  const [dateFilter, setDateFilter] = useState<'all' | 'today' | 'week' | 'month'>('all');
   const [selectedMessage, setSelectedMessage] = useState<any | null>(null);
+  
+  // Auto Refresh & Bulk Selection State
+  const [autoRefresh, setAutoRefresh] = useState(false);
+  const [selectedMsgIds, setSelectedMsgIds] = useState<string[]>([]);
 
   // Technicians Search & Filter
   const [mitraSearch, setMitraSearch] = useState('');
@@ -87,6 +92,15 @@ export default function AdminDashboard() {
       refreshAllData();
     }
   }, [isAuthenticated]);
+
+  // Auto-refresh timer (every 30 seconds when enabled)
+  useEffect(() => {
+    if (!isAuthenticated || !autoRefresh) return;
+    const interval = setInterval(() => {
+      refreshAllData();
+    }, 30000);
+    return () => clearInterval(interval);
+  }, [isAuthenticated, autoRefresh]);
 
   const refreshAllData = async () => {
     setLoading(true);
@@ -300,6 +314,7 @@ export default function AdminDashboard() {
 
     const updated = messages.filter(m => m.id !== msgId);
     setMessages(updated);
+    setSelectedMsgIds(prev => prev.filter(id => id !== msgId));
 
     try {
       localStorage.setItem('washmitra_local_inquiries', JSON.stringify(updated));
@@ -307,7 +322,61 @@ export default function AdminDashboard() {
       console.warn('LocalStorage error:', e);
     }
 
-    toast.success("Inquiry deleted successfully");
+    toast.success("Inquiry deleted");
+  };
+
+  const toggleSelectMessage = (id: string) => {
+    setSelectedMsgIds(prev => 
+      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+    );
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedMsgIds.length === filteredMessages.length) {
+      setSelectedMsgIds([]);
+    } else {
+      setSelectedMsgIds(filteredMessages.map(m => m.id));
+    }
+  };
+
+  const bulkResolveMessages = async () => {
+    if (selectedMsgIds.length === 0) return;
+    if (!window.confirm(`Mark ${selectedMsgIds.length} selected inquiries as RESOLVED?`)) return;
+
+    for (const id of selectedMsgIds) {
+      try {
+        await supabase.from('contact_messages').update({ status: 'resolved' }).eq('id', id);
+      } catch (e) {}
+    }
+
+    const updated = messages.map(m => selectedMsgIds.includes(m.id) ? { ...m, status: 'resolved' } : m);
+    setMessages(updated);
+    try {
+      localStorage.setItem('washmitra_local_inquiries', JSON.stringify(updated));
+    } catch (e) {}
+
+    toast.success(`Marked ${selectedMsgIds.length} inquiries as RESOLVED`);
+    setSelectedMsgIds([]);
+  };
+
+  const bulkDeleteMessages = async () => {
+    if (selectedMsgIds.length === 0) return;
+    if (!window.confirm(`Are you sure you want to PERMANENTLY DELETE ${selectedMsgIds.length} selected inquiries?`)) return;
+
+    for (const id of selectedMsgIds) {
+      try {
+        await supabase.from('contact_messages').delete().eq('id', id);
+      } catch (e) {}
+    }
+
+    const updated = messages.filter(m => !selectedMsgIds.includes(m.id));
+    setMessages(updated);
+    try {
+      localStorage.setItem('washmitra_local_inquiries', JSON.stringify(updated));
+    } catch (e) {}
+
+    toast.success(`Deleted ${selectedMsgIds.length} inquiries`);
+    setSelectedMsgIds([]);
   };
 
   const exportMessagesCSV = () => {
@@ -337,6 +406,10 @@ export default function AdminDashboard() {
     document.body.removeChild(link);
 
     toast.success("Exported Contact Inquiries to CSV!");
+  };
+
+  const makeDirectCall = (phone: string) => {
+    window.location.href = `tel:${phone}`;
   };
 
   const openWhatsAppReply = (phone: string, name: string) => {
@@ -504,7 +577,22 @@ export default function AdminDashboard() {
       messageStatusFilter === 'resolved' ? m.status === 'resolved' :
       (m.status || 'pending') === 'pending';
 
-    return matchesSearch && matchesStatus;
+    let matchesDate = true;
+    if (dateFilter !== 'all' && m.created_at) {
+      const created = new Date(m.created_at);
+      const now = new Date();
+      if (dateFilter === 'today') {
+        matchesDate = created.toDateString() === now.toDateString();
+      } else if (dateFilter === 'week') {
+        const diffDays = (now.getTime() - created.getTime()) / (1000 * 3600 * 24);
+        matchesDate = diffDays <= 7;
+      } else if (dateFilter === 'month') {
+        const diffDays = (now.getTime() - created.getTime()) / (1000 * 3600 * 24);
+        matchesDate = diffDays <= 30;
+      }
+    }
+
+    return matchesSearch && matchesStatus && matchesDate;
   });
 
   const filteredMitras = mitras.filter(m => {
@@ -655,6 +743,18 @@ export default function AdminDashboard() {
             >
               <RefreshCw className={`h-4 w-4 text-[#F26522] ${loading ? 'animate-spin' : ''}`} />
               <span>{loading ? 'Refreshing...' : 'Refresh All Data'}</span>
+            </Button>
+
+            <Button
+              onClick={() => { setAutoRefresh(!autoRefresh); toast.info(`Auto-Sync ${!autoRefresh ? 'Enabled (30s interval)' : 'Disabled'}`); }}
+              className={`font-bold text-xs gap-2 rounded-xl h-10 px-4 transition-all cursor-pointer border backdrop-blur-xs ${
+                autoRefresh 
+                  ? 'bg-emerald-500/20 text-emerald-300 border-emerald-400/40' 
+                  : 'bg-white/10 hover:bg-white/20 text-white/80 border-white/20'
+              }`}
+            >
+              <span className={`w-2 h-2 rounded-full ${autoRefresh ? 'bg-emerald-400 animate-pulse' : 'bg-slate-400'}`} />
+              <span>Auto-Sync {autoRefresh ? 'ON' : 'OFF'}</span>
             </Button>
 
             <Button
@@ -866,9 +966,9 @@ export default function AdminDashboard() {
                 </p>
               </div>
 
-              {/* Controls: Search, Filter, CSV Export */}
+              {/* Controls: Search, Filter, Date Filter, CSV Export */}
               <div className="flex items-center gap-3 flex-wrap">
-                {/* Filter Tabs */}
+                {/* Status Filter Tabs */}
                 <div className="bg-slate-200/70 p-1 rounded-xl flex items-center gap-1 text-xs font-bold">
                   <button
                     onClick={() => setMessageStatusFilter('all')}
@@ -896,8 +996,23 @@ export default function AdminDashboard() {
                   </button>
                 </div>
 
+                {/* Date Filter Tabs */}
+                <div className="bg-slate-200/70 p-1 rounded-xl flex items-center gap-1 text-xs font-bold">
+                  {(['all', 'today', 'week', 'month'] as const).map((df) => (
+                    <button
+                      key={df}
+                      onClick={() => setDateFilter(df)}
+                      className={`px-2.5 py-1.5 rounded-lg transition-all cursor-pointer capitalize ${
+                        dateFilter === df ? 'bg-[#062D27] text-white shadow-sm font-extrabold' : 'text-slate-600 hover:text-slate-900'
+                      }`}
+                    >
+                      {df === 'all' ? 'All Dates' : df === 'today' ? 'Today' : df === 'week' ? '7 Days' : '30 Days'}
+                    </button>
+                  ))}
+                </div>
+
                 {/* Search Input */}
-                <div className="relative w-full sm:w-60">
+                <div className="relative w-full sm:w-56">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
                   <Input
                     placeholder="Search name, phone, message..."
@@ -906,6 +1021,28 @@ export default function AdminDashboard() {
                     className="pl-8 h-9 text-xs border-slate-200 bg-white rounded-xl"
                   />
                 </div>
+
+                {/* Bulk Actions Floating Bar */}
+                {selectedMsgIds.length > 0 && (
+                  <div className="flex items-center gap-2 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-xl">
+                    <span className="text-xs font-black text-emerald-800">{selectedMsgIds.length} Selected</span>
+                    <Button
+                      size="sm"
+                      onClick={bulkResolveMessages}
+                      className="h-7 px-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] rounded-lg cursor-pointer"
+                    >
+                      <CheckCircle2 className="h-3 w-3 mr-1" /> Resolve
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      onClick={bulkDeleteMessages}
+                      className="h-7 px-2.5 bg-red-600 hover:bg-red-700 text-white font-bold text-[11px] rounded-lg cursor-pointer"
+                    >
+                      <Trash2 className="h-3 w-3 mr-1" /> Delete
+                    </Button>
+                  </div>
+                )}
 
                 {/* Export CSV */}
                 <Button
@@ -937,6 +1074,14 @@ export default function AdminDashboard() {
                 <Table>
                   <TableHeader>
                     <TableRow className="bg-slate-50/50">
+                      <TableHead className="w-10">
+                        <input
+                          type="checkbox"
+                          checked={selectedMsgIds.length === filteredMessages.length && filteredMessages.length > 0}
+                          onChange={toggleSelectAll}
+                          className="w-4 h-4 rounded border-slate-300 text-[#F26522] focus:ring-[#F26522] cursor-pointer"
+                        />
+                      </TableHead>
                       <TableHead className="font-black text-xs text-slate-700">Date & Time</TableHead>
                       <TableHead className="font-black text-xs text-slate-700">Customer Details</TableHead>
                       <TableHead className="font-black text-xs text-slate-700">Contact Channels</TableHead>
@@ -948,12 +1093,12 @@ export default function AdminDashboard() {
                   <TableBody>
                     {filteredMessages.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={6} className="text-center py-16 text-slate-400 font-bold text-sm">
-                          {messageSearch || messageStatusFilter !== 'all' ? (
+                        <TableCell colSpan={7} className="text-center py-16 text-slate-400 font-bold text-sm">
+                          {messageSearch || messageStatusFilter !== 'all' || dateFilter !== 'all' ? (
                             <div className="space-y-2">
-                              <p>No contact inquiries match your search filters.</p>
-                              <Button variant="outline" size="sm" onClick={() => { setMessageSearch(''); setMessageStatusFilter('all'); }}>
-                                Reset Search Filters
+                              <p>No contact inquiries match your search & date filters.</p>
+                              <Button variant="outline" size="sm" onClick={() => { setMessageSearch(''); setMessageStatusFilter('all'); setDateFilter('all'); }}>
+                                Reset All Filters
                               </Button>
                             </div>
                           ) : (
@@ -963,7 +1108,16 @@ export default function AdminDashboard() {
                       </TableRow>
                     ) : (
                       filteredMessages.map((msg) => (
-                        <TableRow key={msg.id} className="hover:bg-slate-50/80 transition-colors">
+                        <TableRow key={msg.id} className={`hover:bg-slate-50/80 transition-colors ${selectedMsgIds.includes(msg.id) ? 'bg-amber-50/40' : ''}`}>
+                          <TableCell className="w-10">
+                            <input
+                              type="checkbox"
+                              checked={selectedMsgIds.includes(msg.id)}
+                              onChange={() => toggleSelectMessage(msg.id)}
+                              className="w-4 h-4 rounded border-slate-300 text-[#F26522] focus:ring-[#F26522] cursor-pointer"
+                            />
+                          </TableCell>
+
                           <TableCell className="text-xs font-semibold text-slate-500 whitespace-nowrap">
                             <div className="flex items-center gap-1.5">
                               <Clock className="h-3 w-3 text-slate-400" />
@@ -1020,18 +1174,31 @@ export default function AdminDashboard() {
                           </TableCell>
 
                           <TableCell className="text-right whitespace-nowrap">
-                            <div className="flex items-center justify-end gap-1.5">
+                            <div className="flex items-center justify-end gap-1">
                               {msg.phone && (
-                                <Button
-                                  size="sm"
-                                  variant="ghost"
-                                  onClick={() => openWhatsAppReply(msg.phone, msg.name)}
-                                  className="h-8 px-2 text-emerald-600 hover:bg-emerald-50 text-xs font-bold gap-1 cursor-pointer"
-                                  title="Reply via WhatsApp"
-                                >
-                                  <MessageCircle className="h-3.5 w-3.5" />
-                                  <span className="hidden sm:inline">WhatsApp</span>
-                                </Button>
+                                <>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => makeDirectCall(msg.phone)}
+                                    className="h-8 px-2 border-slate-200 text-slate-700 hover:bg-slate-100 text-xs font-bold gap-1 cursor-pointer"
+                                    title="Call Customer"
+                                  >
+                                    <Phone className="h-3.5 w-3.5 text-[#F26522]" />
+                                    <span className="hidden md:inline">Call</span>
+                                  </Button>
+
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={() => openWhatsAppReply(msg.phone, msg.name)}
+                                    className="h-8 px-2 text-emerald-600 hover:bg-emerald-50 text-xs font-bold gap-1 cursor-pointer"
+                                    title="Reply via WhatsApp"
+                                  >
+                                    <MessageCircle className="h-3.5 w-3.5" />
+                                    <span className="hidden md:inline">WhatsApp</span>
+                                  </Button>
+                                </>
                               )}
 
                               <Button
