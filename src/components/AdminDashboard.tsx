@@ -561,6 +561,87 @@ export default function AdminDashboard() {
     toast.success("Exported Technicians Roster to CSV!");
   };
 
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+  const triggerCSVUpload = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleMitrasCSVImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      try {
+        const text = event.target?.result as string;
+        if (!text) return;
+
+        const lines = text.split(/\r?\n/).filter(line => line.trim().length > 0);
+        if (lines.length < 2) {
+          toast.error("CSV file is empty or missing data rows.");
+          return;
+        }
+
+        let importedCount = 0;
+        const newProfiles: any[] = [];
+
+        for (let i = 1; i < lines.length; i++) {
+          const row = lines[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || lines[i].split(',');
+          const cleanRow = row.map(cell => cell.trim().replace(/^"|"$/g, ''));
+
+          if (cleanRow.length === 0 || !cleanRow[0]) continue;
+
+          const fullName = cleanRow[0] || 'WASHMitra Technician';
+          const phone = cleanRow[1] || '';
+          const email = cleanRow[2] || null;
+          const district = cleanRow[3] || 'Pune';
+          const skillsRaw = cleanRow[4] || 'Plumbing, Sanitation';
+          const skillsArray = skillsRaw.split(/[;,]/).map(s => s.trim()).filter(Boolean);
+          const isVerified = (cleanRow[5] || '').toUpperCase().includes('VERIFIED') || cleanRow[5] === 'true';
+
+          const uuid = (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') 
+            ? crypto.randomUUID() 
+            : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => (Math.random() * 16 | 0).toString(16));
+
+          newProfiles.push({
+            id: uuid,
+            full_name: fullName,
+            name: fullName,
+            phone: phone,
+            email: email,
+            role: 'WASHMITRA',
+            district: district,
+            skills: skillsArray,
+            is_paid: isVerified,
+            is_available: true
+          });
+        }
+
+        if (newProfiles.length === 0) {
+          toast.error("No valid technician rows found in CSV.");
+          return;
+        }
+
+        setLoading(true);
+        const { error } = await supabase.from('profiles').insert(newProfiles);
+
+        if (error) {
+          toast.error("Bulk upload failed: " + error.message);
+        } else {
+          toast.success(`Bulk Upload Complete! Imported ${newProfiles.length} technicians.`);
+          fetchWashMitras();
+        }
+        setLoading(false);
+      } catch (err: any) {
+        toast.error("Error reading CSV file: " + err.message);
+      }
+    };
+
+    reader.readAsText(file);
+    e.target.value = '';
+  };
+
   // ----------------------------------------------------
   // FILTER COMPUTATIONS
   // ----------------------------------------------------
@@ -1294,6 +1375,27 @@ export default function AdminDashboard() {
                     className="pl-8 h-9 text-xs border-slate-200 bg-white rounded-xl"
                   />
                 </div>
+
+                {/* Hidden File Input for CSV Import */}
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  accept=".csv"
+                  onChange={handleMitrasCSVImport}
+                  style={{ display: 'none' }}
+                />
+
+                {/* Bulk Import CSV */}
+                <Button
+                  onClick={triggerCSVUpload}
+                  variant="outline"
+                  size="sm"
+                  title="Bulk upload technicians list from CSV file"
+                  className="h-9 border-blue-200 bg-blue-50/50 hover:bg-blue-100 text-blue-800 font-bold text-xs gap-1.5 rounded-xl transition-all cursor-pointer"
+                >
+                  <FileSpreadsheet className="h-3.5 w-3.5 text-blue-600" />
+                  <span>Bulk Import CSV</span>
+                </Button>
 
                 {/* Export CSV */}
                 <Button
