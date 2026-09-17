@@ -8,7 +8,6 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig(() => {
   return {
-    base: './', // Universal relative base path for custom domain (www.washmitra.com) & GH Pages
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
