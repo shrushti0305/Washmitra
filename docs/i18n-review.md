@@ -56,6 +56,16 @@ This ledger tracks every internationalization translation key across the WASH Mi
 | `showcase.item.sanitation` | Sanitation | स्वच्छता | स्वच्छता | no |
 | `showcase.item.training` | Training | प्रशिक्षण | प्रशिक्षण | no |
 | `showcase.item.plumbing` | Plumbing | प्लंबिंग | नल-पाइप काम | no |
+| `video.badge.watchStory` | Watch Our Story | आमची गोष्ट पहा | हमारी कहानी देखें | no |
+| `video.action.playYoutube` | Click to play on YouTube | YouTube वर व्हिडिओ पहा | YouTube पर वीडियो देखें | no |
+| `video.titlePrefix` | See the WASH Mitra | पहा WASH Mitra ची | देखें WASH Mitra की | no |
+| `video.titleMovement` | movement | ही चळवळ | यह मुहिम | yes |
+| `video.titleSuffix` | in action. | प्रत्यक्षात काम करताना. | ज़मीन पर काम करते हुए। | yes |
+| `video.qr.scanToWatch` | Scan to Watch | स्कॅन करून पहा | स्कैन करके देखें | no |
+| `video.qr.imageAlt` | Scan to watch the WASH Mitra story on YouTube | WASH Mitra चा व्हिडिओ YouTube वर पाहण्यासाठी स्कॅन करा | WASH Mitra का वीडियो YouTube पर देखने के लिए स्कैन करें | no |
+| `video.qr.scanWithPhone` | Scan with your phone | तुमच्या फोनने स्कॅन करा | अपने फोन से स्कैन करें | no |
+| `video.qr.desc` | Point your camera at the QR code to watch the WASH Mitra story on YouTube. | QR कोडवर कॅमेरा धरा आणि YouTube वर WASH Mitra चा व्हिडिओ पहा. | QR कोड पर कैमरा रखें और YouTube पर WASH Mitra का वीडियो देखें। | yes |
+| `video.action.openVideo` | Open Video | व्हिडिओ पहा | वीडियो देखें | no |
 | `layout.nav.trainingNavigated` | Navigated to Training Hub! Choose a certification course to enroll. | प्रशिक्षण विभाग उघडला आहे. नोंदणीसाठी कोर्स निवडा. | प्रशिक्षण विभाग खुल गया है। नामांकन के लिए कोर्स चुनें। | no |
 | `layout.notifications.title` | Notifications | सूचना | सूचनाएं | no |
 | `layout.notifications.new` | New | नवीन | नया | no |

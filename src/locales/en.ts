@@ -61,6 +61,18 @@ export const en = {
   'showcase.item.training': 'Training',
   'showcase.item.plumbing': 'Plumbing',
 
+  // VideoShowcase
+  'video.badge.watchStory': 'Watch Our Story',
+  'video.action.playYoutube': 'Click to play on YouTube',
+  'video.titlePrefix': 'See the WASH Mitra',
+  'video.titleMovement': 'movement',
+  'video.titleSuffix': 'in action.',
+  'video.qr.scanToWatch': 'Scan to Watch',
+  'video.qr.imageAlt': 'Scan to watch the WASH Mitra story on YouTube',
+  'video.qr.scanWithPhone': 'Scan with your phone',
+  'video.qr.desc': 'Point your camera at the QR code to watch the WASH Mitra story on YouTube.',
+  'video.action.openVideo': 'Open Video',
+
   // Layout & Top Nav
   'layout.nav.trainingNavigated': 'Navigated to Training Hub! Choose a certification course to enroll.',
   'layout.notifications.title': 'Notifications',

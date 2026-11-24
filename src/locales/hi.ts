@@ -63,6 +63,18 @@ export const hi: Record<TranslationKey, string> = {
   'showcase.item.training': 'प्रशिक्षण',
   'showcase.item.plumbing': 'नल-पाइप काम',
 
+  // VideoShowcase
+  'video.badge.watchStory': 'हमारी कहानी देखें',
+  'video.action.playYoutube': 'YouTube पर वीडियो देखें',
+  'video.titlePrefix': 'देखें WASH Mitra की',
+  'video.titleMovement': 'यह मुहिम',
+  'video.titleSuffix': 'ज़मीन पर काम करते हुए।',
+  'video.qr.scanToWatch': 'स्कैन करके देखें',
+  'video.qr.imageAlt': 'WASH Mitra का वीडियो YouTube पर देखने के लिए स्कैन करें',
+  'video.qr.scanWithPhone': 'अपने फोन से स्कैन करें',
+  'video.qr.desc': 'QR कोड पर कैमरा रखें और YouTube पर WASH Mitra का वीडियो देखें।',
+  'video.action.openVideo': 'वीडियो देखें',
+
   // Layout & Top Nav
   'layout.nav.trainingNavigated': 'प्रशिक्षण विभाग खुल गया है। नामांकन के लिए कोर्स चुनें।',
   'layout.notifications.title': 'सूचनाएं',

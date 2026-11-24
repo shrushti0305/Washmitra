@@ -2,9 +2,11 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { Play, QrCode, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useLanguage } from '../contexts/LanguageContext';
 import washmitraQrCode from '../assets/images/WASHMITRA.jpeg';
 
 export default function VideoShowcase() {
+  const { t } = useLanguage();
   const VIDEO_URL = "https://www.youtube.com/watch?v=eSzTlktr5jk";
 
   return (
@@ -38,7 +40,7 @@ export default function VideoShowcase() {
 
           <div className="relative z-10 p-12 h-full flex flex-col justify-between">
             <div className="space-y-2">
-              <p className="text-[10px] font-black text-brand-accent uppercase tracking-[0.4em]">Watch Our Story</p>
+              <p className="text-[10px] font-black text-brand-accent uppercase tracking-[0.4em]">{t('video.badge.watchStory')}</p>
             </div>
 
             <div className="max-w-2xl">
@@ -46,11 +48,11 @@ export default function VideoShowcase() {
                 <div className="w-20 h-20 rounded-full bg-brand-accent flex items-center justify-center text-white shadow-xl group-hover:scale-110 transition-transform duration-500">
                   <Play className="h-8 w-8 fill-current ml-1" />
                 </div>
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest group-hover:text-slate-600 transition-colors">Click to play on YouTube</p>
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest group-hover:text-slate-600 transition-colors">{t('video.action.playYoutube')}</p>
               </div>
 
               <h2 className="text-3xl sm:text-4xl md:text-7xl font-black text-brand-primary leading-[0.95] md:leading-[0.9] tracking-tighter">
-                See the WASH Mitra <span className="font-serif italic text-brand-accent font-normal tracking-normal">movement</span> in action.
+                {t('video.titlePrefix')} <span className="font-serif italic text-brand-accent font-normal tracking-normal">{t('video.titleMovement')}</span> {t('video.titleSuffix')}
               </h2>
             </div>
 
@@ -72,22 +74,22 @@ export default function VideoShowcase() {
           <div className="space-y-2">
             <div className="flex items-center justify-center gap-2 text-brand-accent">
               <QrCode className="h-4 w-4" />
-              <p className="text-[10px] font-black uppercase tracking-[0.3em]">Scan to Watch</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.3em]">{t('video.qr.scanToWatch')}</p>
             </div>
           </div>
 
           <div className="w-56 h-56 bg-brand-background rounded-[32px] p-4 border border-slate-100 shadow-inner flex items-center justify-center">
             <img
               src={washmitraQrCode}
-              alt="Scan to watch the WashMitra story on YouTube"
+              alt={t('video.qr.imageAlt')}
               className="w-full h-full object-contain rounded-lg"
             />
           </div>
 
           <div className="space-y-2">
-            <h3 className="text-xl font-black text-brand-primary">Scan with your phone</h3>
+            <h3 className="text-xl font-black text-brand-primary">{t('video.qr.scanWithPhone')}</h3>
             <p className="text-sm text-slate-500 max-w-[200px] font-medium leading-relaxed">
-              Point your camera at the QR code to watch the WASH Mitra story on YouTube.
+              {t('video.qr.desc')}
             </p>
           </div>
 
@@ -97,7 +99,7 @@ export default function VideoShowcase() {
             onClick={() => window.open(VIDEO_URL, '_blank')}
           >
             <Play className="h-4 w-4 fill-current" />
-            Open Video
+            {t('video.action.openVideo')}
           </Button>
         </motion.div>
 
