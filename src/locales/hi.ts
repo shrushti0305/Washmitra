@@ -30,6 +30,15 @@ export const hi: Record<TranslationKey, string> = {
   'hero.badge.dragToExplore': 'घुमाकर देखें',
   'hero.stats.villagesServed': 'गाँवों में सेवा',
 
+  // Landing
+  'landing.services.subtitle': 'हमारी सेवाएं',
+  'landing.services.titleLine1': 'उच्च दर्जे का काम,',
+  'landing.services.titleLine2': 'गाँव से गहरा जुड़ाव।',
+  'landing.map.subtitle': 'काम की सीधी झलक',
+  'landing.map.titleLine1': 'देखें हमारा',
+  'landing.map.titleLine2': 'ज़मीनी स्तर पर बदलाव।',
+  'landing.map.desc': 'नक्शे पर चुनकर देखें, WASH Mitra तकनीशियनों द्वारा गाँवों में लाए गए सच्चे बदलाव।',
+
   // Layout & Top Nav
   'layout.nav.trainingNavigated': 'प्रशिक्षण विभाग खुल गया है। नामांकन के लिए कोर्स चुनें।',
   'layout.notifications.title': 'सूचनाएं',

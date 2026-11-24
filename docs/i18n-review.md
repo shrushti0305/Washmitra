@@ -29,6 +29,13 @@ This ledger tracks every internationalization translation key across the WASH Mi
 | `hero.badge.cadre` | Multi-skill cadre | बहु-कुशल तंत्रज्ञ | बहु-कुशल तकनीशियन | no |
 | `hero.badge.dragToExplore` | Drag to explore | फिरवून पहा | घुमाकर देखें | no |
 | `hero.stats.villagesServed` | Villages Served | गावांमध्ये सेवा | गाँवों में सेवा | no |
+| `landing.services.subtitle` | Our Services | आमच्या सेवा | हमारी सेवाएं | no |
+| `landing.services.titleLine1` | Professional scale, | मोठ्या दर्जाचे काम, | उच्च दर्जे का काम, | yes |
+| `landing.services.titleLine2` | village roots. | गावाशी घट्ट नातं. | गाँव से गहरा जुड़ाव। | yes |
+| `landing.map.subtitle` | Interactive Journey | कामाची प्रत्यक्ष झलक | काम की सीधी झलक | yes |
+| `landing.map.titleLine1` | Explore our | पहा आमचा | देखें हमारा | no |
+| `landing.map.titleLine2` | ground-level impact. | जमिनीवर झालेला बदल. | ज़मीनी स्तर पर बदलाव। | yes |
+| `landing.map.desc` | Click on the markers to see real stories of transformation powered by WASH Mitra technicians. | नकाशावर निवडून पहा, WASH Mitra तंत्रज्ञांनी गावात घडवलेले खरे बदल. | नक्शे पर चुनकर देखें, WASH Mitra तकनीशियनों द्वारा गाँवों में लाए गए सच्चे बदलाव। | yes |
 | `layout.nav.trainingNavigated` | Navigated to Training Hub! Choose a certification course to enroll. | प्रशिक्षण विभाग उघडला आहे. नोंदणीसाठी कोर्स निवडा. | प्रशिक्षण विभाग खुल गया है। नामांकन के लिए कोर्स चुनें। | no |
 | `layout.notifications.title` | Notifications | सूचना | सूचनाएं | no |
 | `layout.notifications.new` | New | नवीन | नया | no |

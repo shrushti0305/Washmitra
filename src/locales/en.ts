@@ -28,6 +28,15 @@ export const en = {
   'hero.badge.dragToExplore': 'Drag to explore',
   'hero.stats.villagesServed': 'Villages Served',
 
+  // Landing
+  'landing.services.subtitle': 'Our Services',
+  'landing.services.titleLine1': 'Professional scale,',
+  'landing.services.titleLine2': 'village roots.',
+  'landing.map.subtitle': 'Interactive Journey',
+  'landing.map.titleLine1': 'Explore our',
+  'landing.map.titleLine2': 'ground-level impact.',
+  'landing.map.desc': 'Click on the markers to see real stories of transformation powered by WASH Mitra technicians.',
+
   // Layout & Top Nav
   'layout.nav.trainingNavigated': 'Navigated to Training Hub! Choose a certification course to enroll.',
   'layout.notifications.title': 'Notifications',
