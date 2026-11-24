@@ -14,10 +14,10 @@ This ledger tracks every internationalization translation key across the WASH Mi
 | `heroTitleLine1` | Real people, | खरे लोक, | सच्चे लोग, | no |
 | `heroTitleLine2` | real skills, | खरी कौशल्ये, | सच्चे कौशल, | no |
 | `heroTitleLine3` | real impact. | खरा प्रभाव. | सच्चा प्रभाव। | no |
-| `heroDesc` | We train and deploy local technicians to maintain critical water and sanitation infrastructure across India's villages. | आम्ही भारतातील गावांमध्ये पाणी व स्वच्छता पायाभूत सुविधांच्या देखभालीसाठी स्थानिक तंत्रज्ञांना प्रशिक्षित व तैनात करतो. | हम भारत के गांवों में जल और स्वच्छता बुनियादी ढांचे के रखरखाव के लिए स्थानीय तकनीशियनों को प्रशिक्षित और तैनात करते हैं। | yes |
+| `heroDesc` | We train and deploy local technicians to maintain critical water and sanitation infrastructure across India's villages. | आम्ही भारतातील गावांमध्ये पाणी व स्वच्छता व्यवस्थेच्या देखभालीसाठी स्थानिक तंत्रज्ञांना शिकवतो आणि कामाची संधी देतो. | हम भारत के गाँवों में पानी और स्वच्छता के रखरखाव के लिए स्थानीय तकनीशियनों को सिखाते हैं और काम से जोड़ते हैं। | yes |
 | `contactUs` | Contact Us | आमच्याशी संपर्क साधा | हमसे संपर्क करें | no |
 | `exploreTraining` | Explore Training | प्रशिक्षण पहा | प्रशिक्षण देखें | no |
-| `becomeMitra` | Become a WASH Mitra | वाश मित्र बना | वाश मित्र बनें | no |
+| `becomeMitra` | Become a WASH Mitra | WASH Mitra बना | WASH Mitra बनें | no |
 | `downloadBrief` | Download Impact Brief (PDF) | प्रभाव अहवाल डाऊनलोड करा (PDF) | प्रभाव रिपोर्ट डाउनलोड करें (PDF) | no |
 | `getInTouch` | Get in Touch | संपर्क साधा | संपर्क करें | no |
 | `callHelpline` | Call Helpline | हेल्पलाइनवर कॉल करा | हेल्पलाइन पर कॉल करें | no |
@@ -25,6 +25,10 @@ This ledger tracks every internationalization translation key across the WASH Mi
 | `whoWeAre` | Who We Are | आम्ही कोण आहोत | हम कौन हैं | no |
 | `ourImpact` | Our Impact | आमचा प्रभाव | हमारा प्रभाव | no |
 | `leadership` | Leadership | नेतृत्व टीम | नेतृत्व टीम | no |
+| `hero.imageAlt` | Certified WASH Mitra Technician | प्रमाणित WASH Mitra तंत्रज्ञ | प्रमाणित WASH Mitra तकनीशियन | no |
+| `hero.badge.cadre` | Multi-skill cadre | बहु-कुशल तंत्रज्ञ | बहु-कुशल तकनीशियन | no |
+| `hero.badge.dragToExplore` | Drag to explore | फिरवून पहा | घुमाकर देखें | no |
+| `hero.stats.villagesServed` | Villages Served | गावांमध्ये सेवा | गाँवों में सेवा | no |
 | `layout.nav.trainingNavigated` | Navigated to Training Hub! Choose a certification course to enroll. | प्रशिक्षण विभाग उघडला आहे. नोंदणीसाठी कोर्स निवडा. | प्रशिक्षण विभाग खुल गया है। नामांकन के लिए कोर्स चुनें। | no |
 | `layout.notifications.title` | Notifications | सूचना | सूचनाएं | no |
 | `layout.notifications.new` | New | नवीन | नया | no |

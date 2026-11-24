@@ -23,6 +23,10 @@ export const en = {
   whoWeAre: 'Who We Are',
   ourImpact: 'Our Impact',
   leadership: 'Leadership',
+  'hero.imageAlt': 'Certified WASH Mitra Technician',
+  'hero.badge.cadre': 'Multi-skill cadre',
+  'hero.badge.dragToExplore': 'Drag to explore',
+  'hero.stats.villagesServed': 'Villages Served',
 
   // Layout & Top Nav
   'layout.nav.trainingNavigated': 'Navigated to Training Hub! Choose a certification course to enroll.',

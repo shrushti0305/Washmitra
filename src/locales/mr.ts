@@ -14,10 +14,10 @@ export const mr: Record<TranslationKey, string> = {
   heroTitleLine1: 'खरे लोक,',
   heroTitleLine2: 'खरी कौशल्ये,',
   heroTitleLine3: 'खरा प्रभाव.',
-  heroDesc: 'आम्ही भारतातील गावांमध्ये पाणी व स्वच्छता पायाभूत सुविधांच्या देखभालीसाठी स्थानिक तंत्रज्ञांना प्रशिक्षित व तैनात करतो.',
+  heroDesc: 'आम्ही भारतातील गावांमध्ये पाणी व स्वच्छता व्यवस्थेच्या देखभालीसाठी स्थानिक तंत्रज्ञांना शिकवतो आणि कामाची संधी देतो.',
   contactUs: 'आमच्याशी संपर्क साधा',
   exploreTraining: 'प्रशिक्षण पहा',
-  becomeMitra: 'वाश मित्र बना',
+  becomeMitra: 'WASH Mitra बना',
   downloadBrief: 'प्रभाव अहवाल डाऊनलोड करा (PDF)',
   getInTouch: 'संपर्क साधा',
   callHelpline: 'हेल्पलाइनवर कॉल करा',
@@ -25,6 +25,10 @@ export const mr: Record<TranslationKey, string> = {
   whoWeAre: 'आम्ही कोण आहोत',
   ourImpact: 'आमचा प्रभाव',
   leadership: 'नेतृत्व टीम',
+  'hero.imageAlt': 'प्रमाणित WASH Mitra तंत्रज्ञ',
+  'hero.badge.cadre': 'बहु-कुशल तंत्रज्ञ',
+  'hero.badge.dragToExplore': 'फिरवून पहा',
+  'hero.stats.villagesServed': 'गावांमध्ये सेवा',
 
   // Layout & Top Nav
   'layout.nav.trainingNavigated': 'प्रशिक्षण विभाग उघडला आहे. नोंदणीसाठी कोर्स निवडा.',

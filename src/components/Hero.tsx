@@ -97,7 +97,7 @@ export default function Hero() {
                  fallback={
                    <img
                      src={roofRepairImg}
-                     alt="Certified WASH Mitra Technician"
+                     alt={t('hero.imageAlt')}
                      className="w-full h-full object-cover grayscale-[0.2] transition-all duration-700"
                      referrerPolicy="no-referrer"
                    />
@@ -108,8 +108,8 @@ export default function Hero() {
 
                {/* Caption chip explaining the 3D piece */}
                <div className="absolute top-5 left-5 bg-white/80 backdrop-blur-md px-4 py-2 rounded-2xl shadow-sm">
-                 <p className="text-[9px] font-black text-[#062D27] uppercase tracking-[0.25em]">Multi-skill cadre</p>
-                 <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Drag to explore</p>
+                 <p className="text-[9px] font-black text-[#062D27] uppercase tracking-[0.25em]">{t('hero.badge.cadre')}</p>
+                 <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">{t('hero.badge.dragToExplore')}</p>
                </div>
                <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-[#062D27]/10 to-transparent" />
             </div>
@@ -126,7 +126,7 @@ export default function Hero() {
                </div>
                <div>
                   <p className="text-2xl font-black text-[#062D27]">500+</p>
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Villages Served</p>
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t('hero.stats.villagesServed')}</p>
                </div>
             </motion.div>
 
