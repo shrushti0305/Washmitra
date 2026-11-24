@@ -1,0 +1,56 @@
+import type { TranslationKey } from './en';
+
+export const hi: Record<TranslationKey, string> = {
+  // Navigation
+  home: 'मुख्यपृष्ठ',
+  about: 'हमारे बारे में',
+  services: 'सेवाएं',
+  training: 'प्रशिक्षण',
+  impact: 'प्रभाव',
+  contact: 'संपर्क',
+
+  // Hero
+  tagline: 'ग्रामीण विकास और सशक्तिकरण',
+  heroTitleLine1: 'सच्चे लोग,',
+  heroTitleLine2: 'सच्चे कौशल,',
+  heroTitleLine3: 'सच्चा प्रभाव।',
+  heroDesc: 'हम भारत के गांवों में जल और स्वच्छता बुनियादी ढांचे के रखरखाव के लिए स्थानीय तकनीशियनों को प्रशिक्षित और तैनात करते हैं।',
+  contactUs: 'हमसे संपर्क करें',
+  exploreTraining: 'प्रशिक्षण देखें',
+  becomeMitra: 'वाश मित्र बनें',
+  downloadBrief: 'प्रभाव रिपोर्ट डाउनलोड करें (PDF)',
+  getInTouch: 'संपर्क करें',
+  callHelpline: 'हेल्पलाइन पर कॉल करें',
+  chatWhatsapp: 'व्हाट्सएप पर चैट करें',
+  whoWeAre: 'हम कौन हैं',
+  ourImpact: 'हमारा प्रभाव',
+  leadership: 'नेतृत्व टीम',
+
+  // Layout & Top Nav
+  'layout.nav.trainingNavigated': 'प्रशिक्षण विभाग खुल गया है। नामांकन के लिए कोर्स चुनें।',
+  'layout.notifications.title': 'सूचनाएं',
+  'layout.notifications.new': 'नया',
+  'layout.notifications.empty': 'अभी तक कोई नया संदेश नहीं है',
+  'layout.notifications.viewAll': 'सभी गतिविधियां देखें',
+  'layout.userMenu.profile': 'प्रोफ़ाइल',
+  'layout.userMenu.settings': 'सेटिंग्स',
+  'layout.userMenu.logout': 'लॉग आउट',
+  'layout.userMenu.loggedOutSuccess': 'सफलतापूर्वक लॉग आउट हो गए',
+  'layout.auth.partnerLogin': 'पार्टनर लॉगिन',
+  'layout.actions.bookService': 'सेवा बुक करें',
+  'layout.user.welcomeBack': 'फिर से स्वागत है',
+  'layout.user.dashboard': 'डैशबोर्ड',
+  'layout.mobileNav.requests': 'अनुरोध',
+  'layout.mobileNav.help': 'सहायता',
+
+  // Footer
+  'footer.tagline': 'तकनीकी कौशल और टिकाऊ रखरखाव नेटवर्क द्वारा ग्रामीण समुदायों का सशक्तिकरण। एक बेहतर भविष्य के निर्माण में हमारे साथ जुड़ें।',
+  'footer.company': 'कंपनी',
+  'footer.legal': 'कानूनी जानकारी',
+  'footer.privacyPolicy': 'गोपनीयता नीति',
+  'footer.termsOfService': 'सेवा शर्तें',
+  'footer.cookiePolicy': 'कुकी नीति',
+  'footer.allRightsReserved': 'सर्वाधिकार सुरक्षित।',
+  'footer.regionalOffices': 'क्षेत्रीय कार्यालय',
+  'footer.careers': 'करियर',
+};

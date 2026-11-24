@@ -1,8 +1,25 @@
 import { Link } from 'react-router-dom';
 import { Facebook, Instagram, Youtube, MessageCircle } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 import logoUrl from '../assets/images/WASH Mitra logo.png';
 
 export default function Footer() {
+  const { t } = useLanguage();
+
+  const companyNav = [
+    { name: t('about'), path: '/about' },
+    { name: t('services'), path: '/services' },
+    { name: t('training'), path: '/training' },
+    { name: t('impact'), path: '/impact' },
+    { name: t('contact'), path: '/contact' },
+  ];
+
+  const legalNav = [
+    { name: t('footer.privacyPolicy'), href: '#' },
+    { name: t('footer.termsOfService'), href: '#' },
+    { name: t('footer.cookiePolicy'), href: '#' },
+  ];
+
   return (
     <footer id="contact" className="bg-slate-900 pt-24 pb-12 text-white border-t border-white/5">
       <div className="container px-4 sm:px-8 mx-auto max-w-7xl">
@@ -25,7 +42,7 @@ export default function Footer() {
                </div>
             </div>
             <p className="text-white/40 font-medium max-w-sm leading-relaxed">
-              Empowering rural communities through technical excellence and sustainable maintenance networks. Join our mission to build a better future.
+              {t('footer.tagline')}
             </p>
             <div className="flex gap-4">
               {[
@@ -52,17 +69,10 @@ export default function Footer() {
           </div>
           
           <div className="space-y-6">
-             <h4 className="text-[10px] font-black text-[#F26522] uppercase tracking-[0.3em]">Company</h4>
+             <h4 className="text-[10px] font-black text-[#F26522] uppercase tracking-[0.3em]">{t('footer.company')}</h4>
              <ul className="space-y-4">
-                {[
-                  { name: 'About', path: '/about' },
-                  { name: 'Services', path: '/services' },
-                  { name: 'Training', path: '/training' },
-                  { name: 'Impact', path: '/impact' },
-                  { name: 'Contact', path: '/contact' },
-                  { name: 'Admin Portal', path: '/admin' }
-                ].map((item) => (
-                  <li key={item.name}>
+                {companyNav.map((item) => (
+                  <li key={item.path}>
                     <Link to={item.path} className="text-white/60 hover:text-[#F26522] transition-colors font-bold text-sm">
                       {item.name}
                     </Link>
@@ -72,12 +82,12 @@ export default function Footer() {
           </div>
 
           <div className="space-y-6">
-             <h4 className="text-[10px] font-black text-[#F26522] uppercase tracking-[0.3em]">Legal</h4>
+             <h4 className="text-[10px] font-black text-[#F26522] uppercase tracking-[0.3em]">{t('footer.legal')}</h4>
              <ul className="space-y-4">
-                {['Privacy Policy', 'Terms of Service', 'Cookie Policy'].map((item) => (
-                  <li key={item}>
-                    <a href="#" className="text-white/60 hover:text-white transition-colors font-bold text-sm">
-                      {item}
+                {legalNav.map((item) => (
+                  <li key={item.name}>
+                    <a href={item.href} className="text-white/60 hover:text-white transition-colors font-bold text-sm">
+                      {item.name}
                     </a>
                   </li>
                 ))}
@@ -87,11 +97,11 @@ export default function Footer() {
 
         <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
            <p className="text-white/20 text-[10px] font-black uppercase tracking-[0.2em]">
-             © 2026 WASH Mitra Private Limited. All rights reserved.
+             © 2026 WASH Mitra Private Limited. {t('footer.allRightsReserved')}
            </p>
            <div className="flex gap-8">
-              <a href="#" className="text-white/20 hover:text-white transition-colors text-[10px] font-black uppercase tracking-[0.2em]">Regional Offices</a>
-              <a href="#" className="text-white/20 hover:text-white transition-colors text-[10px] font-black uppercase tracking-[0.2em]">Careers</a>
+              <a href="#" className="text-white/20 hover:text-white transition-colors text-[10px] font-black uppercase tracking-[0.2em]">{t('footer.regionalOffices')}</a>
+              <a href="#" className="text-white/20 hover:text-white transition-colors text-[10px] font-black uppercase tracking-[0.2em]">{t('footer.careers')}</a>
            </div>
         </div>
       </div>

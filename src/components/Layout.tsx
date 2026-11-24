@@ -73,7 +73,7 @@ export default function Layout({ children }: LayoutProps) {
 
   const handleBecomeMitraClick = () => {
     navigate('/training');
-    toast.success("Navigated to Training Hub! Choose a certification course to enroll.");
+    toast.success(t('layout.nav.trainingNavigated'));
     setIsMobileMenuOpen(false);
   };
 
@@ -138,8 +138,8 @@ export default function Layout({ children }: LayoutProps) {
                   />
                   <PopoverContent className="w-80 p-0 rounded-3xl border-[#062D27]/5 shadow-2xl mr-4 md:mr-0" align="end">
                     <div className="p-4 border-b border-slate-50 flex justify-between items-center bg-slate-50/50 rounded-t-3xl">
-                      <h3 className="font-black text-xs uppercase tracking-widest text-[#062D27]">Notifications</h3>
-                      {unreadCount > 0 && <Badge className="bg-[#F26522] text-[10px]">{unreadCount} New</Badge>}
+                      <h3 className="font-black text-xs uppercase tracking-widest text-[#062D27]">{t('layout.notifications.title')}</h3>
+                      {unreadCount > 0 && <Badge className="bg-[#F26522] text-[10px]">{unreadCount} {t('layout.notifications.new')}</Badge>}
                     </div>
                     <ScrollArea className="h-[350px]">
                       {notifications.length === 0 ? (
@@ -147,7 +147,7 @@ export default function Layout({ children }: LayoutProps) {
                           <div className="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-3">
                              <Bell className="h-6 w-6 text-slate-300" />
                           </div>
-                          <p className="text-xs font-bold text-slate-400 italic">No new messages yet</p>
+                          <p className="text-xs font-bold text-slate-400 italic">{t('layout.notifications.empty')}</p>
                         </div>
                       ) : (
                         <div className="divide-y divide-slate-50">
@@ -174,7 +174,7 @@ export default function Layout({ children }: LayoutProps) {
                     </ScrollArea>
                     <div className="p-2 border-t border-slate-50 rounded-b-3xl">
                       <Button variant="ghost" className="w-full text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-[#062D27] h-10">
-                        View all activity
+                        {t('layout.notifications.viewAll')}
                       </Button>
                     </div>
                   </PopoverContent>
@@ -195,8 +195,8 @@ export default function Layout({ children }: LayoutProps) {
                       </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator className="bg-[#062D27]/5" />
-                    <DropdownMenuItem className="cursor-pointer font-bold text-[#062D27] rounded-xl px-3 py-2">Profile</DropdownMenuItem>
-                    <DropdownMenuItem className="cursor-pointer font-bold text-[#062D27] rounded-xl px-3 py-2">Settings</DropdownMenuItem>
+                    <DropdownMenuItem className="cursor-pointer font-bold text-[#062D27] rounded-xl px-3 py-2">{t('layout.userMenu.profile')}</DropdownMenuItem>
+                    <DropdownMenuItem className="cursor-pointer font-bold text-[#062D27] rounded-xl px-3 py-2">{t('layout.userMenu.settings')}</DropdownMenuItem>
                     <DropdownMenuSeparator className="bg-[#062D27]/5" />
                     <DropdownMenuItem 
                       className="text-[#F26522] cursor-pointer font-black rounded-xl px-3 py-2"
@@ -207,11 +207,11 @@ export default function Layout({ children }: LayoutProps) {
                           console.error('Sign out error:', err);
                         } finally {
                           setUser(null);
-                          toast.success('Logged out successfully');
+                          toast.success(t('layout.userMenu.loggedOutSuccess'));
                         }
                       }}
                     >
-                      Log out
+                      {t('layout.userMenu.logout')}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -225,7 +225,7 @@ export default function Layout({ children }: LayoutProps) {
                       onClick={handleBecomeMitraClick}
                       className="hidden sm:inline-flex border-[#062D27]/20 text-[#062D27] hover:bg-[#062D27]/5 rounded-xl h-9 px-3 text-[10px] font-black uppercase tracking-widest transition-all"
                     >
-                      <UserPlus className="mr-1.5 h-3 w-3 text-[#F26522]" /> Become a WASH Mitra
+                      <UserPlus className="mr-1.5 h-3 w-3 text-[#F26522]" /> {t('becomeMitra')}
                     </Button>
 
                     <Button 
@@ -233,13 +233,13 @@ export default function Layout({ children }: LayoutProps) {
                       onClick={handleLoginClick}
                       className="hidden md:inline-flex text-[12px] font-black uppercase tracking-widest text-[#062D27]/70 hover:text-[#062D27] hover:bg-[#062D27]/5 rounded-xl h-12 px-4"
                     >
-                      Partner Login
+                      {t('layout.auth.partnerLogin')}
                     </Button>
                     <Button 
                       onClick={() => openBookingFor('General Inquiry')}
                       className="bg-[#F26522] hover:bg-[#d95d1f] font-black h-11 sm:h-12 rounded-xl px-4 sm:px-6 shadow-xl shadow-orange-200 border-none text-white whitespace-nowrap text-[11px] sm:text-[12px] uppercase tracking-widest transition-all hover:scale-105 active:scale-95"
                     >
-                      Book a Service
+                      {t('layout.actions.bookService')}
                     </Button>
                   </>
                 ) : (
@@ -250,7 +250,7 @@ export default function Layout({ children }: LayoutProps) {
                     }}
                     className="hidden sm:inline-flex bg-[#F26522] hover:bg-[#d95d1f] font-black h-11 sm:h-12 rounded-xl px-5 sm:px-6 shadow-xl shadow-orange-200 border-none text-white whitespace-nowrap text-[11px] sm:text-[12px] uppercase tracking-widest transition-all hover:scale-105 active:scale-95 items-center gap-2"
                   >
-                    <Mail className="h-4 w-4" /> Contact Us
+                    <Mail className="h-4 w-4" /> {t('contactUs')}
                   </Button>
                 )}
 
@@ -356,13 +356,13 @@ export default function Layout({ children }: LayoutProps) {
                       onClick={handleBecomeMitraClick}
                       className="w-full h-14 bg-[#062D27] text-white hover:bg-[#0A3D36] rounded-2xl font-black uppercase tracking-widest text-xs shadow-md"
                     >
-                      Become a WASH Mitra
+                      {t('becomeMitra')}
                     </Button>
                     <Button 
                       onClick={handleLoginClick}
                       className="w-full h-14 bg-slate-50 text-[#062D27] hover:bg-slate-100 rounded-2xl font-black uppercase tracking-widest text-xs"
                     >
-                      Partner Login
+                      {t('layout.auth.partnerLogin')}
                     </Button>
                     <Button 
                       onClick={() => {
@@ -371,7 +371,7 @@ export default function Layout({ children }: LayoutProps) {
                       }}
                       className="w-full h-14 bg-[#F26522] hover:bg-[#d95d1f] text-white rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-orange-100"
                     >
-                      Book a Service
+                      {t('layout.actions.bookService')}
                     </Button>
                   </>
                 ) : (
@@ -382,7 +382,7 @@ export default function Layout({ children }: LayoutProps) {
                     }}
                     className="w-full h-14 bg-[#F26522] hover:bg-[#d95d1f] text-white rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-orange-100 flex items-center justify-center gap-2"
                   >
-                    <Mail className="h-4 w-4" /> Contact Us
+                    <Mail className="h-4 w-4" /> {t('contactUs')}
                   </Button>
                 )}
               </div>
@@ -396,10 +396,10 @@ export default function Layout({ children }: LayoutProps) {
         {user && (
           <div className="max-w-7xl mx-auto px-4 pt-4">
             <h2 className="text-2xl font-black text-[#062D27] animate-in fade-in slide-in-from-bottom-2">
-              Welcome back, {user.full_name || 'User'}!
+              {t('layout.user.welcomeBack')}, {user.full_name || 'User'}!
             </h2>
             <p className="text-[10px] font-bold text-[#F26522] uppercase tracking-[0.2em] mb-4">
-              {user.role ? user.role.replace('_', ' ') : 'Dashboard'}
+              {user.role ? user.role.replace('_', ' ') : t('layout.user.dashboard')}
             </p>
           </div>
         )}
@@ -415,11 +415,11 @@ export default function Layout({ children }: LayoutProps) {
           <div className="flex justify-around items-center h-16">
             <Button variant="ghost" size="sm" className="flex flex-col gap-1 items-center">
               <Home className="h-5 w-5" />
-              <span className="text-[10px]">Home</span>
+              <span className="text-[10px]">{t('home')}</span>
             </Button>
             <Button variant="ghost" size="sm" className="flex flex-col gap-1 items-center">
               <ClipboardList className="h-5 w-5" />
-              <span className="text-[10px]">Requests</span>
+              <span className="text-[10px]">{t('layout.mobileNav.requests')}</span>
             </Button>
             {user.role === 'WASHMITRA' ? (
                <Button variant="ghost" size="sm" className="flex flex-col gap-1 items-center">
@@ -434,7 +434,7 @@ export default function Layout({ children }: LayoutProps) {
             )}
             <Button variant="ghost" size="sm" className="flex flex-col gap-1 items-center">
               <LifeBuoy className="h-5 w-5" />
-              <span className="text-[10px]">Help</span>
+              <span className="text-[10px]">{t('layout.mobileNav.help')}</span>
             </Button>
           </div>
         </nav>
