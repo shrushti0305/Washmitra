@@ -43,16 +43,14 @@ import { toast } from 'sonner';
 import { supabase } from '../lib/supabase';
 import { motion, AnimatePresence } from 'motion/react';
 
-// Security Password configuration
-const DEFAULT_ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || 'Washmitra@2026';
-
 export default function AdminDashboard() {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    return sessionStorage.getItem('washmitra_admin_auth') === 'true';
-  });
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isCheckingAuth, setIsCheckingAuth] = useState<boolean>(true);
+  const [emailInput, setEmailInput] = useState('');
   const [passwordInput, setPasswordInput] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [authError, setAuthError] = useState(false);
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
 
   const [activeTab, setActiveTab] = useState<'inquiries' | 'technicians' | 'analytics' | 'settings'>('inquiries');
 
@@ -109,23 +107,131 @@ export default function AdminDashboard() {
     setLoading(false);
   };
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (passwordInput === DEFAULT_ADMIN_PASSWORD) {
-      setIsAuthenticated(true);
-      sessionStorage.setItem('washmitra_admin_auth', 'true');
-      setAuthError(false);
-      setPasswordInput('');
-      toast.success("Authenticated successfully as Executive Director");
-    } else {
-      setAuthError(true);
-      toast.error("Incorrect security passcode. Access Denied.");
+  const verifyAdmin = async (userId: string): Promise<boolean> => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', userId)
+        .single();
+
+      return !error && data?.role === 'ADMIN';
+    } catch {
+      return false;
     }
   };
 
-  const handleLogout = () => {
+  useEffect(() => {
+    let mounted = true;
+
+    const checkSession = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user?.id) {
+          const isAdmin = await verifyAdmin(session.user.id);
+          if (mounted) {
+            setIsAuthenticated(isAdmin);
+          }
+        } else {
+          if (mounted) {
+            setIsAuthenticated(false);
+          }
+        }
+      } catch (err) {
+        console.error('Session check failed:', err);
+        if (mounted) {
+          setIsAuthenticated(false);
+        }
+      } finally {
+        if (mounted) {
+          setIsCheckingAuth(false);
+        }
+      }
+    };
+
+    checkSession();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_OUT' || !session?.user) {
+        if (mounted) setIsAuthenticated(false);
+        return;
+      }
+      setTimeout(async () => {
+        if (!mounted || !session.user?.id) return;
+        try {
+          const isAdmin = await verifyAdmin(session.user.id);
+          if (mounted) {
+            setIsAuthenticated(isAdmin);
+          }
+        } catch {
+          if (mounted) setIsAuthenticated(false);
+        }
+      }, 0);
+    });
+
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!emailInput.trim() || !passwordInput) {
+      setAuthError("Please enter both email and password.");
+      toast.error("Please enter both email and password.");
+      return;
+    }
+
+    setIsAuthenticating(true);
+    setAuthError(null);
+
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: emailInput.trim(),
+        password: passwordInput,
+      });
+
+      if (error) {
+        setAuthError(error.message);
+        toast.error(error.message);
+        return;
+      }
+
+      if (!data.user?.id) {
+        setAuthError("Access denied.");
+        toast.error("Access denied.");
+        return;
+      }
+
+      const isAdmin = await verifyAdmin(data.user.id);
+
+      if (isAdmin) {
+        setIsAuthenticated(true);
+        setAuthError(null);
+        setPasswordInput('');
+        toast.success("Authenticated successfully as Administrator");
+      } else {
+        await supabase.auth.signOut();
+        setIsAuthenticated(false);
+        setAuthError("Access denied.");
+        toast.error("Access denied.");
+      }
+    } catch (err: any) {
+      setAuthError("Access denied.");
+      toast.error("Access denied.");
+    } finally {
+      setIsAuthenticating(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+    } catch (err) {
+      console.error('Sign out error:', err);
+    }
     setIsAuthenticated(false);
-    sessionStorage.removeItem('washmitra_admin_auth');
     toast.info("Admin Command Portal locked");
   };
 
@@ -697,8 +803,19 @@ export default function AdminDashboard() {
   const verificationPercentage = mitras.length > 0 ? Math.round((verifiedMitrasCount / mitras.length) * 100) : 100;
 
   // ----------------------------------------------------
-  // 🔒 SECURITY PASSCODE LOGIN OVERLAY
+  // 🔒 SUPABASE RBAC AUTHENTICATION OVERLAY
   // ----------------------------------------------------
+  if (isCheckingAuth) {
+    return (
+      <div className="min-h-[80vh] flex flex-col items-center justify-center py-12 px-4">
+        <div className="flex flex-col items-center gap-4 text-center">
+          <RefreshCw className="h-8 w-8 text-[#F26522] animate-spin" />
+          <p className="text-sm font-semibold text-slate-600">Verifying administrative authorization...</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!isAuthenticated) {
     return (
       <div className="min-h-[80vh] flex items-center justify-center py-12 px-4">
@@ -721,14 +838,35 @@ export default function AdminDashboard() {
             </div>
 
             <CardContent className="p-8">
-              <form onSubmit={handleLogin} className="space-y-6">
+              <form onSubmit={handleLogin} className="space-y-5">
+                <div className="space-y-2">
+                  <label className="text-xs font-black uppercase tracking-wider text-slate-700 flex items-center justify-between">
+                    <span className="flex items-center gap-1.5">
+                      <Mail className="h-3.5 w-3.5 text-[#F26522]" />
+                      Admin Email
+                    </span>
+                  </label>
+                  <Input
+                    type="email"
+                    value={emailInput}
+                    onChange={(e) => {
+                      setEmailInput(e.target.value);
+                      if (authError) setAuthError(null);
+                    }}
+                    placeholder="admin@washmitra.com"
+                    required
+                    className="h-12 rounded-xl text-sm font-semibold text-[#062D27] border-slate-200 focus:ring-[#F26522]/30"
+                    autoFocus
+                  />
+                </div>
+
                 <div className="space-y-2">
                   <label className="text-xs font-black uppercase tracking-wider text-slate-700 flex items-center justify-between">
                     <span className="flex items-center gap-1.5">
                       <KeyRound className="h-3.5 w-3.5 text-[#F26522]" />
-                      Security Passcode
+                      Password
                     </span>
-                    <span className="text-[10px] text-slate-400 font-bold">256-Bit Encrypted</span>
+                    <span className="text-[10px] text-slate-400 font-bold">Encrypted Auth</span>
                   </label>
                   <div className="relative">
                     <Input
@@ -736,13 +874,13 @@ export default function AdminDashboard() {
                       value={passwordInput}
                       onChange={(e) => {
                         setPasswordInput(e.target.value);
-                        if (authError) setAuthError(false);
+                        if (authError) setAuthError(null);
                       }}
-                      placeholder="Enter administrative passcode..."
+                      placeholder="Enter administrator password..."
+                      required
                       className={`pr-10 h-12 rounded-xl text-sm font-semibold text-[#062D27] border ${
                         authError ? 'border-red-500 ring-2 ring-red-500/20' : 'border-slate-200 focus:ring-[#F26522]/30'
                       }`}
-                      autoFocus
                     />
                     <button
                       type="button"
@@ -752,26 +890,29 @@ export default function AdminDashboard() {
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
                   </div>
-                  {authError && (
-                    <p className="text-xs font-bold text-red-500 flex items-center gap-1 mt-1">
-                      <AlertCircle className="h-3.5 w-3.5" />
-                      <span>Invalid passcode. Security log recorded.</span>
-                    </p>
-                  )}
                 </div>
+
+                {authError && (
+                  <div className="p-3 bg-red-50 border border-red-200 rounded-xl flex items-start gap-2">
+                    <AlertCircle className="h-4 w-4 text-red-500 shrink-0 mt-0.5" />
+                    <p className="text-xs font-medium text-red-700">{authError}</p>
+                  </div>
+                )}
 
                 <Button
                   type="submit"
-                  className="w-full h-12 bg-gradient-to-r from-[#F26522] to-[#d95d1f] hover:from-[#d95d1f] hover:to-[#be4f18] text-white font-black text-sm uppercase tracking-wider rounded-xl shadow-lg shadow-[#F26522]/20 transition-all cursor-pointer"
+                  disabled={isAuthenticating}
+                  className="w-full h-12 bg-gradient-to-r from-[#F26522] to-[#d95d1f] hover:from-[#d95d1f] hover:to-[#be4f18] text-white font-black text-sm uppercase tracking-wider rounded-xl shadow-lg shadow-[#F26522]/20 transition-all cursor-pointer disabled:opacity-50"
                 >
-                  Unlock Command Portal
+                  {isAuthenticating ? (
+                    <span className="flex items-center gap-2">
+                      <RefreshCw className="h-4 w-4 animate-spin" />
+                      Authenticating...
+                    </span>
+                  ) : (
+                    "Unlock Command Portal"
+                  )}
                 </Button>
-
-                <div className="text-center pt-2 border-t border-slate-100">
-                  <p className="text-[11px] font-semibold text-slate-400">
-                    Directorate Passcode Protected System
-                  </p>
-                </div>
               </form>
             </CardContent>
           </Card>
