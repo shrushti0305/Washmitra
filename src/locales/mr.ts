@@ -39,6 +39,20 @@ export const mr: Record<TranslationKey, string> = {
   'landing.map.titleLine2': 'जमिनीवर झालेला बदल.',
   'landing.map.desc': 'नकाशावर निवडून पहा, WASH Mitra तंत्रज्ञांनी गावात घडवलेले खरे बदल.',
 
+  // BentoGrid
+  'bento.plumbing.badge': 'विशेष सेवा',
+  'bento.plumbing.titleLine1': 'प्लंबिंग आणि',
+  'bento.plumbing.titleLine2': 'पाण्याची कामे',
+  'bento.plumbing.desc': 'पाइप दुरुस्तीपासून ते पाणी गाळण्याच्या यंत्रणेपर्यंत. प्रमाणित WASH Mitra कडून दर्जेदार सेवा.',
+  'bento.electrical.badge': 'इलेक्ट्रिकल',
+  'bento.electrical.titleLine1': 'इलेक्ट्रिकल',
+  'bento.electrical.titleLine2': 'देखभाल व दुरुस्ती',
+  'bento.electrical.desc': 'दवाखाने, शाळा आणि घरांसाठी सुरक्षित, प्रमाणित वीज काम.',
+  'bento.training.badge': 'सक्षमीकरण',
+  'bento.training.titleLine1': 'तांत्रिक',
+  'bento.training.titleLine2': 'प्रशिक्षण',
+  'bento.training.desc': 'ग्रामीण तरुणांना रोजगारासाठी पक्के तांत्रिक कौशल्य.',
+
   // Layout & Top Nav
   'layout.nav.trainingNavigated': 'प्रशिक्षण विभाग उघडला आहे. नोंदणीसाठी कोर्स निवडा.',
   'layout.notifications.title': 'सूचना',

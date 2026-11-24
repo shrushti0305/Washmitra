@@ -36,6 +36,18 @@ This ledger tracks every internationalization translation key across the WASH Mi
 | `landing.map.titleLine1` | Explore our | पहा आमचा | देखें हमारा | no |
 | `landing.map.titleLine2` | ground-level impact. | जमिनीवर झालेला बदल. | ज़मीनी स्तर पर बदलाव। | yes |
 | `landing.map.desc` | Click on the markers to see real stories of transformation powered by WASH Mitra technicians. | नकाशावर निवडून पहा, WASH Mitra तंत्रज्ञांनी गावात घडवलेले खरे बदल. | नक्शे पर चुनकर देखें, WASH Mitra तकनीशियनों द्वारा गाँवों में लाए गए सच्चे बदलाव। | yes |
+| `bento.plumbing.badge` | Featured Service | विशेष सेवा | खास सेवा | no |
+| `bento.plumbing.titleLine1` | Plumbing & | प्लंबिंग आणि | नल-पाइप और | no |
+| `bento.plumbing.titleLine2` | Water Solutions | पाण्याची कामे | पानी की व्यवस्था | no |
+| `bento.plumbing.desc` | From pipeline repairs to modern filtration systems. Professional service delivered by certified WASH Mitras. | पाइप दुरुस्तीपासून ते पाणी गाळण्याच्या यंत्रणेपर्यंत. प्रमाणित WASH Mitra कडून दर्जेदार सेवा. | पाइप मरम्मत से लेकर आधुनिक फ़िल्टर तक। प्रमाणित WASH Mitra द्वारा भरोसेमंद काम। | yes |
+| `bento.electrical.badge` | Electrical | इलेक्ट्रिकल | बिजली काम | no |
+| `bento.electrical.titleLine1` | Electrical | इलेक्ट्रिकल | बिजली | no |
+| `bento.electrical.titleLine2` | Maintenance | देखभाल व दुरुस्ती | देखभाल व मरम्मत | no |
+| `bento.electrical.desc` | Safe, certified electrical work for clinics, schools, and homesteads. | दवाखाने, शाळा आणि घरांसाठी सुरक्षित, प्रमाणित वीज काम. | अस्पताल, स्कूल और घरों के लिए सुरक्षित, पक्का बिजली का काम। | yes |
+| `bento.training.badge` | Empowerment | सक्षमीकरण | हुनर और रोज़गार | no |
+| `bento.training.titleLine1` | Technical | तांत्रिक | तकनीकी | no |
+| `bento.training.titleLine2` | Training | प्रशिक्षण | प्रशिक्षण | no |
+| `bento.training.desc` | Empowering rural youth with certified livelihood skills. | ग्रामीण तरुणांना रोजगारासाठी पक्के तांत्रिक कौशल्य. | ग्रामीण युवाओं को रोज़गार के लिए काम का हुनर। | yes |
 | `layout.nav.trainingNavigated` | Navigated to Training Hub! Choose a certification course to enroll. | प्रशिक्षण विभाग उघडला आहे. नोंदणीसाठी कोर्स निवडा. | प्रशिक्षण विभाग खुल गया है। नामांकन के लिए कोर्स चुनें। | no |
 | `layout.notifications.title` | Notifications | सूचना | सूचनाएं | no |
 | `layout.notifications.new` | New | नवीन | नया | no |

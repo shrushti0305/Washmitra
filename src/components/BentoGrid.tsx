@@ -4,6 +4,7 @@ import { motion, Variants } from 'motion/react';
 import { ArrowUpRight, Wrench, Zap, GraduationCap } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -27,6 +28,7 @@ const itemVariants: Variants = {
 
 export default function BentoGrid() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   return (
     <motion.div 
@@ -44,7 +46,7 @@ export default function BentoGrid() {
         >
           <div className="absolute top-8 left-8 z-20">
             <Badge className="bg-[#F26522] text-white border-none px-4 py-2 rounded-xl font-black text-[10px] tracking-widest uppercase shadow-lg">
-              Featured Service
+              {t('bento.plumbing.badge')}
             </Badge>
           </div>
           <div className="absolute top-8 right-8 z-20">
@@ -57,9 +59,11 @@ export default function BentoGrid() {
             <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center mb-6 text-[#F26522] group-hover:scale-110 transition-transform duration-500">
                <Wrench className="h-8 w-8" />
             </div>
-            <h3 className="text-4xl md:text-5xl font-black tracking-tighter mb-4">Plumbing & <br />Water Solutions</h3>
+            <h3 className="text-4xl md:text-5xl font-black tracking-tighter mb-4">
+              {t('bento.plumbing.titleLine1')} <br />{t('bento.plumbing.titleLine2')}
+            </h3>
             <p className="text-white/60 font-medium max-w-sm leading-relaxed">
-              From pipeline repairs to modern filtration systems. Professional service delivered by certified WASH Mitras.
+              {t('bento.plumbing.desc')}
             </p>
           </div>
 
@@ -76,7 +80,7 @@ export default function BentoGrid() {
         >
           <div className="absolute top-8 left-8 z-20">
             <Badge variant="secondary" className="bg-[#f1f5f9] text-slate-500 border-none px-4 py-2 rounded-xl font-black text-[10px] tracking-widest uppercase">
-              Electrical
+              {t('bento.electrical.badge')}
             </Badge>
           </div>
           <div className="absolute top-8 right-8 z-20">
@@ -89,9 +93,11 @@ export default function BentoGrid() {
             <div className="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center mb-6 text-[#F26522] group-hover:scale-110 transition-transform duration-500">
                <Zap className="h-7 w-7" />
             </div>
-            <h3 className="text-3xl font-black text-[#062D27] tracking-tight mb-3">Electrical <br />Maintenance</h3>
+            <h3 className="text-3xl font-black text-[#062D27] tracking-tight mb-3">
+              {t('bento.electrical.titleLine1')} <br />{t('bento.electrical.titleLine2')}
+            </h3>
             <p className="text-slate-500 font-medium leading-relaxed">
-              Safe, certified electrical work for clinics, schools, and homesteads.
+              {t('bento.electrical.desc')}
             </p>
           </div>
         </Card>
@@ -105,7 +111,7 @@ export default function BentoGrid() {
         >
           <div className="absolute top-8 left-8 z-20">
             <Badge variant="secondary" className="bg-[#f1f5f9] text-slate-500 border-none px-4 py-2 rounded-xl font-black text-[10px] tracking-widest uppercase">
-              Empowerment
+              {t('bento.training.badge')}
             </Badge>
           </div>
           <div className="absolute top-8 right-8 z-20">
@@ -118,9 +124,11 @@ export default function BentoGrid() {
             <div className="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center mb-6 text-[#F26522] group-hover:scale-110 transition-transform duration-500">
                <GraduationCap className="h-7 w-7" />
             </div>
-            <h3 className="text-3xl font-black text-[#062D27] tracking-tight mb-3">Technical <br />Training</h3>
+            <h3 className="text-3xl font-black text-[#062D27] tracking-tight mb-3">
+              {t('bento.training.titleLine1')} <br />{t('bento.training.titleLine2')}
+            </h3>
             <p className="text-slate-500 font-medium leading-relaxed">
-              Empowering rural youth with certified livelihood skills.
+              {t('bento.training.desc')}
             </p>
           </div>
         </Card>

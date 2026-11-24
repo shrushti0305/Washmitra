@@ -37,6 +37,20 @@ export const en = {
   'landing.map.titleLine2': 'ground-level impact.',
   'landing.map.desc': 'Click on the markers to see real stories of transformation powered by WASH Mitra technicians.',
 
+  // BentoGrid
+  'bento.plumbing.badge': 'Featured Service',
+  'bento.plumbing.titleLine1': 'Plumbing &',
+  'bento.plumbing.titleLine2': 'Water Solutions',
+  'bento.plumbing.desc': 'From pipeline repairs to modern filtration systems. Professional service delivered by certified WASH Mitras.',
+  'bento.electrical.badge': 'Electrical',
+  'bento.electrical.titleLine1': 'Electrical',
+  'bento.electrical.titleLine2': 'Maintenance',
+  'bento.electrical.desc': 'Safe, certified electrical work for clinics, schools, and homesteads.',
+  'bento.training.badge': 'Empowerment',
+  'bento.training.titleLine1': 'Technical',
+  'bento.training.titleLine2': 'Training',
+  'bento.training.desc': 'Empowering rural youth with certified livelihood skills.',
+
   // Layout & Top Nav
   'layout.nav.trainingNavigated': 'Navigated to Training Hub! Choose a certification course to enroll.',
   'layout.notifications.title': 'Notifications',
