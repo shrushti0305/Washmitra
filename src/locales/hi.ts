@@ -75,6 +75,13 @@ export const hi: Record<TranslationKey, string> = {
   'video.qr.desc': 'QR कोड पर कैमरा रखें और YouTube पर WASH Mitra का वीडियो देखें।',
   'video.action.openVideo': 'वीडियो देखें',
 
+  // Partners
+  'partners.subtitle': 'हमारे सहयोगी',
+  'partners.title': 'बड़ी संस्थाओं का अटूट विश्वास।',
+  'partners.desc': 'भारत के गाँवों में बड़ा बदलाव लाने के लिए प्रमुख संस्थाओं और CSR सहयोगियों के साथ मिलकर काम।',
+  'partners.footer.others': 'और कई अन्य संस्थाएं',
+  'partners.footer.partnerWithUs': 'हमारे साथ जुड़ें',
+
   // Layout & Top Nav
   'layout.nav.trainingNavigated': 'प्रशिक्षण विभाग खुल गया है। नामांकन के लिए कोर्स चुनें।',
   'layout.notifications.title': 'सूचनाएं',

@@ -66,6 +66,11 @@ This ledger tracks every internationalization translation key across the WASH Mi
 | `video.qr.scanWithPhone` | Scan with your phone | तुमच्या फोनने स्कॅन करा | अपने फोन से स्कैन करें | no |
 | `video.qr.desc` | Point your camera at the QR code to watch the WASH Mitra story on YouTube. | QR कोडवर कॅमेरा धरा आणि YouTube वर WASH Mitra चा व्हिडिओ पहा. | QR कोड पर कैमरा रखें और YouTube पर WASH Mitra का वीडियो देखें। | yes |
 | `video.action.openVideo` | Open Video | व्हिडिओ पहा | वीडियो देखें | no |
+| `partners.subtitle` | Our Supporters | आमचे सहयोगी | हमारे सहयोगी | no |
+| `partners.title` | Trusted by global leaders. | मोठमोठ्या संस्थांचा विश्वास. | बड़ी संस्थाओं का अटूट विश्वास। | yes |
+| `partners.desc` | Working together with strategic partners and CSR clients to scale rural impact across India. | भारतातील गावांमध्ये मोठा बदल घडवण्यासाठी आघाडीच्या संस्था आणि CSR भागीदारांसोबत एकत्र काम. | भारत के गाँवों में बड़ा बदलाव लाने के लिए प्रमुख संस्थाओं और CSR सहयोगियों के साथ मिलकर काम। | yes |
+| `partners.footer.others` | And many other institutions | आणि इतर अनेक संस्था | और कई अन्य संस्थाएं | no |
+| `partners.footer.partnerWithUs` | Partner with us | आमच्यासोबत जोडा | हमारे साथ जुड़ें | no |
 | `layout.nav.trainingNavigated` | Navigated to Training Hub! Choose a certification course to enroll. | प्रशिक्षण विभाग उघडला आहे. नोंदणीसाठी कोर्स निवडा. | प्रशिक्षण विभाग खुल गया है। नामांकन के लिए कोर्स चुनें। | no |
 | `layout.notifications.title` | Notifications | सूचना | सूचनाएं | no |
 | `layout.notifications.new` | New | नवीन | नया | no |

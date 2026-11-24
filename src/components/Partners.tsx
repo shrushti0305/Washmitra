@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 // 1. Local Partner Logo Imports
 import logoUnicef from '../assets/images/Unicef.png';
@@ -14,6 +15,8 @@ import logoTdd from '../assets/images/TDD.jpg';
 import logoTdk from '../assets/images/TDK.png';
 
 export default function Partners() {
+  const { t } = useLanguage();
+
   const partners = [
     { name: "UNICEF", logo: logoUnicef },
     { name: "ASK", logo: logoAsk },
@@ -33,11 +36,11 @@ export default function Partners() {
     <div className="space-y-16 py-12">
       <div className="flex flex-col md:flex-row justify-between items-end gap-6 border-b border-slate-100 pb-8">
         <div className="space-y-4">
-          <h3 className="text-[10px] font-black text-orange-500 uppercase tracking-[0.2em]">Our Supporters</h3>
-          <h2 className="text-4xl md:text-5xl font-black text-[#062D27] tracking-tighter">Trusted by global leaders.</h2>
+          <h3 className="text-[10px] font-black text-orange-500 uppercase tracking-[0.2em]">{t('partners.subtitle')}</h3>
+          <h2 className="text-4xl md:text-5xl font-black text-[#062D27] tracking-tighter">{t('partners.title')}</h2>
         </div>
         <p className="text-slate-500 font-medium max-w-xs text-sm">
-          Working together with strategic partners and CSR clients to scale rural impact across India.
+          {t('partners.desc')}
         </p>
       </div>
 
@@ -63,9 +66,9 @@ export default function Partners() {
       
       <div className="flex justify-center pt-8">
          <div className="inline-flex items-center gap-2 px-6 py-3 bg-slate-100 rounded-full text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-[#062D27] transition-colors cursor-pointer">
-            <span>And many other institutions</span>
+            <span>{t('partners.footer.others')}</span>
             <div className="h-1 w-1 rounded-full bg-slate-300" />
-            <span className="text-slate-900">Partner with us</span>
+            <span className="text-slate-900">{t('partners.footer.partnerWithUs')}</span>
          </div>
       </div>
     </div>
