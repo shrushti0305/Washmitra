@@ -62,8 +62,7 @@ export default function Layout({ children }: LayoutProps) {
     { label: t('services'), path: '/services' },
     { label: t('training'), path: '/training' },
     { label: t('impact'), path: '/impact' },
-    { label: t('contact'), path: '/contact' },
-    { label: 'Admin', path: '/admin' }
+    { label: t('contact'), path: '/contact' }
   ];
 
   const handleNavClick = (e: React.MouseEvent, path: string) => {
