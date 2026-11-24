@@ -89,6 +89,16 @@ export default function App() {
     }
   };
 
+  // One-time privacy cleanup: purge deprecated local inquiry logs from browser storage
+  useEffect(() => {
+    try {
+      localStorage.removeItem('washmitra_local_inquiries');
+      localStorage.removeItem('washmitra_permanent_inquiry_log');
+    } catch {
+      // Storage access blocked or unavailable in private browsing
+    }
+  }, []);
+
   // 1. Restore session on load + keep the store in sync with auth state changes
   useEffect(() => {
     try {

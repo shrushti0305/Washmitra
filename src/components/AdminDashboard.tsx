@@ -254,130 +254,25 @@ export default function AdminDashboard() {
   };
 
   const fetchContactMessages = async () => {
-    let localItems: any[] = [];
-    let dbItems: any[] = [];
-
-    // 1. Read local storage backup inquiries (both standard and permanent log)
-    try {
-      const localStr = localStorage.getItem('washmitra_local_inquiries');
-      const permStr = localStorage.getItem('washmitra_permanent_inquiry_log');
-      const localArr = localStr ? JSON.parse(localStr) : [];
-      const permArr = permStr ? JSON.parse(permStr) : [];
-      localItems = [...localArr, ...permArr];
-    } catch (e) {
-      console.warn('Local storage read note:', e);
-    }
-
-    // 2. Read Supabase database inquiries
     try {
       const { data, error } = await supabase
         .from('contact_messages')
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (!error && data) {
-        dbItems = data;
+      if (error) {
+        console.error('Supabase contact messages fetch error:', error);
+        toast.error('Failed to load inquiries from database');
+        return;
+      }
+
+      if (data) {
+        setMessages(data);
       }
     } catch (err) {
-      console.warn('Supabase message fetch note:', err);
+      console.error('Supabase message fetch exception:', err);
+      toast.error('Failed to load inquiries from database');
     }
-
-    // 3. Auto-sync any local items missing from Supabase DB
-    const existingDbKeys = new Set(dbItems.map(d => `${d.phone}_${d.name}`));
-    const unsyncedItems = localItems.filter(l => l.name && !existingDbKeys.has(`${l.phone}_${l.name}`));
-
-    if (unsyncedItems.length > 0) {
-      console.log(`Auto-syncing ${unsyncedItems.length} unsynced local inquiries to Supabase...`);
-      for (const item of unsyncedItems) {
-        try {
-          const isValidUuid = item.id && item.id.length > 25 && item.id.includes('-');
-          const recordToInsert: any = {
-            name: item.name || 'Visitor',
-            phone: item.phone || null,
-            email: item.email || null,
-            message: item.message || '[General Inquiry]',
-            status: item.status === 'resolved' ? 'resolved' : 'NEW'
-          };
-          if (isValidUuid) recordToInsert.id = item.id;
-
-          const { error: insErr } = await supabase.from('contact_messages').insert([recordToInsert]);
-          if (!insErr) {
-            console.log('Auto-synced inquiry to Supabase:', item.name);
-          }
-        } catch (e) {
-          console.warn('Auto-sync item note:', e);
-        }
-      }
-
-      // Re-fetch clean DB list after auto-sync
-      try {
-        const { data: freshData } = await supabase
-          .from('contact_messages')
-          .select('*')
-          .order('created_at', { ascending: false });
-        if (freshData) dbItems = freshData;
-      } catch (e) {}
-    }
-
-    // Merge and deduplicate by ID or name+phone+message
-    const map = new Map();
-    [...dbItems, ...localItems].forEach((item) => {
-      const key = item.id || `${item.phone}_${item.name}_${item.message}`;
-      if (!map.has(key)) {
-        map.set(key, { ...item, status: item.status || 'pending' });
-      }
-    });
-
-    const combined = Array.from(map.values());
-    combined.sort((a, b) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime());
-    setMessages(combined);
-  };
-
-  const syncLocalToDatabase = async () => {
-    setLoading(true);
-    let syncedCount = 0;
-
-    // Fetch existing Supabase items
-    let dbItems: any[] = [];
-    try {
-      const { data } = await supabase.from('contact_messages').select('*');
-      if (data) dbItems = data;
-    } catch (e) {}
-
-    const existingDbKeys = new Set(dbItems.map(d => `${d.phone}_${d.name}`));
-
-    for (const msg of messages) {
-      try {
-        const key = `${msg.phone}_${msg.name}`;
-        if (existingDbKeys.has(key)) continue; // Already in DB
-
-        const isValidUuid = msg.id && msg.id.length > 25 && msg.id.includes('-');
-        const payload: any = {
-          name: msg.name || 'Visitor',
-          phone: msg.phone || null,
-          email: msg.email || null,
-          message: msg.message || '[General Inquiry]',
-          status: msg.status === 'resolved' ? 'resolved' : 'NEW'
-        };
-        if (isValidUuid) payload.id = msg.id;
-
-        const { error } = await supabase.from('contact_messages').insert([payload]);
-        if (!error) {
-          syncedCount++;
-          existingDbKeys.add(key);
-        }
-      } catch (e) {
-        console.warn('Manual sync message note:', e);
-      }
-    }
-
-    setLoading(false);
-    if (syncedCount > 0) {
-      toast.success(`Database Sync Complete! (${syncedCount} new records pushed to Supabase)`);
-    } else {
-      toast.info("Database is already up to date. All inquiries synced!");
-    }
-    fetchContactMessages();
   };
 
   // ----------------------------------------------------
@@ -388,24 +283,25 @@ export default function AdminDashboard() {
     
     // Update Supabase
     try {
-      await supabase
+      const { error } = await supabase
         .from('contact_messages')
         .update({ status: newStatus })
         .eq('id', msg.id);
+
+      if (error) {
+        console.error('Supabase update status error:', error);
+        toast.error('Failed to update inquiry status');
+        return;
+      }
     } catch (e) {
-      console.warn('Supabase update status error:', e);
+      console.error('Supabase update status exception:', e);
+      toast.error('Failed to update inquiry status');
+      return;
     }
 
-    // Update local state & localStorage
+    // Update local state only if database update succeeded
     const updatedMessages = messages.map(m => m.id === msg.id ? { ...m, status: newStatus } : m);
     setMessages(updatedMessages);
-    
-    try {
-      localStorage.setItem('washmitra_local_inquiries', JSON.stringify(updatedMessages));
-    } catch (e) {
-      console.warn('LocalStorage error:', e);
-    }
-
     toast.success(`Inquiry marked as ${newStatus.toUpperCase()}`);
   };
 
@@ -413,21 +309,21 @@ export default function AdminDashboard() {
     if (!window.confirm("Are you sure you want to permanently delete this inquiry message?")) return;
 
     try {
-      await supabase.from('contact_messages').delete().eq('id', msgId);
+      const { error } = await supabase.from('contact_messages').delete().eq('id', msgId);
+      if (error) {
+        console.error('Supabase delete error:', error);
+        toast.error('Failed to delete inquiry');
+        return;
+      }
     } catch (e) {
-      console.warn('Supabase delete error:', e);
+      console.error('Supabase delete exception:', e);
+      toast.error('Failed to delete inquiry');
+      return;
     }
 
     const updated = messages.filter(m => m.id !== msgId);
     setMessages(updated);
     setSelectedMsgIds(prev => prev.filter(id => id !== msgId));
-
-    try {
-      localStorage.setItem('washmitra_local_inquiries', JSON.stringify(updated));
-    } catch (e) {
-      console.warn('LocalStorage error:', e);
-    }
-
     toast.success("Inquiry deleted");
   };
 
@@ -449,18 +345,25 @@ export default function AdminDashboard() {
     if (selectedMsgIds.length === 0) return;
     if (!window.confirm(`Mark ${selectedMsgIds.length} selected inquiries as RESOLVED?`)) return;
 
-    for (const id of selectedMsgIds) {
-      try {
-        await supabase.from('contact_messages').update({ status: 'resolved' }).eq('id', id);
-      } catch (e) {}
+    try {
+      const { error } = await supabase
+        .from('contact_messages')
+        .update({ status: 'resolved' })
+        .in('id', selectedMsgIds);
+
+      if (error) {
+        console.error('Supabase bulk resolve error:', error);
+        toast.error('Failed to mark selected inquiries as resolved');
+        return;
+      }
+    } catch (e) {
+      console.error('Supabase bulk resolve exception:', e);
+      toast.error('Failed to mark selected inquiries as resolved');
+      return;
     }
 
     const updated = messages.map(m => selectedMsgIds.includes(m.id) ? { ...m, status: 'resolved' } : m);
     setMessages(updated);
-    try {
-      localStorage.setItem('washmitra_local_inquiries', JSON.stringify(updated));
-    } catch (e) {}
-
     toast.success(`Marked ${selectedMsgIds.length} inquiries as RESOLVED`);
     setSelectedMsgIds([]);
   };
@@ -469,18 +372,25 @@ export default function AdminDashboard() {
     if (selectedMsgIds.length === 0) return;
     if (!window.confirm(`Are you sure you want to PERMANENTLY DELETE ${selectedMsgIds.length} selected inquiries?`)) return;
 
-    for (const id of selectedMsgIds) {
-      try {
-        await supabase.from('contact_messages').delete().eq('id', id);
-      } catch (e) {}
+    try {
+      const { error } = await supabase
+        .from('contact_messages')
+        .delete()
+        .in('id', selectedMsgIds);
+
+      if (error) {
+        console.error('Supabase bulk delete error:', error);
+        toast.error('Failed to delete selected inquiries');
+        return;
+      }
+    } catch (e) {
+      console.error('Supabase bulk delete exception:', e);
+      toast.error('Failed to delete selected inquiries');
+      return;
     }
 
     const updated = messages.filter(m => !selectedMsgIds.includes(m.id));
     setMessages(updated);
-    try {
-      localStorage.setItem('washmitra_local_inquiries', JSON.stringify(updated));
-    } catch (e) {}
-
     toast.success(`Deleted ${selectedMsgIds.length} inquiries`);
     setSelectedMsgIds([]);
   };
@@ -1277,16 +1187,16 @@ export default function AdminDashboard() {
                   <span>Export CSV</span>
                 </Button>
 
-                {/* Re-Sync DB */}
+                {/* Refresh Inquiries */}
                 <Button
-                  onClick={syncLocalToDatabase}
+                  onClick={fetchContactMessages}
                   variant="outline"
                   size="sm"
-                  title="Push locally saved inquiries directly to Supabase cloud database"
-                  className="h-9 border-amber-200 bg-amber-50/50 hover:bg-amber-100 text-amber-800 font-bold text-xs gap-1.5 rounded-xl transition-all cursor-pointer"
+                  title="Reload inquiries from database"
+                  className="h-9 border-slate-200 hover:bg-slate-100 text-slate-700 font-bold text-xs gap-1.5 rounded-xl transition-all cursor-pointer"
                 >
-                  <RefreshCw className="h-3.5 w-3.5 text-amber-600" />
-                  <span>Re-Sync DB</span>
+                  <RefreshCw className="h-3.5 w-3.5 text-[#F26522]" />
+                  <span>Refresh</span>
                 </Button>
               </div>
             </CardHeader>

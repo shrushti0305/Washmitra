@@ -36,98 +36,34 @@ export default function Contact() {
       ? `[Interest: ${selectedInterest}] ${message}`
       : `[Interest: ${selectedInterest}] Customer requested call-back.`;
 
-    // Generate robust RFC4122 compliant UUID v4 for all mobile/desktop browsers
-    const uuid = (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') 
-      ? crypto.randomUUID() 
-      : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-          const r = Math.random() * 16 | 0;
-          const v = c === 'x' ? r : (r & 0x3 | 0x8);
-          return v.toString(16);
-        });
-
-    const newInquiry = {
-      id: uuid,
-      name,
-      phone,
-      email,
-      message: formattedMessage,
-      created_at: new Date().toISOString(),
-      status: 'pending'
-    };
-
-    // 1. Save to Local Storage (2 separate storage keys for zero data loss)
+    // Primary Database Sync: Supabase contact_messages
     try {
-      const existingStr = localStorage.getItem('washmitra_local_inquiries');
-      const existingArr = existingStr ? JSON.parse(existingStr) : [];
-      localStorage.setItem('washmitra_local_inquiries', JSON.stringify([newInquiry, ...existingArr]));
+      if (!supabase) {
+        console.error('Supabase client unavailable');
+        toast.error('Failed to submit message. Please try again.');
+        setIsSubmitting(false);
+        return;
+      }
 
-      const permanentStr = localStorage.getItem('washmitra_permanent_inquiry_log');
-      const permanentArr = permanentStr ? JSON.parse(permanentStr) : [];
-      localStorage.setItem('washmitra_permanent_inquiry_log', JSON.stringify([newInquiry, ...permanentArr]));
-    } catch (e) {
-      console.warn('LocalStorage save note:', e);
-    }
+      const { error } = await supabase.from('contact_messages').insert([{
+        name,
+        phone,
+        email,
+        message: formattedMessage,
+        status: 'NEW'
+      }]);
 
-    // 2. Primary Database Sync: Supabase contact_messages
-    try {
-      if (supabase) {
-        // Insert payload
-        const payload = {
-          id: uuid,
-          name,
-          phone,
-          email,
-          message: formattedMessage,
-          status: 'NEW'
-        };
-
-        let { error } = await supabase.from('contact_messages').insert([payload]);
-
-        // Fallback Attempt 2: If custom ID rejected, insert without explicit ID
-        if (error) {
-          console.warn('Supabase insert with UUID note, retrying without explicit ID:', error.message);
-          const fallbackRes = await supabase.from('contact_messages').insert([{
-            name,
-            phone,
-            email,
-            message: formattedMessage,
-            status: 'NEW'
-          }]);
-
-          if (fallbackRes.error) {
-            console.error('Supabase contact_messages fallback insert error:', fallbackRes.error.message);
-          } else {
-            console.log('Successfully inserted inquiry into Supabase via fallback');
-          }
-        } else {
-          console.log('Successfully inserted inquiry into Supabase contact_messages');
-        }
+      if (error) {
+        console.error('Supabase contact_messages insert error:', error.message);
+        toast.error('Failed to submit message. Please try again.');
+        setIsSubmitting(false);
+        return;
       }
     } catch (err) {
       console.error('Contact submission error:', err);
-    }
-
-    // 3. Background Email Backup Notification (Sends instant alert to washmitra.india@gmail.com)
-    try {
-      fetch('https://formsubmit.co/ajax/washmitra.india@gmail.com', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        keepalive: true,
-        body: JSON.stringify({
-          _subject: `New WASHMitra Mobile Inquiry from ${name}`,
-          Name: name,
-          Phone: phone,
-          Email: email || 'Not Provided',
-          Category: selectedInterest,
-          Message: formattedMessage,
-          SubmittedAt: new Date().toLocaleString()
-        })
-      }).catch(e => console.warn('Email webhook backup note:', e));
-    } catch (e) {
-      console.warn('Email trigger note:', e);
+      toast.error('Failed to submit message. Please try again.');
+      setIsSubmitting(false);
+      return;
     }
 
     setIsSubmitting(false);
