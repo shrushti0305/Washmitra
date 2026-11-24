@@ -51,6 +51,16 @@ export const en = {
   'bento.training.titleLine2': 'Training',
   'bento.training.desc': 'Empowering rural youth with certified livelihood skills.',
 
+  // Showcase
+  'showcase.subtitle': 'Pages of WASH Mitra',
+  'showcase.titleLine1': 'Certified,',
+  'showcase.titleLine2': 'Trained,',
+  'showcase.titleLine3': 'Trusted.',
+  'showcase.desc': 'Men and women from rural India — trained, certified and delivering trusted WASH services every day.',
+  'showcase.item.sanitation': 'Sanitation',
+  'showcase.item.training': 'Training',
+  'showcase.item.plumbing': 'Plumbing',
+
   // Layout & Top Nav
   'layout.nav.trainingNavigated': 'Navigated to Training Hub! Choose a certification course to enroll.',
   'layout.notifications.title': 'Notifications',

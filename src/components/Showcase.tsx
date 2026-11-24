@@ -1,6 +1,7 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Droplets, Wrench, GraduationCap } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 // 1. IMPORT YOUR IMAGES HERE
 import womenSanitizingImg from '../assets/images/womenSanitizing.jpg';
@@ -8,24 +9,26 @@ import trainingImg from '../assets/images/trainingwomen.jpg';
 import plumbingImg from '../assets/images/plumbing.jpeg';
 
 export default function Showcase() {
+  const { t } = useLanguage();
+
   const items = [
     {
-      title: "Sanitation",
-      label: "SANITATION",
+      title: t('showcase.item.sanitation'),
+      label: t('showcase.item.sanitation'),
       icon: Droplets,
       image: womenSanitizingImg,
       color: "bg-[#F26522]"
     },
     {
-      title: "Training",
-      label: "TRAINING",
+      title: t('showcase.item.training'),
+      label: t('showcase.item.training'),
       icon: GraduationCap,
       image: trainingImg,
       color: "bg-[#F26522]"
     },
     {
-      title: "Plumbing",
-      label: "PLUMBING",
+      title: t('showcase.item.plumbing'),
+      label: t('showcase.item.plumbing'),
       icon: Wrench,
       image: plumbingImg,
       color: "bg-[#F26522]"
@@ -37,15 +40,15 @@ export default function Showcase() {
       {/* Header Section */}
       <div className="grid lg:grid-cols-2 gap-12 items-end">
         <div className="space-y-4">
-          <p className="text-[10px] font-black text-[#F26522] uppercase tracking-[0.4em] ml-1">Pages of WASH Mitra</p>
+          <p className="text-[10px] font-black text-[#F26522] uppercase tracking-[0.4em] ml-1">{t('showcase.subtitle')}</p>
           <h2 className="text-6xl md:text-8xl font-black text-[#062D27] leading-[0.85] tracking-tighter">
-            Certified, <br />
-            <span className="font-serif italic text-slate-400 font-normal tracking-normal">Trained,</span> Trusted.
+            {t('showcase.titleLine1')} <br />
+            <span className="font-serif italic text-slate-400 font-normal tracking-normal">{t('showcase.titleLine2')}</span> {t('showcase.titleLine3')}
           </h2>
         </div>
         <div className="max-w-md ml-auto">
           <p className="text-xl text-slate-500 font-medium leading-relaxed">
-            Men and women from rural India — trained, certified and delivering trusted WASH services every day.
+            {t('showcase.desc')}
           </p>
         </div>
       </div>

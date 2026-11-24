@@ -48,6 +48,14 @@ This ledger tracks every internationalization translation key across the WASH Mi
 | `bento.training.titleLine1` | Technical | तांत्रिक | तकनीकी | no |
 | `bento.training.titleLine2` | Training | प्रशिक्षण | प्रशिक्षण | no |
 | `bento.training.desc` | Empowering rural youth with certified livelihood skills. | ग्रामीण तरुणांना रोजगारासाठी पक्के तांत्रिक कौशल्य. | ग्रामीण युवाओं को रोज़गार के लिए काम का हुनर। | yes |
+| `showcase.subtitle` | Pages of WASH Mitra | WASH Mitra ची झलक | WASH Mitra की झलक | no |
+| `showcase.titleLine1` | Certified, | प्रमाणित, | प्रमाणित, | no |
+| `showcase.titleLine2` | Trained, | प्रशिक्षित, | कुशल, | no |
+| `showcase.titleLine3` | Trusted. | विश्वासू. | भरोसेमंद। | no |
+| `showcase.desc` | Men and women from rural India — trained, certified and delivering trusted WASH services every day. | ग्रामीण भारतातील महिला व पुरुष — प्रशिक्षित, प्रमाणित आणि दररोज खात्रीशीर WASH सेवा देणारे. | ग्रामीण भारत के महिला और पुरुष — हुनरमंद, प्रमाणित और हर दिन भरोसेमंद WASH सेवा देने वाले। | yes |
+| `showcase.item.sanitation` | Sanitation | स्वच्छता | स्वच्छता | no |
+| `showcase.item.training` | Training | प्रशिक्षण | प्रशिक्षण | no |
+| `showcase.item.plumbing` | Plumbing | प्लंबिंग | नल-पाइप काम | no |
 | `layout.nav.trainingNavigated` | Navigated to Training Hub! Choose a certification course to enroll. | प्रशिक्षण विभाग उघडला आहे. नोंदणीसाठी कोर्स निवडा. | प्रशिक्षण विभाग खुल गया है। नामांकन के लिए कोर्स चुनें। | no |
 | `layout.notifications.title` | Notifications | सूचना | सूचनाएं | no |
 | `layout.notifications.new` | New | नवीन | नया | no |

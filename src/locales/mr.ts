@@ -53,6 +53,16 @@ export const mr: Record<TranslationKey, string> = {
   'bento.training.titleLine2': 'प्रशिक्षण',
   'bento.training.desc': 'ग्रामीण तरुणांना रोजगारासाठी पक्के तांत्रिक कौशल्य.',
 
+  // Showcase
+  'showcase.subtitle': 'WASH Mitra ची झलक',
+  'showcase.titleLine1': 'प्रमाणित,',
+  'showcase.titleLine2': 'प्रशिक्षित,',
+  'showcase.titleLine3': 'विश्वासू.',
+  'showcase.desc': 'ग्रामीण भारतातील महिला व पुरुष — प्रशिक्षित, प्रमाणित आणि दररोज खात्रीशीर WASH सेवा देणारे.',
+  'showcase.item.sanitation': 'स्वच्छता',
+  'showcase.item.training': 'प्रशिक्षण',
+  'showcase.item.plumbing': 'प्लंबिंग',
+
   // Layout & Top Nav
   'layout.nav.trainingNavigated': 'प्रशिक्षण विभाग उघडला आहे. नोंदणीसाठी कोर्स निवडा.',
   'layout.notifications.title': 'सूचना',
