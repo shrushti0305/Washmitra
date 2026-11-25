@@ -34,6 +34,18 @@ import { motion } from 'motion/react';
 
 import { useNotifications } from '../contexts/NotificationContext';
 import MitraPerformanceDashboard from './MitraPerformanceDashboard';
+import {
+  SHOW_MITRA_NEARBY_JOBS,
+  SHOW_MITRA_EARNINGS,
+  SHOW_MITRA_AUDITS,
+  SHOW_MITRA_TOOLKIT,
+  SHOW_MITRA_STATS,
+  SHOW_MITRA_JOB_ACTIONS,
+  SHOW_MITRA_SYNC_QUEUE,
+  SHOW_MITRA_REGISTER_BUSINESS,
+  SHOW_MITRA_REPORT_DAMAGE,
+  DEMO_STRINGS
+} from '../config/features';
 
 export default function WashMitraDashboard() {
   const { user, requests, updateRequest, setRequests } = useStore();
@@ -171,28 +183,44 @@ export default function WashMitraDashboard() {
             >
               Profile
             </Button>
-            <Button 
-              variant={activeTab === 'TOOLKIT' ? 'default' : 'ghost'}
-              onClick={() => setActiveTab('TOOLKIT')}
-              className={`rounded-xl h-10 px-4 text-[10px] font-black uppercase tracking-widest ${activeTab === 'TOOLKIT' ? 'bg-[#062D27] text-white shadow-lg' : 'text-slate-500'}`}
-            >
-              Toolkit
-            </Button>
-            <Button 
-              variant={activeTab === 'PERFORMANCE' ? 'default' : 'ghost'}
-              onClick={() => setActiveTab('PERFORMANCE')}
-              className={`rounded-xl h-10 px-4 text-[10px] font-black uppercase tracking-widest ${activeTab === 'PERFORMANCE' ? 'bg-[#062D27] text-white shadow-lg' : 'text-slate-500'}`}
-            >
-              Stats
-            </Button>
+            {SHOW_MITRA_TOOLKIT && (
+              <Button 
+                variant={activeTab === 'TOOLKIT' ? 'default' : 'ghost'}
+                onClick={() => setActiveTab('TOOLKIT')}
+                className={`rounded-xl h-10 px-4 text-[10px] font-black uppercase tracking-widest ${activeTab === 'TOOLKIT' ? 'bg-[#062D27] text-white shadow-lg' : 'text-slate-500'}`}
+              >
+                Toolkit
+              </Button>
+            )}
+            {SHOW_MITRA_STATS && (
+              <Button 
+                variant={activeTab === 'PERFORMANCE' ? 'default' : 'ghost'}
+                onClick={() => setActiveTab('PERFORMANCE')}
+                className={`rounded-xl h-10 px-4 text-[10px] font-black uppercase tracking-widest ${activeTab === 'PERFORMANCE' ? 'bg-[#062D27] text-white shadow-lg' : 'text-slate-500'}`}
+              >
+                Stats
+              </Button>
+            )}
           </div>
         </div>
       </div>
 
       {activeTab === 'JOBS' && (
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className={`grid gap-8 ${(SHOW_MITRA_EARNINGS || SHOW_MITRA_AUDITS) ? 'lg:grid-cols-3' : 'grid-cols-1'}`}>
           {/* Main Job Queue */}
-          <div className="lg:col-span-2 space-y-12">
+          <div className={(SHOW_MITRA_EARNINGS || SHOW_MITRA_AUDITS) ? 'lg:col-span-2 space-y-8' : 'space-y-8'}>
+            
+            {/* Technician Account Status Card */}
+            <Card className="border border-slate-100 bg-white shadow-sm p-8 rounded-[32px] text-center">
+              <div className="w-14 h-14 bg-emerald-50 text-emerald-700 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <ShieldCheck className="h-7 w-7" />
+              </div>
+              <h3 className="text-xl font-black text-[#062D27]">Technician Account Active</h3>
+              <p className="text-sm text-slate-500 font-medium max-w-md mx-auto mt-2 leading-relaxed">
+                {DEMO_STRINGS.washMitraPlaceholder}
+              </p>
+            </Card>
+
             {/* Active Assignments */}
             <div className="space-y-6">
               <h2 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2 italic">
@@ -237,26 +265,28 @@ export default function WashMitraDashboard() {
                             <p className="text-xl font-black text-[#F26522]">₹{job.total_price}</p>
                           </div>
                         </div>
-                        <div className="flex gap-3">
-                          {job.status === 'ASSIGNED' || job.status === 'EN_ROUTE' ? (
-                            <Button 
-                              onClick={() => handleStartService(job.id)}
-                              className="flex-1 h-16 bg-[#062D27] hover:bg-[#0A3D36] text-white font-black uppercase tracking-widest rounded-2xl shadow-xl transition-all"
-                            >
-                              Verify OTP & Start
+                        {SHOW_MITRA_JOB_ACTIONS && (
+                          <div className="flex gap-3">
+                            {job.status === 'ASSIGNED' || job.status === 'EN_ROUTE' ? (
+                              <Button 
+                                onClick={() => handleStartService(job.id)}
+                                className="flex-1 h-16 bg-[#062D27] hover:bg-[#0A3D36] text-white font-black uppercase tracking-widest rounded-2xl shadow-xl transition-all"
+                              >
+                                Verify OTP & Start
+                              </Button>
+                            ) : (
+                              <Button 
+                                onClick={() => handleCompleteJob(job.id)}
+                                className="flex-1 h-16 bg-[#F26522] hover:bg-[#d5581e] text-white font-black uppercase tracking-widest rounded-2xl shadow-xl transition-all"
+                              >
+                                Work Finished
+                              </Button>
+                            )}
+                            <Button variant="outline" className="h-16 w-16 rounded-2xl border-slate-100 bg-slate-50 text-slate-400">
+                              <MoreVertical />
                             </Button>
-                          ) : (
-                            <Button 
-                              onClick={() => handleCompleteJob(job.id)}
-                              className="flex-1 h-16 bg-[#F26522] hover:bg-[#d5581e] text-white font-black uppercase tracking-widest rounded-2xl shadow-xl transition-all"
-                            >
-                              Work Finished
-                            </Button>
-                          )}
-                          <Button variant="outline" className="h-16 w-16 rounded-2xl border-slate-100 bg-slate-50 text-slate-400">
-                            <MoreVertical />
-                          </Button>
-                        </div>
+                          </div>
+                        )}
                       </CardContent>
                     </Card>
                   ))}
@@ -275,7 +305,7 @@ export default function WashMitraDashboard() {
                   <p className="text-sm font-bold text-slate-700">{isOnline ? 'Fully Connected' : `${queue.length} Pending Actions`}</p>
                 </div>
               </div>
-              {queue.length > 0 && isOnline && (
+              {SHOW_MITRA_SYNC_QUEUE && queue.length > 0 && isOnline && (
                 <Button 
                   onClick={handleSync}
                   disabled={isSyncing}
@@ -288,89 +318,97 @@ export default function WashMitraDashboard() {
             </div>
 
             {/* Nearby Available Jobs Feed */}
-            <div className="space-y-6">
-               <h2 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2 italic">
-                Jobs Near You <Badge variant="outline" className="text-slate-400 border-slate-200">Real-time Feed</Badge>
-              </h2>
-              <div className="grid gap-4">
-                {availableJobs.map((job) => (
-                  <Card key={job.id} className="border-none shadow-sm rounded-3xl p-6 bg-slate-50 hover:bg-white hover:shadow-xl transition-all group">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center text-[#F26522] group-hover:bg-[#F26522] group-hover:text-white transition-all">
-                          <MapPin size={24} />
+            {SHOW_MITRA_NEARBY_JOBS && (
+              <div className="space-y-6">
+                <h2 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2 italic">
+                  Jobs Near You <Badge variant="outline" className="text-slate-400 border-slate-200">Real-time Feed</Badge>
+                </h2>
+                <div className="grid gap-4">
+                  {availableJobs.map((job) => (
+                    <Card key={job.id} className="border-none shadow-sm rounded-3xl p-6 bg-slate-50 hover:bg-white hover:shadow-xl transition-all group">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center text-[#F26522] group-hover:bg-[#F26522] group-hover:text-white transition-all">
+                            <MapPin size={24} />
+                          </div>
+                          <div>
+                            <h4 className="font-black text-[#062D27]">{job.customer}</h4>
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{job.task} • {job.distance}</p>
+                          </div>
                         </div>
-                        <div>
-                          <h4 className="font-black text-[#062D27]">{job.customer}</h4>
-                          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{job.task} • {job.distance}</p>
+                        <div className="text-right flex items-center gap-4">
+                          <div>
+                            <p className="text-lg font-black text-[#062D27]">₹{job.payout}</p>
+                            <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Base Payout</p>
+                          </div>
+                          <Button className="h-10 px-6 bg-[#062D27] rounded-xl text-white font-black uppercase text-[10px] tracking-widest shadow-lg">
+                            Accept
+                          </Button>
                         </div>
                       </div>
-                      <div className="text-right flex items-center gap-4">
-                        <div>
-                          <p className="text-lg font-black text-[#062D27]">₹{job.payout}</p>
-                          <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Base Payout</p>
-                        </div>
-                        <Button className="h-10 px-6 bg-[#062D27] rounded-xl text-white font-black uppercase text-[10px] tracking-widest shadow-lg">
-                          Accept
-                        </Button>
-                      </div>
-                    </div>
-                  </Card>
-                ))}
+                    </Card>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* Work Hub Stats & Earnings */}
-          <div className="space-y-6">
-            <Card className="bg-[#062D27] border-none rounded-[40px] overflow-hidden text-white shadow-2xl relative p-8">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="p-3 bg-white/10 rounded-2xl text-[#F26522] shadow-inner"><Wallet size={24} /></div>
-                <div>
-                   <h3 className="text-xl font-black tracking-tight leading-none">Earnings Hub</h3>
-                   <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Settled & Pending</p>
-                </div>
-              </div>
-              
-              <div className="space-y-1">
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest opacity-60">Today's Revenue</p>
-                <h3 className="text-5xl font-black tracking-tighter">₹1,240</h3>
-              </div>
-
-              <div className="mt-8 pt-8 border-t border-white/5 space-y-4">
-                <div>
-                  <div className="flex justify-between text-[10px] font-black uppercase mb-1">
-                    <span className="text-slate-400">Weekly Target</span>
-                    <span className="text-[#F26522]">₹5,000</span>
+          {(SHOW_MITRA_EARNINGS || SHOW_MITRA_AUDITS) && (
+            <div className="space-y-6">
+              {SHOW_MITRA_EARNINGS && (
+                <Card className="bg-[#062D27] border-none rounded-[40px] overflow-hidden text-white shadow-2xl relative p-8">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="p-3 bg-white/10 rounded-2xl text-[#F26522] shadow-inner"><Wallet size={24} /></div>
+                    <div>
+                       <h3 className="text-xl font-black tracking-tight leading-none">Earnings Hub</h3>
+                       <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Settled & Pending</p>
+                    </div>
                   </div>
-                  <Progress value={65} className="h-2 bg-white/10" />
-                  <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest mt-2">65% of Goal Reached</p>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4 mt-8">
-                <div className="bg-white/5 p-4 rounded-3xl border border-white/5">
-                   <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">This Week</p>
-                   <p className="text-xl font-black">₹4,840</p>
-                </div>
-                <div className="bg-white/5 p-4 rounded-3xl border border-white/5">
-                   <p className="text-[10px] font-black uppercase tracking-widest text-[#F16622]">Last Week</p>
-                   <p className="text-xl font-black opacity-40">₹3,900</p>
-                </div>
-              </div>
-            </Card>
-
-            <Card className="rounded-[32px] border-none bg-slate-50 p-8">
-               <h3 className="text-lg font-black text-[#062D27] mb-4">Upcoming Audits</h3>
-               <div className="flex items-center gap-4 p-4 bg-white rounded-2xl border border-slate-100 shadow-sm">
-                  <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-[#F26522]"><Star size={20} className="fill-[#F26522]" /></div>
-                  <div>
-                    <p className="font-black text-xs text-[#062D27]">Skill Recertification</p>
-                    <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Starts in 12 Days</p>
+                  
+                  <div className="space-y-1">
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest opacity-60">Today's Revenue</p>
+                    <h3 className="text-5xl font-black tracking-tighter">₹1,240</h3>
                   </div>
-               </div>
-            </Card>
-          </div>
+
+                  <div className="mt-8 pt-8 border-t border-white/5 space-y-4">
+                    <div>
+                      <div className="flex justify-between text-[10px] font-black uppercase mb-1">
+                        <span className="text-slate-400">Weekly Target</span>
+                        <span className="text-[#F26522]">₹5,000</span>
+                      </div>
+                      <Progress value={65} className="h-2 bg-white/10" />
+                      <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest mt-2">65% of Goal Reached</p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4 mt-8">
+                    <div className="bg-white/5 p-4 rounded-3xl border border-white/5">
+                       <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">This Week</p>
+                       <p className="text-xl font-black">₹4,840</p>
+                    </div>
+                    <div className="bg-white/5 p-4 rounded-3xl border border-white/5">
+                       <p className="text-[10px] font-black uppercase tracking-widest text-[#F16622]">Last Week</p>
+                       <p className="text-xl font-black opacity-40">₹3,900</p>
+                    </div>
+                  </div>
+                </Card>
+              )}
+
+              {SHOW_MITRA_AUDITS && (
+                <Card className="rounded-[32px] border-none bg-slate-50 p-8">
+                   <h3 className="text-lg font-black text-[#062D27] mb-4">Upcoming Audits</h3>
+                   <div className="flex items-center gap-4 p-4 bg-white rounded-2xl border border-slate-100 shadow-sm">
+                      <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-[#F26522]"><Star size={20} className="fill-[#F26522]" /></div>
+                      <div>
+                        <p className="font-black text-xs text-[#062D27]">Skill Recertification</p>
+                        <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Starts in 12 Days</p>
+                      </div>
+                   </div>
+                </Card>
+              )}
+            </div>
+          )}
         </div>
       )}
 
@@ -406,14 +444,16 @@ export default function WashMitraDashboard() {
             <p className="text-slate-500 font-medium mt-2 max-w-sm">
               We help you register your own micro-enterprise. Get support for GST filing and national portal listings.
             </p>
-            <Button className="mt-8 h-12 px-8 bg-[#062D27] rounded-full font-black text-xs uppercase tracking-widest shadow-xl">
-              Register Business
-            </Button>
+            {SHOW_MITRA_REGISTER_BUSINESS && (
+              <Button className="mt-8 h-12 px-8 bg-[#062D27] rounded-full font-black text-xs uppercase tracking-widest shadow-xl">
+                Register Business
+              </Button>
+            )}
           </Card>
         </div>
       )}
 
-      {activeTab === 'TOOLKIT' && (
+      {SHOW_MITRA_TOOLKIT && activeTab === 'TOOLKIT' && (
         <section className="space-y-6">
           <div className="flex items-center justify-between">
             <h2 className="text-3xl font-black text-slate-900 tracking-tighter">Digital Toolkit Ledger</h2>
@@ -430,16 +470,18 @@ export default function WashMitraDashboard() {
                 </div>
                 <h3 className="font-black text-[#062D27]">{item.name}</h3>
                 <p className="text-xs text-slate-500 mt-1 uppercase tracking-widest font-bold">Last inventoried: {item.lastSeen}</p>
-                <Button variant="ghost" className="w-full mt-4 text-[10px] font-black uppercase text-slate-400 hover:text-[#062D27] border-t border-slate-50 pt-4 rounded-none h-auto">
-                  Report Damage
-                </Button>
+                {SHOW_MITRA_REPORT_DAMAGE && (
+                  <Button variant="ghost" className="w-full mt-4 text-[10px] font-black uppercase text-slate-400 hover:text-[#062D27] border-t border-slate-50 pt-4 rounded-none h-auto">
+                    Report Damage
+                  </Button>
+                )}
               </Card>
             ))}
           </div>
         </section>
       )}
 
-      {activeTab === 'PERFORMANCE' && (
+      {SHOW_MITRA_STATS && activeTab === 'PERFORMANCE' && (
         <div className="animate-in fade-in zoom-in-95 duration-500">
            <MitraPerformanceDashboard />
         </div>

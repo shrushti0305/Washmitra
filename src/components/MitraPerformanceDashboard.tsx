@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { motion } from 'motion/react';
+import { SHOW_MITRA_STATS, DEMO_STRINGS } from '../config/features';
 
 const EarningHistory = [
   { day: 'Mon', earnings: 1200 },
@@ -31,6 +32,20 @@ const ServiceBreakdown = [
 ];
 
 export default function MitraPerformanceDashboard() {
+  if (!SHOW_MITRA_STATS) {
+    return (
+      <Card className="border border-slate-100 bg-white shadow-sm p-8 rounded-[32px] text-center max-w-2xl mx-auto my-8">
+        <div className="w-14 h-14 bg-emerald-50 text-emerald-700 rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <TrendingUp className="h-7 w-7" />
+        </div>
+        <h3 className="text-xl font-black text-[#062D27]">Technician Performance Hub</h3>
+        <p className="text-sm text-slate-500 font-medium max-w-md mx-auto mt-2 leading-relaxed">
+          {DEMO_STRINGS.washMitraPlaceholder}
+        </p>
+      </Card>
+    );
+  }
+
   const stats = useMemo(() => ({
     completed: 142,
     rating: 4.9,
