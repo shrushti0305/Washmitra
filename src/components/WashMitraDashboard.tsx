@@ -34,6 +34,7 @@ import { motion } from 'motion/react';
 
 import { useNotifications } from '../contexts/NotificationContext';
 import MitraPerformanceDashboard from './MitraPerformanceDashboard';
+import { SHOW_MITRA_CREDENTIALS } from '../lib/featureFlags';
 
 export default function WashMitraDashboard() {
   const { user, requests, updateRequest, setRequests } = useStore();
@@ -164,13 +165,15 @@ export default function WashMitraDashboard() {
             >
               Jobs
             </Button>
-            <Button 
-              variant={activeTab === 'SKILLS' ? 'default' : 'ghost'}
-              onClick={() => setActiveTab('SKILLS')}
-              className={`rounded-xl h-10 px-4 text-[10px] font-black uppercase tracking-widest ${activeTab === 'SKILLS' ? 'bg-[#062D27] text-white shadow-lg' : 'text-slate-500'}`}
-            >
-              Profile
-            </Button>
+            {SHOW_MITRA_CREDENTIALS && (
+              <Button 
+                variant={activeTab === 'SKILLS' ? 'default' : 'ghost'}
+                onClick={() => setActiveTab('SKILLS')}
+                className={`rounded-xl h-10 px-4 text-[10px] font-black uppercase tracking-widest ${activeTab === 'SKILLS' ? 'bg-[#062D27] text-white shadow-lg' : 'text-slate-500'}`}
+              >
+                Profile
+              </Button>
+            )}
             <Button 
               variant={activeTab === 'TOOLKIT' ? 'default' : 'ghost'}
               onClick={() => setActiveTab('TOOLKIT')}
@@ -374,7 +377,7 @@ export default function WashMitraDashboard() {
         </div>
       )}
 
-      {activeTab === 'SKILLS' && (
+      {SHOW_MITRA_CREDENTIALS && activeTab === 'SKILLS' && (
         <div className="grid md:grid-cols-2 gap-8">
           <section className="space-y-6">
             <h2 className="text-3xl font-black text-slate-900 tracking-tighter">Verified Credentials</h2>

@@ -6,3 +6,8 @@
 // ready to launch — the underlying code (Auth, booking flow, Razorpay) is
 // untouched, this only hides the entry points.
 export const SHOW_TRANSACTIONAL_FEATURES = false;
+
+// Controls whether the Profile (SKILLS) tab and its hardcoded credential
+// badges appear in WashMitraDashboard. Turn on once technician credentials
+// are backed by Supabase profile/certification records.
+export const SHOW_MITRA_CREDENTIALS = false;
