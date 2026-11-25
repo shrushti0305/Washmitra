@@ -139,7 +139,7 @@ export default function WashMitraDashboard() {
           <h1 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter">
             Good Morning, <span className="italic font-serif text-slate-400">{user?.full_name ? user.full_name.split(' ')[0] : 'Mitra'}</span>
           </h1>
-          <p className="text-slate-500 font-medium mt-1">Status: {isAvailable ? 'Active & Certified (Batch 04). Ready for service.' : 'Offline. Shift finished.'}</p>
+          <p className="text-slate-500 font-medium mt-1">Status: {isAvailable ? 'Account active.' : 'Offline. Shift finished.'}</p>
         </div>
         
         <div className="flex flex-col items-end gap-4">
