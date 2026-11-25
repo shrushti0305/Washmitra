@@ -32,6 +32,13 @@ import { Progress } from '@/components/ui/progress';
 import { motion, AnimatePresence } from 'motion/react';
 import { toast } from 'sonner';
 import MitraStackView from './MitraStackView';
+import {
+  SHOW_CUSTOMER_PROGRESS_TRACKER,
+  SHOW_CUSTOMER_CLOSE_OUT_KEY,
+  SHOW_CUSTOMER_RATING_FORM,
+  SHOW_CUSTOMER_MOCK_METRICS,
+  SHOW_CUSTOMER_WORKFORCE_BANNER
+} from '../config/features';
 
 export default function CustomerDashboard() {
   const { user, requests = [], services = [], setRequests } = useStore();
@@ -69,6 +76,7 @@ export default function CustomerDashboard() {
 
   // Simulated worker execution telemetry loop
   useEffect(() => {
+    if (!SHOW_CUSTOMER_PROGRESS_TRACKER) return;
     const processTimer = setInterval(() => {
       setWorkStage((prev) => (prev < technicalMilestones.length - 1 ? prev + 1 : prev));
     }, 15000); // Transitions across maintenance phases every 15 seconds
@@ -119,128 +127,137 @@ export default function CustomerDashboard() {
         <div className="space-y-12 px-4 md:px-0">
           
           {/* LIVE WORK-DONE PROCESS TRACKER CONTAINER */}
-          <section className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
-                Technical Maintenance Diagnostics <Badge className="bg-[#062D27] text-white animate-pulse">Fix In Progress</Badge>
-              </h2>
-            </div>
+          {(SHOW_CUSTOMER_PROGRESS_TRACKER || SHOW_CUSTOMER_RATING_FORM || SHOW_CUSTOMER_CLOSE_OUT_KEY) && (
+            <section className="space-y-6">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
+                  Technical Maintenance Diagnostics <Badge className="bg-[#062D27] text-white animate-pulse">Fix In Progress</Badge>
+                </h2>
+              </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-              
-              {/* Left Side: Technical Progression Loop Tracking Stream */}
-              <Card className="lg:col-span-8 border-none bg-white shadow-2xl rounded-[40px] overflow-hidden">
-                <div className="p-8 bg-[#062D27] text-white flex justify-between items-center">
-                  <div className="flex items-center gap-3">
-                    {React.createElement(technicalMilestones[workStage].icon, { size: 20, className: "text-[#F26522]" })}
-                    <div>
-                      <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Current Execution Phase</p>
-                      <h4 className="text-lg font-black tracking-tight leading-none mt-1">{technicalMilestones[workStage].label}</h4>
-                    </div>
-                  </div>
-                  <Badge variant="outline" className="text-[#F26522] border-[#F26522] text-[9px] font-black tracking-widest uppercase px-3 py-1 bg-white/5">
-                    {technicalMilestones[workStage].eta}
-                  </Badge>
-                </div>
-
-                <div className="p-8 space-y-8">
-                  {/* Explanatory telemetry prompt phrase */}
-                  <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                    <p className="text-xs text-slate-600 font-medium leading-relaxed">
-                      {technicalMilestones[workStage].desc}
-                    </p>
-                  </div>
-
-                  {/* Horizontal visual status block progress trackers */}
-                  <div className="relative pt-4 pb-4">
-                    <div className="absolute top-[32px] left-0 w-full h-[2px] bg-slate-100" />
-                    <div className="relative flex justify-between">
-                      {technicalMilestones.map((step, idx) => {
-                        const isDone = workStage >= idx;
-                        const isCurrent = workStage === idx;
-                        return (
-                          <div key={step.phase} className="flex flex-col items-center gap-2.5 relative z-10">
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all duration-500 ${
-                              isCurrent ? 'bg-[#F26522] border-[#F26522] text-white scale-110 shadow-lg' : 
-                              isDone ? 'bg-[#062D27] border-[#062D27] text-white' : 'bg-white border-slate-200 text-slate-300'
-                            }`}>
-                              <CheckCircle2 size={16} />
-                            </div>
-                            <span className={`text-[8px] font-black uppercase tracking-wider text-center max-w-[70px] ${isCurrent ? 'text-[#062D27]' : 'text-slate-400'}`}>
-                              {step.phase.replace('_', ' ')}
-                            </span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Total progress calculation meter block line */}
-                  <div className="space-y-2 pt-2">
-                    <div className="flex justify-between text-[10px] font-black uppercase text-slate-400 tracking-widest">
-                      <span>Overall Task Metric Compliance</span>
-                      <span className="text-[#062D27] font-black">{technicalMilestones[workStage].progress}% Completed</span>
-                    </div>
-                    <Progress value={technicalMilestones[workStage].progress} className="h-2 bg-slate-100" />
-                  </div>
-                </div>
-              </Card>
-
-              {/* Right Side Stack: Feedback Hub upgraded with Loyalty Rewards interaction */}
-              <Card className="lg:col-span-4 rounded-[40px] border-none bg-[#062D27] text-white p-8 flex flex-col justify-between overflow-hidden shadow-2xl relative min-h-[380px]">
-                <div className="relative z-10 space-y-4 text-center">
-                  
-                  {/* Interactive Star Selection Bar Layout */}
-                  <div className="flex justify-center gap-1.5 pt-2">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <button
-                        key={star}
-                        type="button"
-                        onClick={() => setUserRating(star)}
-                        className="transition-transform active:scale-95 hover:scale-110 outline-none focus:outline-none"
-                      >
-                        <Star 
-                          size={28}
-                          className={`transition-colors ${userRating >= star ? "text-[#F26522] fill-[#F26522]" : "text-white/20"}`}
-                        />
-                      </button>
-                    ))}
-                  </div>
-
-                  <h3 className="text-xl font-black tracking-tight pt-2">Feedback Hub</h3>
-                  <p className="text-slate-400 text-xs leading-relaxed max-w-[220px] mx-auto font-medium">
-                    {userRating === 5 
-                      ? "Excellent! Submitting this 5-star audit will credit +50 Loyalty Points to your Mitra."
-                      : "Your performance validation notes shape local credit indices."}
-                  </p>
-
-                  <Button
-                    onClick={() => handleRatingSubmit(userRating)}
-                    className="w-full bg-[#F26522] hover:bg-[#d5581e] border-none text-white font-black uppercase text-[10px] tracking-widest h-12 rounded-xl shadow-xl transition-all flex items-center justify-center gap-2"
-                  >
-                    {userRating === 5 ? <Gem size={12} /> : null}
-                    {userRating === 5 ? "Award Points & Submit" : "Submit Audit"}
-                  </Button>
-                </div>
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 
-                {/* Handover verification token layout box alert */}
-                <div className="bg-white/5 border border-white/10 p-4 rounded-2xl relative z-10 mt-auto space-y-1">
-                  <div className="flex items-center gap-2 text-[#F26522]">
-                    <QrCode size={14} />
-                    <span className="text-[9px] font-black uppercase tracking-widest">Close Out Key</span>
-                  </div>
-                  <p className="text-[11px] text-slate-300 font-medium leading-relaxed text-left">
-                    Provide code <strong className="text-white tracking-wider">4821</strong> once infrastructure diagnostic passes are logged complete.
-                  </p>
-                </div>
+                {/* Left Side: Technical Progression Loop Tracking Stream */}
+                {SHOW_CUSTOMER_PROGRESS_TRACKER && (
+                  <Card className="lg:col-span-8 border-none bg-white shadow-2xl rounded-[40px] overflow-hidden">
+                    <div className="p-8 bg-[#062D27] text-white flex justify-between items-center">
+                      <div className="flex items-center gap-3">
+                        {React.createElement(technicalMilestones[workStage].icon, { size: 20, className: "text-[#F26522]" })}
+                        <div>
+                          <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Current Execution Phase</p>
+                          <h4 className="text-lg font-black tracking-tight leading-none mt-1">{technicalMilestones[workStage].label}</h4>
+                        </div>
+                      </div>
+                      <Badge variant="outline" className="text-[#F26522] border-[#F26522] text-[9px] font-black tracking-widest uppercase px-3 py-1 bg-white/5">
+                        {technicalMilestones[workStage].eta}
+                      </Badge>
+                    </div>
 
-                <div className="absolute -bottom-10 -right-10 opacity-5 pointer-events-none">
-                  <Star size={160} />
-                </div>
-              </Card>
+                    <div className="p-8 space-y-8">
+                      {/* Explanatory telemetry prompt phrase */}
+                      <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                        <p className="text-xs text-slate-600 font-medium leading-relaxed">
+                          {technicalMilestones[workStage].desc}
+                        </p>
+                      </div>
 
-            </div>
-          </section>
+                      {/* Horizontal visual status block progress trackers */}
+                      <div className="relative pt-4 pb-4">
+                        <div className="absolute top-[32px] left-0 w-full h-[2px] bg-slate-100" />
+                        <div className="relative flex justify-between">
+                          {technicalMilestones.map((step, idx) => {
+                            const isDone = workStage >= idx;
+                            const isCurrent = workStage === idx;
+                            return (
+                              <div key={step.phase} className="flex flex-col items-center gap-2.5 relative z-10">
+                                <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all duration-500 ${
+                                  isCurrent ? 'bg-[#F26522] border-[#F26522] text-white scale-110 shadow-lg' : 
+                                  isDone ? 'bg-[#062D27] border-[#062D27] text-white' : 'bg-white border-slate-200 text-slate-300'
+                                }`}>
+                                  <CheckCircle2 size={16} />
+                                </div>
+                                <span className={`text-[8px] font-black uppercase tracking-wider text-center max-w-[70px] ${isCurrent ? 'text-[#062D27]' : 'text-slate-400'}`}>
+                                  {step.phase.replace('_', ' ')}
+                                </span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Total progress calculation meter block line */}
+                      <div className="space-y-2 pt-2">
+                        <div className="flex justify-between text-[10px] font-black uppercase text-slate-400 tracking-widest">
+                          <span>Overall Task Metric Compliance</span>
+                          <span className="text-[#062D27] font-black">{technicalMilestones[workStage].progress}% Completed</span>
+                        </div>
+                        <Progress value={technicalMilestones[workStage].progress} className="h-2 bg-slate-100" />
+                      </div>
+                    </div>
+                  </Card>
+                )}
+
+                {/* Right Side Stack: Feedback Hub upgraded with Loyalty Rewards interaction */}
+                {(SHOW_CUSTOMER_RATING_FORM || SHOW_CUSTOMER_CLOSE_OUT_KEY) && (
+                  <Card className="lg:col-span-4 rounded-[40px] border-none bg-[#062D27] text-white p-8 flex flex-col justify-between overflow-hidden shadow-2xl relative min-h-[380px]">
+                    {SHOW_CUSTOMER_RATING_FORM && (
+                      <div className="relative z-10 space-y-4 text-center">
+                        {/* Interactive Star Selection Bar Layout */}
+                        <div className="flex justify-center gap-1.5 pt-2">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <button
+                              key={star}
+                              type="button"
+                              onClick={() => setUserRating(star)}
+                              className="transition-transform active:scale-95 hover:scale-110 outline-none focus:outline-none"
+                            >
+                              <Star 
+                                size={28}
+                                className={`transition-colors ${userRating >= star ? "text-[#F26522] fill-[#F26522]" : "text-white/20"}`}
+                              />
+                            </button>
+                          ))}
+                        </div>
+
+                        <h3 className="text-xl font-black tracking-tight pt-2">Feedback Hub</h3>
+                        <p className="text-slate-400 text-xs leading-relaxed max-w-[220px] mx-auto font-medium">
+                          {userRating === 5 
+                            ? "Excellent! Submitting this 5-star audit will credit +50 Loyalty Points to your Mitra."
+                            : "Your performance validation notes shape local credit indices."}
+                        </p>
+
+                        <Button
+                          onClick={() => handleRatingSubmit(userRating)}
+                          className="w-full bg-[#F26522] hover:bg-[#d5581e] border-none text-white font-black uppercase text-[10px] tracking-widest h-12 rounded-xl shadow-xl transition-all flex items-center justify-center gap-2"
+                        >
+                          {userRating === 5 ? <Gem size={12} /> : null}
+                          {userRating === 5 ? "Award Points & Submit" : "Submit Audit"}
+                        </Button>
+                      </div>
+                    )}
+                    
+                    {/* Handover verification token layout box alert */}
+                    {SHOW_CUSTOMER_CLOSE_OUT_KEY && (
+                      <div className="bg-white/5 border border-white/10 p-4 rounded-2xl relative z-10 mt-auto space-y-1">
+                        <div className="flex items-center gap-2 text-[#F26522]">
+                          <QrCode size={14} />
+                          <span className="text-[9px] font-black uppercase tracking-widest">Close Out Key</span>
+                        </div>
+                        <p className="text-[11px] text-slate-300 font-medium leading-relaxed text-left">
+                          Provide code <strong className="text-white tracking-wider">4821</strong> once infrastructure diagnostic passes are logged complete.
+                        </p>
+                      </div>
+                    )}
+
+                    <div className="absolute -bottom-10 -right-10 opacity-5 pointer-events-none">
+                      <Star size={160} />
+                    </div>
+                  </Card>
+                )}
+
+              </div>
+            </section>
+          )}
 
           {/* Express Repair Category Grid Selection Panel */}
           <section className="space-y-6">
@@ -265,34 +282,40 @@ export default function CustomerDashboard() {
           </section>
 
           {/* Quick Stats Metrics Panels Counter Row Layout */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pb-4">
+          <div className={`grid gap-4 pb-4 ${SHOW_CUSTOMER_MOCK_METRICS ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-2'}`}>
             <StatsCard label="Past Repairs" value={completedRequests.length} icon={History} color="blue" />
             <StatsCard label="Active Status" value={activeRequests.length} icon={Clock} color="orange" />
-            <StatsCard label="Total Conserved" value="1,240 Ltrs" icon={Droplets} color="green" />
-            <StatsCard label="Credits Available" value="₹450" icon={Wallet} color="purple" />
+            {SHOW_CUSTOMER_MOCK_METRICS && (
+              <>
+                <StatsCard label="Total Conserved" value="1,240 Ltrs" icon={Droplets} color="green" />
+                <StatsCard label="Credits Available" value="₹450" icon={Wallet} color="purple" />
+              </>
+            )}
           </div>
 
           {/* Livelihoods Stack Workforce Presentation Panel Wrapper Section */}
-          <section className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center py-6">
-            <div className="space-y-6">
-              <div className="w-fit">
-                <Badge variant="outline" className="text-[#062D27] border-[#062D27] font-black text-[10px] uppercase tracking-widest px-3 py-1">Featured Workforce</Badge>
-              </div>
-              <h2 className="text-4xl font-black text-slate-900 tracking-tighter leading-tight italic font-serif">Meet the Faces of <br /> <span className="text-[#062D27] not-italic">Sustainable Change</span></h2>
-              <p className="text-slate-500 font-medium text-sm md:text-base leading-relaxed">Every technician undergoes an exhaustive trade filter residential check, completing structural alignment checks on mechanical assets.</p>
-              <div className="flex gap-8 border-t border-slate-100 pt-6">
-                <div>
-                  <p className="text-3xl font-black text-[#062D27]">149+</p>
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-0.5">Women Technicians</p>
+          {SHOW_CUSTOMER_WORKFORCE_BANNER && (
+            <section className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center py-6">
+              <div className="space-y-6">
+                <div className="w-fit">
+                  <Badge variant="outline" className="text-[#062D27] border-[#062D27] font-black text-[10px] uppercase tracking-widest px-3 py-1">Featured Workforce</Badge>
                 </div>
-                <div>
-                  <p className="text-3xl font-black text-[#062D27]">820+</p>
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-0.5">Certified Partners</p>
+                <h2 className="text-4xl font-black text-slate-900 tracking-tighter leading-tight italic font-serif">Meet the Faces of <br /> <span className="text-[#062D27] not-italic">Sustainable Change</span></h2>
+                <p className="text-slate-500 font-medium text-sm md:text-base leading-relaxed">Every technician undergoes an exhaustive trade filter residential check, completing structural alignment checks on mechanical assets.</p>
+                <div className="flex gap-8 border-t border-slate-100 pt-6">
+                  <div>
+                    <p className="text-3xl font-black text-[#062D27]">149+</p>
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-0.5">Women Technicians</p>
+                  </div>
+                  <div>
+                    <p className="text-3xl font-black text-[#062D27]">820+</p>
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-0.5">Certified Partners</p>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="relative"><MitraStackView /></div>
-          </section>
+              <div className="relative"><MitraStackView /></div>
+            </section>
+          )}
         </div>
       )}
 
