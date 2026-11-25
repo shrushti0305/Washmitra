@@ -35,6 +35,11 @@ import Footer from './Footer';
 import WashMitraChatbot from './WashMitraChatbot';
 import logoUrl from '../assets/images/WASH Mitra logo.png';
 import { SHOW_TRANSACTIONAL_FEATURES } from '../lib/featureFlags';
+import { 
+  SHOW_NAV_PROFILE_SETTINGS, 
+  SHOW_NAV_VIEW_ALL_ACTIVITY, 
+  SHOW_MOBILE_BOTTOM_EXTRA_TABS 
+} from '../config/features';
 import { Toaster } from '@/components/ui/sonner';
 import { motion, AnimatePresence } from 'motion/react';
 import { useNotifications } from '../contexts/NotificationContext';
@@ -172,11 +177,13 @@ export default function Layout({ children }: LayoutProps) {
                         </div>
                       )}
                     </ScrollArea>
-                    <div className="p-2 border-t border-slate-50 rounded-b-3xl">
-                      <Button variant="ghost" className="w-full text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-[#062D27] h-10">
-                        View all activity
-                      </Button>
-                    </div>
+                    {SHOW_NAV_VIEW_ALL_ACTIVITY && (
+                      <div className="p-2 border-t border-slate-50 rounded-b-3xl">
+                        <Button variant="ghost" className="w-full text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-[#062D27] h-10">
+                          View all activity
+                        </Button>
+                      </div>
+                    )}
                   </PopoverContent>
                 </Popover>
 
@@ -195,9 +202,13 @@ export default function Layout({ children }: LayoutProps) {
                       </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator className="bg-[#062D27]/5" />
-                    <DropdownMenuItem className="cursor-pointer font-bold text-[#062D27] rounded-xl px-3 py-2">Profile</DropdownMenuItem>
-                    <DropdownMenuItem className="cursor-pointer font-bold text-[#062D27] rounded-xl px-3 py-2">Settings</DropdownMenuItem>
-                    <DropdownMenuSeparator className="bg-[#062D27]/5" />
+                    {SHOW_NAV_PROFILE_SETTINGS && (
+                      <>
+                        <DropdownMenuItem className="cursor-pointer font-bold text-[#062D27] rounded-xl px-3 py-2">Profile</DropdownMenuItem>
+                        <DropdownMenuItem className="cursor-pointer font-bold text-[#062D27] rounded-xl px-3 py-2">Settings</DropdownMenuItem>
+                        <DropdownMenuSeparator className="bg-[#062D27]/5" />
+                      </>
+                    )}
                     <DropdownMenuItem 
                       className="text-[#F26522] cursor-pointer font-black rounded-xl px-3 py-2"
                       onClick={async () => {
@@ -413,26 +424,40 @@ export default function Layout({ children }: LayoutProps) {
       {user && (
         <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-slate-200 sm:hidden">
           <div className="flex justify-around items-center h-16">
-            <Button variant="ghost" size="sm" className="flex flex-col gap-1 items-center">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => navigate('/')}
+              className="flex flex-col gap-1 items-center"
+            >
               <Home className="h-5 w-5" />
               <span className="text-[10px]">Home</span>
             </Button>
-            <Button variant="ghost" size="sm" className="flex flex-col gap-1 items-center">
-              <ClipboardList className="h-5 w-5" />
-              <span className="text-[10px]">Requests</span>
-            </Button>
-            {user.role === 'WASHMITRA' ? (
-               <Button variant="ghost" size="sm" className="flex flex-col gap-1 items-center">
-               <ShoppingBag className="h-5 w-5" />
-               <span className="text-[10px]">WashMart</span>
-             </Button>
-            ) : (
-              <Button variant="ghost" size="sm" className="flex flex-col gap-1 items-center">
-              <ShieldCheck className="h-5 w-5" />
-              <span className="text-[10px]">AMC</span>
-            </Button>
+            {SHOW_MOBILE_BOTTOM_EXTRA_TABS && (
+              <>
+                <Button variant="ghost" size="sm" className="flex flex-col gap-1 items-center">
+                  <ClipboardList className="h-5 w-5" />
+                  <span className="text-[10px]">Requests</span>
+                </Button>
+                {user.role === 'WASHMITRA' ? (
+                  <Button variant="ghost" size="sm" className="flex flex-col gap-1 items-center">
+                    <ShoppingBag className="h-5 w-5" />
+                    <span className="text-[10px]">WashMart</span>
+                  </Button>
+                ) : (
+                  <Button variant="ghost" size="sm" className="flex flex-col gap-1 items-center">
+                    <ShieldCheck className="h-5 w-5" />
+                    <span className="text-[10px]">AMC</span>
+                  </Button>
+                )}
+              </>
             )}
-            <Button variant="ghost" size="sm" className="flex flex-col gap-1 items-center">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => navigate('/contact')}
+              className="flex flex-col gap-1 items-center"
+            >
               <LifeBuoy className="h-5 w-5" />
               <span className="text-[10px]">Help</span>
             </Button>
