@@ -395,6 +395,14 @@ export default function AdminDashboard() {
     setSelectedMsgIds([]);
   };
 
+  const formatCSVCell = (val: string | number | null | undefined): string => {
+    const str = val == null ? '' : String(val);
+    const isPlainNumberOrPhone = /^[+-]?[\d\s().-]+$/.test(str);
+    const needsPrefix = !isPlainNumberOrPhone && /^[=+\-@\t\r]/.test(str);
+    const safeStr = needsPrefix ? `'${str}` : str;
+    return `"${safeStr.replace(/"/g, '""')}"`;
+  };
+
   const exportMessagesCSV = () => {
     if (messages.length === 0) {
       toast.error("No inquiries available to export.");
@@ -403,23 +411,25 @@ export default function AdminDashboard() {
 
     const headers = ["Date & Time", "Name", "Phone", "Email", "Subject", "Message", "Status"];
     const rows = filteredMessages.map(m => [
-      `"${new Date(m.created_at || Date.now()).toLocaleString()}"`,
-      `"${(m.name || '').replace(/"/g, '""')}"`,
-      `"${(m.phone || '').replace(/"/g, '""')}"`,
-      `"${(m.email || '').replace(/"/g, '""')}"`,
-      `"${(m.subject || 'General Inquiry').replace(/"/g, '""')}"`,
-      `"${(m.message || '').replace(/"/g, '""')}"`,
-      `"${m.status || 'pending'}"`
+      formatCSVCell(new Date(m.created_at || Date.now()).toLocaleString()),
+      formatCSVCell(m.name),
+      formatCSVCell(m.phone),
+      formatCSVCell(m.email),
+      formatCSVCell(m.subject || 'General Inquiry'),
+      formatCSVCell(m.message),
+      formatCSVCell(m.status || 'pending')
     ]);
 
-    const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-    const encodedUri = encodeURI(csvContent);
+    const csvContent = "\uFEFF" + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
+    link.setAttribute("href", url);
     link.setAttribute("download", `WashMitra_Contact_Inquiries_${new Date().toISOString().slice(0,10)}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
 
     toast.success("Exported Contact Inquiries to CSV!");
   };
@@ -557,22 +567,24 @@ export default function AdminDashboard() {
 
     const headers = ["Name", "Phone", "Email", "District", "Skills", "Verification Status"];
     const rows = filteredMitras.map(m => [
-      `"${(m.full_name || m.name || 'Technician').replace(/"/g, '""')}"`,
-      `"${(m.phone || '').replace(/"/g, '""')}"`,
-      `"${(m.email || '').replace(/"/g, '""')}"`,
-      `"${(m.district || 'Pune').replace(/"/g, '""')}"`,
-      `"${(Array.isArray(m.skills) ? m.skills.join('; ') : (m.skills || '')).replace(/"/g, '""')}"`,
-      `"${m.is_paid ? 'VERIFIED' : 'PENDING'}"`
+      formatCSVCell(m.full_name || m.name || 'Technician'),
+      formatCSVCell(m.phone),
+      formatCSVCell(m.email),
+      formatCSVCell(m.district || 'Pune'),
+      formatCSVCell(Array.isArray(m.skills) ? m.skills.join('; ') : (m.skills || '')),
+      formatCSVCell(m.is_paid ? 'VERIFIED' : 'PENDING')
     ]);
 
-    const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-    const encodedUri = encodeURI(csvContent);
+    const csvContent = "\uFEFF" + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
+    link.setAttribute("href", url);
     link.setAttribute("download", `WashMitra_Technicians_Roster_${new Date().toISOString().slice(0,10)}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
 
     toast.success("Exported Technicians Roster to CSV!");
   };
