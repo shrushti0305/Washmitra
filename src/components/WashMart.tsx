@@ -12,6 +12,11 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ShoppingCart, Package, Info, Tag } from 'lucide-react';
+import { 
+  SHOW_WASHMART_BALANCE, 
+  SHOW_WASHMART_ADD_TO_KIT, 
+  DEMO_STRINGS 
+} from '../config/features';
 
 export default function WashMart() {
   const { washMartItems } = useStore();
@@ -23,12 +28,20 @@ export default function WashMart() {
           <h2 className="text-3xl font-black mb-2">WashMART</h2>
           <p className="text-slate-400 max-w-md">Exclusive discounted materials and tools for certified WashMitras. Pay via platform tokens or cash.</p>
         </div>
-        <div className="hidden md:flex gap-4">
-           <div className="bg-slate-800 p-4 rounded-2xl flex flex-col items-center min-w-[100px]">
-              <span className="text-xs text-slate-500 font-bold uppercase">Balance</span>
-              <span className="text-xl font-black text-orange-500">₹4500</span>
-           </div>
-        </div>
+        {SHOW_WASHMART_BALANCE && (
+          <div className="hidden md:flex gap-4">
+             <div className="bg-slate-800 p-4 rounded-2xl flex flex-col items-center min-w-[100px]">
+                <span className="text-xs text-slate-500 font-bold uppercase">Balance</span>
+                <span className="text-xl font-black text-orange-500">₹4500</span>
+             </div>
+          </div>
+        )}
+      </div>
+
+      {/* Store status banner */}
+      <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-center gap-3 text-amber-900">
+        <Info className="h-5 w-5 text-amber-600 shrink-0" />
+        <p className="text-sm font-bold">{DEMO_STRINGS.washMartBanner}</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -58,11 +71,13 @@ export default function WashMart() {
               </div>
               <p className="text-xs text-slate-500 mt-2 line-clamp-2">{item.description}</p>
             </CardContent>
-            <CardFooter className="pt-0">
-               <Button className="w-full bg-slate-900 hover:bg-slate-800 gap-2 font-bold">
-                 <ShoppingCart className="h-4 w-4" /> Add to Kit
-               </Button>
-            </CardFooter>
+            {SHOW_WASHMART_ADD_TO_KIT && (
+              <CardFooter className="pt-0">
+                 <Button className="w-full bg-slate-900 hover:bg-slate-800 gap-2 font-bold">
+                   <ShoppingCart className="h-4 w-4" /> Add to Kit
+                 </Button>
+              </CardFooter>
+            )}
           </Card>
         ))}
       </div>
