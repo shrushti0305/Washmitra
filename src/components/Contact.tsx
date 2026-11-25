@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { supabase } from '../lib/supabase';
 import { toast } from 'sonner';
+import { PRIVACY_VERSION } from '../content/privacyNotice';
 
 const SERVICE_INTERESTS = [
   'Plumbing & Pipeline Repair',
@@ -20,11 +21,16 @@ const SERVICE_INTERESTS = [
 export default function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [consentAgreed, setConsentAgreed] = useState(false);
   const [selectedInterest, setSelectedInterest] = useState('Plumbing & Pipeline Repair');
   const [submittedData, setSubmittedData] = useState<{ name: string; phone: string } | null>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!consentAgreed) {
+      toast.error('Please agree to the Privacy Notice before submitting.');
+      return;
+    }
     setIsSubmitting(true);
 
     const formData = new FormData(e.currentTarget);
@@ -50,7 +56,9 @@ export default function Contact() {
         phone,
         email,
         message: formattedMessage,
-        status: 'NEW'
+        status: 'NEW',
+        consent_at: new Date().toISOString(),
+        privacy_version: PRIVACY_VERSION
       }]);
 
       if (error) {
@@ -68,6 +76,7 @@ export default function Contact() {
 
     setIsSubmitting(false);
     setIsSuccess(true);
+    setConsentAgreed(false);
     setSubmittedData({ name, phone });
     toast.success("Inquiry received! Our team will contact you shortly.");
   };
@@ -273,9 +282,32 @@ export default function Contact() {
                 />
               </div>
 
+              <div className="flex items-start gap-3 pt-1">
+                <input
+                  type="checkbox"
+                  id="contact-consent"
+                  checked={consentAgreed}
+                  onChange={(e) => setConsentAgreed(e.target.checked)}
+                  className="mt-1 h-4 w-4 rounded border-slate-300 text-[#F26522] focus:ring-[#F26522]/30 cursor-pointer"
+                  required
+                />
+                <label htmlFor="contact-consent" className="text-xs text-slate-500 leading-relaxed cursor-pointer select-none">
+                  I agree that WASH Mitra may use my details to reply to my enquiry, as described in the{' '}
+                  <a
+                    href="#/privacy"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#F26522] underline font-semibold hover:text-[#d95d1f]"
+                  >
+                    Privacy Notice
+                  </a>
+                  .
+                </label>
+              </div>
+
               <Button 
                 type="submit" 
-                disabled={isSubmitting} 
+                disabled={isSubmitting || !consentAgreed} 
                 className="w-full h-16 rounded-2xl bg-[#F26522] hover:bg-[#d95d1f] text-white font-black uppercase tracking-widest gap-3 shadow-xl shadow-orange-200 transition-all hover:scale-[1.01] active:scale-[0.99] disabled:opacity-60 text-xs"
               >
                 {isSubmitting ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />} 

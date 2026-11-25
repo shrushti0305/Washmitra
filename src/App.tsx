@@ -22,6 +22,7 @@ const Contact = lazy(() => import('./components/Contact'));
 const ServiceFlow = lazy(() => import('./components/ServiceFlow'));
 const WashMitraFeeGate = lazy(() => import('./components/WashMitraFeeGate'));
 const TrainingCatalogue = lazy(() => import('./components/TrainingCatalogue'));
+const PrivacyNotice = lazy(() => import('./components/PrivacyNotice'));
 
 function RouteFallback() {
   return (
@@ -203,6 +204,10 @@ export default function App() {
               
               <Route path="/training" element={<Page seo={seoContent.training} path="/training"><TrainingCatalogue /></Page>} />
               <Route path="/Washmitra/training" element={<Page seo={seoContent.training} path="/training"><TrainingCatalogue /></Page>} />
+              
+              <Route path="/privacy" element={<Page seo={seoContent.privacy} path="/privacy"><PrivacyNotice /></Page>} />
+              <Route path="/Washmitra/privacy" element={<Page seo={seoContent.privacy} path="/privacy"><PrivacyNotice /></Page>} />
+              <Route path="/washmitra/privacy" element={<Page seo={seoContent.privacy} path="/privacy"><PrivacyNotice /></Page>} />
               
               {/* Admin Route & Aliases */}
               <Route path="/admin" element={<Page seo={{ title: "Admin Portal — WashMitra", description: "Directorate Dashboard" }} path="/admin"><AdminDashboard /></Page>} />
