@@ -19,6 +19,7 @@ import { Badge } from '@/components/ui/badge';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 import { Progress } from '@/components/ui/progress';
 import { motion, AnimatePresence } from 'framer-motion';
+import { SHOW_INSTITUTE_DEMO_VIEW, DEMO_STRINGS } from '../config/features';
 
 export default function InstituteDashboard() {
   const { user } = useStore();
@@ -38,6 +39,22 @@ export default function InstituteDashboard() {
       prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
     );
   };
+
+  if (!SHOW_INSTITUTE_DEMO_VIEW) {
+    return (
+      <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6">
+        <Card className="border border-slate-100 bg-white shadow-sm p-10 rounded-[32px] text-center">
+          <div className="w-16 h-16 bg-blue-50 text-[#2B4B9B] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm">
+            <Building2 className="h-8 w-8" />
+          </div>
+          <h2 className="text-2xl font-black text-[#062D27] tracking-tight">Institution Account Active</h2>
+          <p className="text-base text-slate-500 font-medium max-w-lg mx-auto mt-3 leading-relaxed">
+            {DEMO_STRINGS.institutePlaceholder}
+          </p>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 md:space-y-8 max-w-6xl mx-auto pb-20 px-4 sm:px-6 md:px-0">
