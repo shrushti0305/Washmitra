@@ -13,14 +13,20 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
+import { PRIVACY_VERSION } from '../content/privacyNotice';
 
 export default function BookingModal() {
   const { isModalOpen, setModalOpen, selectedService, selectedServiceId, setTrackingOpen } = useBookingStore();
   const { user } = useStore();
   const [loading, setLoading] = useState(false);
+  const [consentAgreed, setConsentAgreed] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!consentAgreed) {
+      toast.error('Please agree to the Privacy Notice before confirming.');
+      return;
+    }
     setLoading(true);
 
     const formData = new FormData(e.currentTarget);
@@ -32,6 +38,8 @@ export default function BookingModal() {
       service_id: selectedServiceId,
       user_id: user?.id ?? null,
       status: 'PENDING' as const,
+      consent_at: new Date().toISOString(),
+      privacy_version: PRIVACY_VERSION,
     };
 
     const { error } = await supabase.from('bookings').insert([bookingData]);
@@ -44,6 +52,7 @@ export default function BookingModal() {
     }
 
     toast.success(`Booking request for ${selectedService} submitted!`);
+    setConsentAgreed(false);
     setModalOpen(false);
 
     setTimeout(() => {
@@ -52,7 +61,7 @@ export default function BookingModal() {
   };
 
   return (
-    <Dialog open={isModalOpen} onOpenChange={setModalOpen}>
+    <Dialog open={isModalOpen} onOpenChange={(open) => { setModalOpen(open); if (!open) setConsentAgreed(false); }}>
       <DialogContent className="sm:max-w-[425px] rounded-[40px] border-none shadow-2xl p-8 bg-[#F9F9F7]">
         <DialogHeader>
           <DialogTitle className="text-2xl font-black text-[#062D27] tracking-tight">
@@ -75,9 +84,31 @@ export default function BookingModal() {
             <Label htmlFor="location" className="text-[10px] font-black uppercase tracking-widest text-slate-400">Location</Label>
             <Input id="location" name="location" placeholder="Village / City" className="h-12 rounded-2xl bg-white border-slate-100" required />
           </div>
+          <div className="flex items-start gap-3 pt-1">
+            <input
+              type="checkbox"
+              id="booking-consent"
+              checked={consentAgreed}
+              onChange={(e) => setConsentAgreed(e.target.checked)}
+              className="mt-0.5 h-4 w-4 rounded border-slate-300 text-[#F26522] focus:ring-[#F26522]/30 cursor-pointer"
+              required
+            />
+            <label htmlFor="booking-consent" className="text-xs text-slate-500 leading-relaxed cursor-pointer select-none">
+              I agree that WASH Mitra may use my details to arrange this service, as described in the{' '}
+              <a
+                href="#/privacy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#F26522] underline font-semibold hover:text-[#d95d1f]"
+              >
+                Privacy Notice
+              </a>
+              .
+            </label>
+          </div>
           <Button
             type="submit"
-            disabled={loading}
+            disabled={loading || !consentAgreed}
             className="w-full h-14 rounded-2xl bg-[#F26522] hover:bg-[#d95d1f] text-white font-black uppercase tracking-widest gap-3 shadow-xl shadow-orange-200 mt-4 transition-all disabled:opacity-50"
           >
             {loading ? 'Submitting...' : 'Confirm Booking'}

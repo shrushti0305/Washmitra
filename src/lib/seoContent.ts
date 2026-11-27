@@ -37,4 +37,9 @@ export const seoContent = {
     title: 'Log In — WashMitra',
     description: 'Log in to your WashMitra account.',
   },
+  privacy: {
+    title: 'Privacy and Cookie Notice — WashMitra',
+    description:
+      'Read the WashMitra Privacy and Cookie Notice, detailing our data practices under India\'s Digital Personal Data Protection Act, 2023.',
+  },
 } as const;

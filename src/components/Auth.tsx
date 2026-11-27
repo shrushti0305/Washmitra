@@ -5,6 +5,7 @@ import { supabase } from '../lib/supabase';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
+import { PRIVACY_VERSION } from '../content/privacyNotice';
 import washMitraLogo from '../assets/images/WASH Mitra logo.png';
 
 const ROLES = [
@@ -15,11 +16,14 @@ const ROLES = [
 
 export default function Auth() {
   const { setUser } = useStore();
+  const [authMode, setAuthMode] = useState<'signup' | 'signin'>('signup');
   const [role, setRole] = useState("customer");
   const [step, setStep] = useState(0);
   const [otp, setOtp] = useState('');
   const [timer, setTimer] = useState(0);
   const [formData, setFormData] = useState({ fullName: '', mobile: '', email: '' });
+  const [consentAgreed, setConsentAgreed] = useState(false);
+  const [consentTimestamp, setConsentTimestamp] = useState<string | null>(null);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -38,9 +42,18 @@ export default function Auth() {
       toast.error("Please enter a valid 10-digit mobile number.");
       return;
     }
+    if (authMode === 'signup' && !consentAgreed) {
+      toast.error("Please agree to the Privacy Notice before creating an account.");
+      return;
+    }
+
+    if (authMode === 'signup') {
+      setConsentTimestamp(new Date().toISOString());
+    }
+
     const { error } = await supabase.auth.signInWithOtp({
       phone: getFormattedPhone(),
-      options: { shouldCreateUser: true }
+      options: { shouldCreateUser: authMode === 'signup' }
     });
     
     if (error) {
@@ -78,18 +91,25 @@ export default function Auth() {
       const userRole = existingProfile?.role || role.toUpperCase();
       const userName = formData.fullName || existingProfile?.full_name || existingProfile?.name || 'WASH Mitra User';
 
+      const profilePayload: Record<string, any> = {
+        id: data.user.id,
+        full_name: userName,
+        name: userName,
+        role: userRole,
+        phone: getFormattedPhone(),
+        email: formData.email || existingProfile?.email || null,
+        is_paid: existingProfile ? existingProfile.is_paid : role !== 'washmitra',
+        is_available: true
+      };
+
+      if (authMode === 'signup' && consentAgreed) {
+        profilePayload.consent_at = consentTimestamp || new Date().toISOString();
+        profilePayload.privacy_version = PRIVACY_VERSION;
+      }
+
       const { error: profileError } = await supabase
         .from('profiles')
-        .upsert({ 
-          id: data.user.id,
-          full_name: userName,
-          name: userName,
-          role: userRole,
-          phone: getFormattedPhone(),
-          email: formData.email || existingProfile?.email || null,
-          is_paid: existingProfile ? existingProfile.is_paid : role !== 'washmitra',
-          is_available: true
-        }, { onConflict: 'id' });
+        .upsert(profilePayload, { onConflict: 'id' });
 
       if (profileError) {
         console.error("Profile upsert notice:", profileError);
@@ -106,6 +126,7 @@ export default function Auth() {
       });
       
       toast.success("Account verified successfully!");
+      setConsentAgreed(false);
       setStep(2);
     }
   };
@@ -115,18 +136,38 @@ export default function Auth() {
   return (
     <div className="flex items-center justify-center min-h-[60vh] p-4 bg-slate-50">
       <div className="w-full max-w-[440px] bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border border-slate-100">
-        <div className="text-center px-10 pt-10 pb-6">
+        <div className="text-center px-10 pt-10 pb-4">
           <img src={washMitraLogo} alt="WASH Mitra Logo" className="w-auto h-16 mx-auto mb-4 object-contain" />
           <h2 className="text-[1.25rem] font-black text-[#062D27] tracking-tight">Access your WASH Mitra account</h2>
         </div>
 
-        <div className="mx-10 mb-6 grid grid-cols-3 gap-1 bg-slate-100 p-1 rounded-xl">
-          {ROLES.map((r) => (
-            <button key={r.key} onClick={() => { setRole(r.key); setStep(0); }} className={`py-2 text-[9px] font-black uppercase rounded-lg transition-all ${role === r.key ? 'bg-white shadow-sm text-[#062D27]' : 'text-slate-500'}`}>
-              {r.label}
-            </button>
-          ))}
+        {/* Mode Switcher: Create Account vs Sign In */}
+        <div className="mx-10 mb-4 flex bg-slate-100 p-1 rounded-xl">
+          <button
+            type="button"
+            onClick={() => { setAuthMode('signup'); setStep(0); setConsentAgreed(false); }}
+            className={`flex-1 py-2 text-[10px] font-black uppercase rounded-lg transition-all ${authMode === 'signup' ? 'bg-white shadow-sm text-[#062D27]' : 'text-slate-500'}`}
+          >
+            Create Account
+          </button>
+          <button
+            type="button"
+            onClick={() => { setAuthMode('signin'); setStep(0); setConsentAgreed(false); }}
+            className={`flex-1 py-2 text-[10px] font-black uppercase rounded-lg transition-all ${authMode === 'signin' ? 'bg-white shadow-sm text-[#062D27]' : 'text-slate-500'}`}
+          >
+            Sign In
+          </button>
         </div>
+
+        {authMode === 'signup' && (
+          <div className="mx-10 mb-6 grid grid-cols-3 gap-1 bg-slate-100 p-1 rounded-xl">
+            {ROLES.map((r) => (
+              <button key={r.key} onClick={() => { setRole(r.key); setStep(0); }} className={`py-2 text-[9px] font-black uppercase rounded-lg transition-all ${role === r.key ? 'bg-white shadow-sm text-[#062D27]' : 'text-slate-500'}`}>
+                {r.label}
+              </button>
+            ))}
+          </div>
+        )}
 
         <div className="px-10 pb-8">
           <div className="flex gap-2 justify-center mb-6">
@@ -135,16 +176,81 @@ export default function Auth() {
             ))}
           </div>
 
-          <span className={`inline-block px-3 py-1 rounded-lg text-[0.6rem] font-black uppercase tracking-wide mb-4 ${roleMeta?.badgeCls}`}>
-            {roleMeta?.fullLabel}
-          </span>
+          {authMode === 'signup' && (
+            <span className={`inline-block px-3 py-1 rounded-lg text-[0.6rem] font-black uppercase tracking-wide mb-4 ${roleMeta?.badgeCls}`}>
+              {roleMeta?.fullLabel}
+            </span>
+          )}
 
           {step === 0 && (
             <div className="space-y-4 animate-in fade-in slide-in-from-right-4">
-              <Input placeholder="Full Name" maxLength={50} value={formData.fullName} onChange={(e) => setFormData({...formData, fullName: e.target.value})} />
-              <Input placeholder="Mobile Number" type="tel" maxLength={10} value={formData.mobile} onChange={(e) => setFormData({...formData, mobile: e.target.value.replace(/\D/g, '')})} />
-              <Input placeholder="Email Address (Optional)" type="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} />
-              <Button onClick={handleSendOtp} className="w-full bg-[#F16622] h-12 rounded-xl font-black">Send Verification Code</Button>
+              {authMode === 'signup' && (
+                <Input placeholder="Full Name" maxLength={50} value={formData.fullName} onChange={(e) => setFormData({...formData, fullName: e.target.value})} required />
+              )}
+              <Input placeholder="Mobile Number" type="tel" maxLength={10} value={formData.mobile} onChange={(e) => setFormData({...formData, mobile: e.target.value.replace(/\D/g, '')})} required />
+              {authMode === 'signup' && (
+                <Input placeholder="Email Address (Optional)" type="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} />
+              )}
+
+              {/* Consent Box (Sign-up only) */}
+              {authMode === 'signup' && (
+                <div className="flex items-start gap-3 pt-1">
+                  <input
+                    type="checkbox"
+                    id="auth-signup-consent"
+                    checked={consentAgreed}
+                    onChange={(e) => setConsentAgreed(e.target.checked)}
+                    className="mt-0.5 h-4 w-4 rounded border-slate-300 text-[#F26522] focus:ring-[#F26522]/30 cursor-pointer"
+                    required
+                  />
+                  <label htmlFor="auth-signup-consent" className="text-xs text-slate-500 leading-relaxed cursor-pointer select-none">
+                    I agree that WASH Mitra may use my details to create and run my account, as described in the{' '}
+                    <a
+                      href="#/privacy"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[#F26522] underline font-semibold hover:text-[#d95d1f]"
+                    >
+                      Privacy Notice
+                    </a>
+                    .
+                  </label>
+                </div>
+              )}
+
+              <Button
+                onClick={handleSendOtp}
+                disabled={authMode === 'signup' && !consentAgreed}
+                className="w-full bg-[#F16622] h-12 rounded-xl font-black disabled:opacity-50"
+              >
+                Send Verification Code
+              </Button>
+
+              <div className="text-center pt-2">
+                {authMode === 'signup' ? (
+                  <p className="text-xs text-slate-500">
+                    Already have an account?{' '}
+                    <button
+                      type="button"
+                      onClick={() => { setAuthMode('signin'); setConsentAgreed(false); }}
+                      className="text-[#F16622] font-bold hover:underline"
+                    >
+                      Sign In
+                    </button>
+                  </p>
+                ) : (
+                  <p className="text-xs text-slate-500">
+                    New to WASH Mitra?{' '}
+                    <button
+                      type="button"
+                      onClick={() => { setAuthMode('signup'); setConsentAgreed(false); }}
+                      className="text-[#F16622] font-bold hover:underline"
+                    >
+                      Create Account
+                    </button>
+                  </p>
+                )}
+              </div>
             </div>
           )}
 
