@@ -109,12 +109,14 @@ export default function CustomerDashboard() {
         <div>
           <div className="flex items-center gap-2 mb-2">
             <ShieldCheck size={14} className="text-[#F26522]" />
-            <p className="text-[10px] font-black text-[#F26522] uppercase tracking-[0.4em]">Verified Household Account</p>
+            <p className="text-[10px] font-black text-[#F26522] uppercase tracking-[0.4em]">Household Account</p>
           </div>
           <h1 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter">
             Welcome, <span className="italic font-serif text-slate-400">{user?.full_name ? user.full_name.split(' ')[0] : 'Resident'}</span>
           </h1>
-          <p className="text-slate-500 font-medium mt-1">Status: Active Service Linkage (Pune Dist.)</p>
+          {user?.district && (
+            <p className="text-slate-500 font-medium mt-1">District: {user.district}</p>
+          )}
         </div>
         <div className="flex bg-slate-100 p-1 rounded-2xl w-full md:w-auto overflow-x-auto">
           <Button onClick={() => setActiveTab('HOME')} className={`rounded-xl h-10 px-6 text-xs font-black uppercase tracking-wider transition-all shrink-0 ${activeTab === 'HOME' ? 'bg-[#062D27] text-white shadow-xl' : 'text-slate-500 hover:bg-slate-200'}`}>Overview</Button>
