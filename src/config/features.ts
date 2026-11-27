@@ -22,6 +22,7 @@ export const SHOW_MITRA_JOB_ACTIONS = false;
 export const SHOW_MITRA_SYNC_QUEUE = false;
 export const SHOW_MITRA_REGISTER_BUSINESS = false;
 export const SHOW_MITRA_REPORT_DAMAGE = false;
+export const SHOW_MITRA_CREDENTIALS = false;
 
 // --- Institute Dashboard Flags ---
 export const SHOW_INSTITUTE_DEMO_VIEW = false;

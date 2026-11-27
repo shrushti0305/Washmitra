@@ -44,6 +44,7 @@ import {
   SHOW_MITRA_SYNC_QUEUE,
   SHOW_MITRA_REGISTER_BUSINESS,
   SHOW_MITRA_REPORT_DAMAGE,
+  SHOW_MITRA_CREDENTIALS,
   DEMO_STRINGS
 } from '../config/features';
 
@@ -176,13 +177,15 @@ export default function WashMitraDashboard() {
             >
               Jobs
             </Button>
-            <Button 
-              variant={activeTab === 'SKILLS' ? 'default' : 'ghost'}
-              onClick={() => setActiveTab('SKILLS')}
-              className={`rounded-xl h-10 px-4 text-[10px] font-black uppercase tracking-widest ${activeTab === 'SKILLS' ? 'bg-[#062D27] text-white shadow-lg' : 'text-slate-500'}`}
-            >
-              Profile
-            </Button>
+            {SHOW_MITRA_CREDENTIALS && (
+              <Button 
+                variant={activeTab === 'SKILLS' ? 'default' : 'ghost'}
+                onClick={() => setActiveTab('SKILLS')}
+                className={`rounded-xl h-10 px-4 text-[10px] font-black uppercase tracking-widest ${activeTab === 'SKILLS' ? 'bg-[#062D27] text-white shadow-lg' : 'text-slate-500'}`}
+              >
+                Profile
+              </Button>
+            )}
             {SHOW_MITRA_TOOLKIT && (
               <Button 
                 variant={activeTab === 'TOOLKIT' ? 'default' : 'ghost'}
@@ -412,7 +415,7 @@ export default function WashMitraDashboard() {
         </div>
       )}
 
-      {activeTab === 'SKILLS' && (
+      {SHOW_MITRA_CREDENTIALS && activeTab === 'SKILLS' && (
         <div className="grid md:grid-cols-2 gap-8">
           <section className="space-y-6">
             <h2 className="text-3xl font-black text-slate-900 tracking-tighter">Verified Credentials</h2>
